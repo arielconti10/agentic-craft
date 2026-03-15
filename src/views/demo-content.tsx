@@ -458,7 +458,7 @@ export function DemoContent() {
         {/*  Composer                                                  */}
         {/* -------------------------------------------------------- */}
         <div className="mt-8">
-          <InteractiveComposer />
+          <InteractiveComposer showControls={false} />
         </div>
 
         {/* -------------------------------------------------------- */}

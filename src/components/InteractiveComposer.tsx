@@ -150,7 +150,7 @@ function ensureStyles() {
    - Composer sits on top at z:[1] with full rounded border.
    - Attachments live inside the composer card itself.
    ──────────────────────────────────────────────── */
-export default function InteractiveComposer() {
+export default function InteractiveComposer({ showControls = true }: { showControls?: boolean }) {
   useEffect(ensureStyles, [])
 
   const [features, setFeatures] = useState<ComposerState>({
@@ -246,41 +246,43 @@ export default function InteractiveComposer() {
   if (features.replyTo) islandPanels.push("reply")
 
   return (
-    <div className="relative flex min-h-[520px] flex-col">
+    <div className={`relative flex flex-col ${showControls ? "min-h-[520px]" : ""}`}>
 
       {/* ── Controls — float at top of stage ── */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-6">
-        <span className="section-label mr-1">Controls</span>
-        {(
-          [
-            ["scopeBanner", "Scope"],
-            ["replyTo", "Reply-to"],
-            ["plan", "Plan"],
-            ["suggestions", "Suggestions"],
-            ["attachments", "Attachments"],
-          ] as const
-        ).map(([key, label]) => (
-          <button
-            key={key}
-            onClick={() => toggle(key)}
-            className={`
-              relative text-xs px-2.5 py-1 rounded-md border transition-all duration-200
-              ${features[key]
-                ? "border-foreground/20 bg-foreground/[0.04] text-foreground"
-                : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              }
-            `}
-          >
-            {label}
-            {features[key] && (
-              <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-foreground/40" />
-            )}
-          </button>
-        ))}
-      </div>
+      {showControls && (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-6">
+          <span className="section-label mr-1">Controls</span>
+          {(
+            [
+              ["scopeBanner", "Scope"],
+              ["replyTo", "Reply-to"],
+              ["plan", "Plan"],
+              ["suggestions", "Suggestions"],
+              ["attachments", "Attachments"],
+            ] as const
+          ).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => toggle(key)}
+              className={`
+                relative text-xs px-2.5 py-1 rounded-md border transition-all duration-200
+                ${features[key]
+                  ? "border-foreground/20 bg-foreground/[0.04] text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }
+              `}
+            >
+              {label}
+              {features[key] && (
+                <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-foreground/40" />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ── Spacer — pushes composer assembly to the bottom ── */}
-      <div className="flex-1" />
+      {showControls && <div className="flex-1" />}
 
       {/* ── Stacked Islands + Composer — pinned to bottom center ── */}
       <div className="mx-auto w-full max-w-[720px] flex flex-col items-center">
@@ -562,12 +564,14 @@ export default function InteractiveComposer() {
       )}
 
       {/* Interaction hints */}
-      <div className="mt-3 mb-2 flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-muted-foreground/40 justify-center">
-        <span>Type to auto-expand</span>
-        <span>Enter to send</span>
-        <span>Shift+Enter for newline</span>
-        <span>Click suggestions to fill</span>
-      </div>
+      {showControls && (
+        <div className="mt-3 mb-2 flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-muted-foreground/40 justify-center">
+          <span>Type to auto-expand</span>
+          <span>Enter to send</span>
+          <span>Shift+Enter for newline</span>
+          <span>Click suggestions to fill</span>
+        </div>
+      )}
     </div>
   )
 }
