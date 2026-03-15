@@ -1,0 +1,1440 @@
+import { useState, useEffect, useCallback, useRef } from "react"
+import { HugeiconsIcon } from "@hugeicons/react"
+import {
+  Wrench01Icon,
+  ArrowDown01Icon,
+  ArrowRight01Icon,
+  Brain01Icon,
+  Alert01Icon,
+  GitBranchIcon,
+  CheckListIcon,
+  Cancel01Icon,
+  DragDropIcon,
+  SentIcon,
+  Tick01Icon,
+  TextIcon,
+} from "@hugeicons/core-free-icons"
+
+/* ------------------------------------------------------------------ */
+/*  CSS Keyframes                                                      */
+/* ------------------------------------------------------------------ */
+
+const STYLE_ID = "actions-page-styles"
+function ensureStyles() {
+  if (document.getElementById(STYLE_ID)) return
+  const style = document.createElement("style")
+  style.id = STYLE_ID
+  style.textContent = `
+    @keyframes actions-slide-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes actions-expand {
+      from { max-height: 0; opacity: 0; }
+      to { max-height: 600px; opacity: 1; }
+    }
+    @keyframes actions-collapse {
+      from { max-height: 600px; opacity: 1; }
+      to { max-height: 0; opacity: 0; }
+    }
+    @keyframes actions-fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes actions-progress {
+      from { width: 0%; }
+      to { width: var(--target-width); }
+    }
+    @keyframes actions-pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    @keyframes actions-timeline-fill {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+    @keyframes actions-step-enter {
+      from { opacity: 0; transform: translateX(-6px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .actions-slide-in {
+      animation: actions-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .actions-expand {
+      animation: actions-expand 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      overflow: hidden;
+    }
+    .actions-fade-in {
+      animation: actions-fade-in 0.2s ease forwards;
+    }
+    .actions-pulse-dot {
+      animation: actions-pulse-dot 1.5s ease-in-out infinite;
+    }
+    .actions-step-enter {
+      animation: actions-step-enter 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+  `
+  document.head.appendChild(style)
+}
+
+/* ------------------------------------------------------------------ */
+/*  Data                                                               */
+/* ------------------------------------------------------------------ */
+
+const TOOL_CALLS_DATA = [
+  {
+    label: "Searching document repository",
+    duration: "1.2s",
+    details: [
+      { key: "Query", value: "active security requirements" },
+      { key: "Results", value: "47 documents matched" },
+      { key: "Scope", value: "Security Target v3.1" },
+    ],
+  },
+  {
+    label: "Loading Security Target definitions",
+    duration: "0.4s",
+    details: [
+      { key: "File", value: "ST-SmartCard-v3.1.pdf" },
+      { key: "SFRs parsed", value: "23 requirements" },
+      { key: "SARs parsed", value: "14 assurance components" },
+    ],
+  },
+  {
+    label: "Cross-referencing test case mappings",
+    duration: "3.4s",
+    details: [
+      { key: "Test cases", value: "87 mapped" },
+      { key: "Unmapped SFRs", value: "2 (FPT_FLS.1, FDP_RIP.1)" },
+    ],
+  },
+  {
+    label: "Generating coverage matrix",
+    duration: "0.9s",
+    details: [
+      { key: "Coverage", value: "91.3% (21 of 23 SFRs)" },
+      { key: "Output", value: "coverage-matrix-2026-03.xlsx" },
+    ],
+  },
+]
+
+const ERROR_TOOL = {
+  label: "Checking remote syslog connectivity",
+  duration: "8.2s",
+  error:
+    "Connection timed out — the remote syslog server at 10.0.4.22:514 did not respond within 8 seconds.",
+}
+
+const SUBAGENT_TOOLS = [
+  {
+    label: "Checking ALC_CMC evidence",
+    duration: "1.8s",
+    details: [
+      { key: "Documents", value: "CM Plan v2.3, CM Records" },
+      { key: "Status", value: "All evidence present" },
+    ],
+  },
+  {
+    label: "Checking ALC_DEL evidence",
+    duration: "0.9s",
+    details: [
+      { key: "Documents", value: "Delivery procedures rev 4" },
+      { key: "Status", value: "Complete" },
+    ],
+  },
+  {
+    label: "Checking AVA_VAN evidence",
+    duration: "4.2s",
+    details: [
+      { key: "Documents", value: "Vulnerability analysis report" },
+      { key: "Status", value: "Pending — 2 items missing" },
+    ],
+  },
+]
+
+const PLAN_STEPS = [
+  "Load Security Target",
+  "Parse SFR definitions",
+  "Map test cases to SFRs",
+  "Identify coverage gaps",
+  "Generate report",
+  "Review with evaluator",
+]
+
+const PARALLEL_TASKS = [
+  {
+    label: "Analyzing SFR coverage",
+    duration: "3.4s",
+    details: [
+      { key: "SFRs analyzed", value: "23" },
+      { key: "Coverage", value: "91.3%" },
+    ],
+  },
+  {
+    label: "Fetching test execution results",
+    duration: "2.1s",
+    details: [
+      { key: "Test runs", value: "87 retrieved" },
+      { key: "Pass rate", value: "94.3%" },
+    ],
+  },
+  {
+    label: "Comparing with previous evaluation",
+    duration: "1.7s",
+    details: [
+      { key: "Previous eval", value: "EAL4 — 2025-08" },
+      { key: "Delta", value: "+4 SFRs, −1 finding" },
+    ],
+  },
+]
+
+const DECISION_OPTIONS = [
+  {
+    title: "Flag as finding",
+    desc: "Add to the non-conformity report for evaluator review in the next OR meeting.",
+    consequence: "Impact: Adds 1 open finding to the ETR. Requires vendor response within 10 days.",
+  },
+  {
+    title: "Request evidence",
+    desc: "Send an automated evidence request to the developer with a 5-day deadline.",
+    consequence: "Impact: Evaluation paused for FPT_STM.1 pending developer response.",
+  },
+  {
+    title: "Mark for later",
+    desc: "Add to the deferred items list for the next evaluation cycle.",
+    consequence: "Impact: No immediate delay. Risk carried forward to next cycle.",
+  },
+]
+
+/* ------------------------------------------------------------------ */
+/*  Controls component                                                 */
+/* ------------------------------------------------------------------ */
+
+function Controls({
+  options,
+  active,
+  onToggle,
+}: {
+  options: { key: string; label: string }[]
+  active: Record<string, boolean>
+  onToggle: (key: string) => void
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-5">
+      <span className="section-label mr-1">Controls</span>
+      {options.map((opt) => (
+        <button
+          key={opt.key}
+          onClick={() => onToggle(opt.key)}
+          className={`
+            relative text-xs px-2.5 py-1 rounded-md border transition-all duration-200
+            ${active[opt.key]
+              ? "border-foreground/20 bg-foreground/[0.04] text-foreground"
+              : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
+            }
+          `}
+        >
+          {opt.label}
+          {active[opt.key] && (
+            <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-foreground/40" />
+          )}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  ToolCall sub-component                                             */
+/* ------------------------------------------------------------------ */
+
+function ToolCall({
+  label,
+  duration,
+  error,
+  details,
+  open,
+  onToggle,
+  animate,
+}: {
+  label: string
+  duration: string
+  error?: string
+  details?: { key: string; value: string }[]
+  open: boolean
+  onToggle: () => void
+  animate?: boolean
+}) {
+  return (
+    <div
+      className={`rounded-md border transition-colors duration-200 ${
+        error ? "border-destructive/40" : "border-border"
+      } ${animate ? "actions-slide-in" : ""}`}
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left"
+      >
+        <HugeiconsIcon
+          icon={Wrench01Icon}
+          size={14}
+          strokeWidth={1.5}
+          className="shrink-0 text-muted-foreground"
+        />
+        <span className="text-sm font-normal">{label}</span>
+        <span
+          className={`ml-auto text-xs ${
+            error ? "text-destructive" : "text-muted-foreground"
+          }`}
+        >
+          {error ? `failed · ${duration}` : duration}
+        </span>
+        <HugeiconsIcon
+          icon={ArrowDown01Icon}
+          size={12}
+          strokeWidth={1.5}
+          className={`shrink-0 text-muted-foreground transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {open && (
+        <div className="actions-expand border-t border-border px-3 py-2.5">
+          {error ? (
+            <div className="space-y-2.5">
+              <p className="text-xs text-muted-foreground">{error}</p>
+              <button
+                type="button"
+                className="rounded-md border border-border px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+              >
+                Retry
+              </button>
+            </div>
+          ) : details ? (
+            <div className="space-y-1">
+              {details.map((d) => (
+                <div key={d.key} className="flex gap-2 text-xs">
+                  <span className="text-muted-foreground">{d.key}:</span>
+                  <span className="text-foreground">{d.value}</span>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  PlanStep sub-component                                             */
+/* ------------------------------------------------------------------ */
+
+function PlanStep({
+  index,
+  label,
+  state,
+  editable,
+  onRemove,
+}: {
+  index: number
+  label: string
+  state: "done" | "active" | "pending"
+  editable?: boolean
+  onRemove?: () => void
+}) {
+  return (
+    <div className="actions-step-enter flex items-center gap-2.5 py-1 group">
+      {editable && (
+        <HugeiconsIcon
+          icon={DragDropIcon}
+          size={12}
+          strokeWidth={1.5}
+          className="shrink-0 text-muted-foreground/30 cursor-grab"
+        />
+      )}
+      <div
+        className={`h-1.5 w-1.5 shrink-0 rounded-sm ${
+          state === "done"
+            ? "bg-muted-foreground"
+            : state === "active"
+              ? "bg-foreground actions-pulse-dot"
+              : "bg-muted-foreground/30"
+        }`}
+      />
+      <span
+        className={`text-sm flex-1 ${
+          state === "done"
+            ? "text-muted-foreground line-through"
+            : state === "active"
+              ? "text-foreground"
+              : "text-muted-foreground/60"
+        }`}
+      >
+        {index + 1}. {label}
+      </span>
+      {editable && onRemove && (
+        <button
+          type="button"
+          onClick={onRemove}
+          className="shrink-0 opacity-0 group-hover:opacity-100 text-muted-foreground/40 hover:text-foreground transition-all"
+        >
+          <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={1.5} />
+        </button>
+      )}
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Page                                                               */
+/* ------------------------------------------------------------------ */
+
+export default function Actions() {
+  useEffect(ensureStyles, [])
+
+  /* ── Section 1: Tool Calls state ── */
+  const [toolState, setToolState] = useState({ expandAll: false, error: false, grouped: false })
+  const [toolOpens, setToolOpens] = useState<Record<number, boolean>>({})
+
+  const toggleToolControl = useCallback((key: string) => {
+    setToolState((prev) => {
+      const next = { ...prev, [key]: !prev[key as keyof typeof prev] }
+      if (key === "expandAll") {
+        // Open/close all tool calls
+        const newOpens: Record<number, boolean> = {}
+        TOOL_CALLS_DATA.forEach((_, i) => { newOpens[i] = next.expandAll })
+        setToolOpens(newOpens)
+      }
+      return next
+    })
+  }, [])
+
+  const toggleTool = useCallback((idx: number) => {
+    setToolOpens((prev) => ({ ...prev, [idx]: !prev[idx] }))
+  }, [])
+
+  /* ── Section 2: Subagent state ── */
+  const [subagentState, setSubagentState] = useState({ running: true, complete: false })
+  const [subagentProgress, setSubagentProgress] = useState(0)
+  const [subagentOpen, setSubagentOpen] = useState(true)
+  const [subToolOpens, setSubToolOpens] = useState<Record<number, boolean>>({})
+  const progressRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const toggleSubagentControl = useCallback((key: string) => {
+    setSubagentState((prev) => {
+      if (key === "running") {
+        return { running: !prev.running, complete: false }
+      }
+      if (key === "complete") {
+        return { running: false, complete: !prev.complete }
+      }
+      return prev
+    })
+  }, [])
+
+  useEffect(() => {
+    if (progressRef.current) clearInterval(progressRef.current)
+    if (subagentState.complete) {
+      setSubagentProgress(8)
+      return
+    }
+    if (subagentState.running) {
+      setSubagentProgress(0)
+      progressRef.current = setInterval(() => {
+        setSubagentProgress((prev) => {
+          if (prev >= 8) {
+            if (progressRef.current) clearInterval(progressRef.current)
+            return 8
+          }
+          return prev + 1
+        })
+      }, 600)
+      return () => {
+        if (progressRef.current) clearInterval(progressRef.current)
+      }
+    } else {
+      setSubagentProgress(0)
+    }
+  }, [subagentState.running, subagentState.complete])
+
+  const toggleSubTool = useCallback((idx: number) => {
+    setSubToolOpens((prev) => ({ ...prev, [idx]: !prev[idx] }))
+  }, [])
+
+  /* ── Section 3: Plan Cards state ── */
+  const [planState, setPlanState] = useState({ executing: true, editable: false })
+  const [planSteps, setPlanSteps] = useState(PLAN_STEPS)
+  const [activeStep, setActiveStep] = useState(3) // 0-indexed, step 4 is active
+
+  const togglePlanControl = useCallback((key: string) => {
+    setPlanState((prev) => {
+      if (key === "executing") return { executing: !prev.executing, editable: false }
+      if (key === "editable") return { executing: false, editable: !prev.editable }
+      return prev
+    })
+    if (key === "editable") {
+      setPlanSteps(PLAN_STEPS)
+      setActiveStep(3)
+    }
+  }, [])
+
+  const removePlanStep = useCallback((idx: number) => {
+    setPlanSteps((prev) => prev.filter((_, i) => i !== idx))
+  }, [])
+
+  const movePlanStep = useCallback((idx: number, dir: -1 | 1) => {
+    setPlanSteps((prev) => {
+      const arr = [...prev]
+      const target = idx + dir
+      if (target < 0 || target >= arr.length) return arr
+      ;[arr[idx], arr[target]] = [arr[target], arr[idx]]
+      return arr
+    })
+  }, [])
+
+  /* ── Section 4: Parallel Execution state ── */
+  const [parallelState, setParallelState] = useState({ sequential: false, parallel: true })
+  const [parallelOpens, setParallelOpens] = useState<Record<number, boolean>>({})
+
+  const toggleParallelControl = useCallback((key: string) => {
+    setParallelState(() => {
+      if (key === "sequential") return { sequential: true, parallel: false }
+      return { sequential: false, parallel: true }
+    })
+    setParallelOpens({})
+  }, [])
+
+  const toggleParallel = useCallback((idx: number) => {
+    setParallelOpens((prev) => ({ ...prev, [idx]: !prev[idx] }))
+  }, [])
+
+  /* ── Section 5: Decision Flow state ── */
+  const [decisionState, setDecisionState] = useState({ pending: true, resolved: false })
+  const [selectedOption, setSelectedOption] = useState<number | null>(null)
+
+  const toggleDecisionControl = useCallback((key: string) => {
+    if (key === "pending") {
+      setDecisionState({ pending: true, resolved: false })
+      setSelectedOption(null)
+    } else {
+      setDecisionState({ pending: false, resolved: true })
+      setSelectedOption(1)
+    }
+  }, [])
+
+  /* ── Section 6: Structured Ask state ── */
+  const [askState, setAskState] = useState({ open: true, answered: false })
+  const [askInput, setAskInput] = useState("")
+  const [askSubmitted, setAskSubmitted] = useState(false)
+
+  const toggleAskControl = useCallback((key: string) => {
+    if (key === "open") {
+      setAskState({ open: true, answered: false })
+      setAskInput("")
+      setAskSubmitted(false)
+    } else {
+      setAskState({ open: false, answered: true })
+      setAskInput("EAL4+ with ALC_FLR.3 augmentation")
+      setAskSubmitted(true)
+    }
+  }, [])
+
+  const handleAskSubmit = useCallback(() => {
+    if (!askInput.trim()) return
+    setAskSubmitted(true)
+    setAskState({ open: false, answered: true })
+  }, [askInput])
+
+  return (
+    <article>
+      <header className="mb-20">
+        <p className="section-label mb-4">Patterns</p>
+        <h1 className="font-serif text-4xl font-light tracking-tight leading-[1.15]">
+          Agent Actions
+        </h1>
+        <p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          Tool calls, subagent orchestration, parallel execution, plan cards,
+          structured asks, and decision flows for agent-driven certification
+          and compliance workflows.
+        </p>
+      </header>
+
+      {/* ============================================================ */}
+      {/*  Section 1 — Tool Calls                                      */}
+      {/* ============================================================ */}
+      <section id="tool-calls" className="page-section">
+        <p className="section-label mb-3">Actions</p>
+        <h2 className="text-xl font-semibold tracking-tight">Tool Calls</h2>
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          Expandable, human-readable action indicators. Each tool call shows a
+          plain-language label — never a function signature. Click to reveal
+          key-value details.
+        </p>
+
+        <div className="mt-10">
+          <Controls
+            options={[
+              { key: "expandAll", label: "Expand All" },
+              { key: "error", label: "Error State" },
+              { key: "grouped", label: "Grouped" },
+            ]}
+            active={toolState}
+            onToggle={toggleToolControl}
+          />
+
+          <div className="border border-border/40 rounded-lg p-6">
+            <div className={`space-y-1.5 ${toolState.grouped ? "border-l-2 border-border pl-3" : ""}`}>
+              {toolState.error ? (
+                /* Error state: show one normal + one errored */
+                <>
+                  <ToolCall
+                    label={TOOL_CALLS_DATA[0].label}
+                    duration={TOOL_CALLS_DATA[0].duration}
+                    details={TOOL_CALLS_DATA[0].details}
+                    open={!!toolOpens[0]}
+                    onToggle={() => toggleTool(0)}
+                    animate
+                  />
+                  <ToolCall
+                    label={ERROR_TOOL.label}
+                    duration={ERROR_TOOL.duration}
+                    error={ERROR_TOOL.error}
+                    open
+                    onToggle={() => {}}
+                    animate
+                  />
+                </>
+              ) : (
+                TOOL_CALLS_DATA.map((tool, i) => (
+                  <ToolCall
+                    key={tool.label}
+                    label={tool.label}
+                    duration={tool.duration}
+                    details={tool.details}
+                    open={!!toolOpens[i]}
+                    onToggle={() => toggleTool(i)}
+                  />
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Spec table */}
+        <table className="mt-10 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+                Property
+              </th>
+              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Spec
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["Tool title", "14px sans, font-weight 400 (never bold)"],
+              ["Inner detail text", "12px, key in muted, value in foreground"],
+              ["Icons", "All monochrome — no colored status indicators"],
+              ["Labels", "Human-readable only — no function signatures or code"],
+              ["Duration", "Right-aligned in muted text; errors show \"failed ·\" prefix"],
+              ["Interaction", "Click anywhere on the header row to expand/collapse"],
+            ].map(([prop, spec], i, arr) => (
+              <tr key={prop} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
+                <td className="py-3 pr-6 font-medium">{prop}</td>
+                <td className="py-3 text-muted-foreground">{spec}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+          Tool calls should feel like quiet status updates, not system logs.
+          The user glances at them during execution and digs in only when
+          something looks wrong.
+        </p>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  Section 2 — Subagent Orchestration                          */}
+      {/* ============================================================ */}
+      <section id="subagents" className="page-section">
+        <p className="section-label mb-3">Orchestration</p>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Subagent Orchestration
+        </h2>
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          Expandable cards showing delegated subagent work. Each card contains
+          its own progress indicator and nested tool calls.
+        </p>
+
+        <div className="mt-10">
+          <Controls
+            options={[
+              { key: "running", label: "Running" },
+              { key: "complete", label: "Complete" },
+            ]}
+            active={subagentState}
+            onToggle={toggleSubagentControl}
+          />
+
+          <div className="border border-border/40 rounded-lg p-6">
+            <div className="rounded-md border border-border/40">
+              <button
+                type="button"
+                onClick={() => setSubagentOpen(!subagentOpen)}
+                className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left"
+              >
+                <HugeiconsIcon
+                  icon={Brain01Icon}
+                  size={14}
+                  strokeWidth={1.5}
+                  className="shrink-0 text-muted-foreground"
+                />
+                <span className="text-sm font-normal">
+                  Evidence Verification Agent
+                </span>
+                <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                  {subagentProgress >= 8
+                    ? "complete"
+                    : `${subagentProgress} of 8 families`}
+                </span>
+                {subagentState.running && subagentProgress < 8 && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-foreground/40 actions-pulse-dot" />
+                )}
+                <HugeiconsIcon
+                  icon={ArrowDown01Icon}
+                  size={12}
+                  strokeWidth={1.5}
+                  className={`ml-auto shrink-0 text-muted-foreground transition-transform duration-200 ${
+                    subagentOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {subagentOpen && (
+                <div className="actions-expand border-t border-border/40 px-3 py-3 space-y-2">
+                  <p className="text-xs text-muted-foreground">
+                    Validating completeness and traceability of evaluation
+                    evidence for each assurance family.
+                  </p>
+                  {/* Progress bar */}
+                  <div className="h-1 rounded-md bg-muted">
+                    <div
+                      className="h-1 rounded-md bg-foreground/40 transition-all duration-500"
+                      style={{ width: `${(subagentProgress / 8) * 100}%` }}
+                    />
+                  </div>
+                  {/* Nested tool calls */}
+                  <div className="mt-2 space-y-1.5 pl-2 border-l border-border/60">
+                    {SUBAGENT_TOOLS.map((tool, i) => (
+                      <ToolCall
+                        key={tool.label}
+                        label={tool.label}
+                        duration={tool.duration}
+                        details={tool.details}
+                        open={!!subToolOpens[i]}
+                        onToggle={() => toggleSubTool(i)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Spec table */}
+        <table className="mt-10 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+                Property
+              </th>
+              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Spec
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["Progress format", "\"N of M unit\" — concrete, not percentage-based"],
+              ["Completion", "\"complete\" badge replaces the progress count"],
+              ["Running indicator", "Pulsing dot next to the badge while in-progress"],
+              ["Nesting", "Nested tool calls inherit the same collapsed style"],
+              ["Progress bar", "1px foreground/40 bar with transition-all duration-500"],
+            ].map(([prop, spec], i, arr) => (
+              <tr key={prop} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
+                <td className="py-3 pr-6 font-medium">{prop}</td>
+                <td className="py-3 text-muted-foreground">{spec}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+          Subagent cards let users monitor delegated work without leaving
+          their current context. The progress bar provides glanceable status
+          while nested tools offer drill-down detail.
+        </p>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  Section 3 — Plan Cards                                      */}
+      {/* ============================================================ */}
+      <section id="plans" className="page-section">
+        <p className="section-label mb-3">Planning</p>
+        <h2 className="text-xl font-semibold tracking-tight">Plan Cards</h2>
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          Step-progress cards that show the agent's execution plan. Completed
+          steps are muted with line-through; the current step pulses subtly;
+          pending steps are dimmed.
+        </p>
+
+        <div className="mt-10">
+          <Controls
+            options={[
+              { key: "executing", label: "Executing" },
+              { key: "editable", label: "Editable" },
+            ]}
+            active={planState}
+            onToggle={togglePlanControl}
+          />
+
+          <div className="border border-border/40 rounded-lg p-6">
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <HugeiconsIcon
+                  icon={CheckListIcon}
+                  size={14}
+                  strokeWidth={1.5}
+                  className="text-muted-foreground"
+                />
+                <span className="text-sm font-medium">
+                  CC Evaluation Coverage Report
+                </span>
+              </div>
+              <span className="rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                {planState.executing
+                  ? `${Math.min(activeStep, planSteps.length)} of ${planSteps.length} complete`
+                  : planState.editable
+                    ? `${planSteps.length} steps`
+                    : `${planSteps.length} steps`}
+              </span>
+            </div>
+
+            <div className="space-y-0">
+              {planSteps.map((step, i) => {
+                let state: "done" | "active" | "pending" = "pending"
+                if (planState.executing) {
+                  if (i < activeStep) state = "done"
+                  else if (i === activeStep) state = "active"
+                  else state = "pending"
+                }
+
+                return (
+                  <PlanStep
+                    key={`${step}-${i}`}
+                    index={i}
+                    label={step}
+                    state={planState.editable ? "pending" : state}
+                    editable={planState.editable}
+                    onRemove={
+                      planState.editable ? () => removePlanStep(i) : undefined
+                    }
+                  />
+                )
+              })}
+            </div>
+
+            {planState.editable && (
+              <div className="mt-3 flex gap-2 actions-fade-in">
+                <button
+                  type="button"
+                  onClick={() => movePlanStep(0, 1)}
+                  className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                >
+                  Reorder steps
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setPlanSteps((prev) => [...prev, "New step"])
+                  }
+                  className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                >
+                  + Add step
+                </button>
+              </div>
+            )}
+
+            {planState.executing && (
+              <div className="mt-3 flex gap-2 actions-fade-in">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveStep((prev) =>
+                      prev < planSteps.length ? prev + 1 : prev,
+                    )
+                  }
+                  className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                >
+                  Advance step
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveStep(0)}
+                  className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                >
+                  Reset
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Spec table */}
+        <table className="mt-10 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+                Property
+              </th>
+              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Spec
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["Step indicator", "6px square dot, rounded-sm — not a checkbox or number"],
+              ["Done state", "Muted foreground + line-through"],
+              ["Active state", "Foreground + pulse animation"],
+              ["Pending state", "Muted foreground at 60% opacity"],
+              ["Editable mode", "Drag handle + remove button on hover per step"],
+              ["Progress badge", "\"N of M complete\" or step count in editable mode"],
+            ].map(([prop, spec], i, arr) => (
+              <tr key={prop} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
+                <td className="py-3 pr-6 font-medium">{prop}</td>
+                <td className="py-3 text-muted-foreground">{spec}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+          Plan cards give users a sense of progress and predictability. The
+          editable mode allows corrections before the agent commits to an
+          approach — a key trust-building pattern.
+        </p>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  Section 4 — Parallel Execution                              */}
+      {/* ============================================================ */}
+      <section id="parallel" className="page-section">
+        <p className="section-label mb-3">Concurrency</p>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Parallel Execution
+        </h2>
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          Visual branching indicators for operations running concurrently
+          versus sequentially. Toggle between modes to see how execution
+          differs.
+        </p>
+
+        <div className="mt-10">
+          <Controls
+            options={[
+              { key: "sequential", label: "Sequential" },
+              { key: "parallel", label: "Parallel" },
+            ]}
+            active={parallelState}
+            onToggle={toggleParallelControl}
+          />
+
+          <div className="border border-border/40 rounded-lg p-6">
+            {parallelState.parallel ? (
+              /* Parallel mode — branching */
+              <div className="space-y-0">
+                <div className="flex items-center gap-2 pb-3">
+                  <HugeiconsIcon
+                    icon={GitBranchIcon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="text-muted-foreground"
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    Running {PARALLEL_TASKS.length} tasks in parallel
+                  </span>
+                </div>
+
+                <div className="ml-[6px] border-l-2 border-border space-y-0">
+                  {PARALLEL_TASKS.map((task, i) => (
+                    <div key={task.label} className="relative pl-5 py-2">
+                      <div className="absolute left-0 top-1/2 h-px w-4 bg-border" />
+                      <ToolCall
+                        label={task.label}
+                        duration={task.duration}
+                        details={task.details}
+                        open={!!parallelOpens[i]}
+                        onToggle={() => toggleParallel(i)}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2 pt-3">
+                  <HugeiconsIcon
+                    icon={ArrowRight01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="text-muted-foreground"
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    All parallel tasks complete — merging results
+                  </span>
+                </div>
+
+                {/* Timeline visualization */}
+                <div className="mt-4 pt-3 border-t border-border/30">
+                  <p className="text-[10px] text-muted-foreground mb-2">
+                    Timeline (parallel)
+                  </p>
+                  <div className="space-y-1.5">
+                    {PARALLEL_TASKS.map((task) => {
+                      const dur = parseFloat(task.duration)
+                      const pct = (dur / 3.4) * 100
+                      return (
+                        <div key={task.label} className="flex items-center gap-2">
+                          <span className="text-[10px] text-muted-foreground w-[140px] truncate">
+                            {task.label}
+                          </span>
+                          <div className="flex-1 h-1.5 rounded-md bg-muted relative">
+                            <div
+                              className="absolute inset-y-0 left-0 rounded-md bg-foreground/25"
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                          <span className="text-[10px] text-muted-foreground w-8 text-right">
+                            {task.duration}
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div className="mt-1.5 flex items-center justify-between text-[10px] text-muted-foreground/50">
+                    <span>0s</span>
+                    <span>Total: 3.4s (longest task)</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Sequential mode */
+              <div className="space-y-0">
+                <div className="flex items-center gap-2 pb-3">
+                  <HugeiconsIcon
+                    icon={ArrowDown01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="text-muted-foreground"
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    Running {PARALLEL_TASKS.length} tasks sequentially
+                  </span>
+                </div>
+
+                <div className="space-y-1.5">
+                  {PARALLEL_TASKS.map((task, i) => (
+                    <ToolCall
+                      key={task.label}
+                      label={task.label}
+                      duration={task.duration}
+                      details={task.details}
+                      open={!!parallelOpens[i]}
+                      onToggle={() => toggleParallel(i)}
+                    />
+                  ))}
+                </div>
+
+                {/* Timeline visualization */}
+                <div className="mt-4 pt-3 border-t border-border/30">
+                  <p className="text-[10px] text-muted-foreground mb-2">
+                    Timeline (sequential)
+                  </p>
+                  <div className="space-y-1.5">
+                    {(() => {
+                      const total = PARALLEL_TASKS.reduce(
+                        (sum, t) => sum + parseFloat(t.duration),
+                        0,
+                      )
+                      let offset = 0
+                      return PARALLEL_TASKS.map((task) => {
+                        const dur = parseFloat(task.duration)
+                        const startPct = (offset / total) * 100
+                        const widthPct = (dur / total) * 100
+                        offset += dur
+                        return (
+                          <div
+                            key={task.label}
+                            className="flex items-center gap-2"
+                          >
+                            <span className="text-[10px] text-muted-foreground w-[140px] truncate">
+                              {task.label}
+                            </span>
+                            <div className="flex-1 h-1.5 rounded-md bg-muted relative">
+                              <div
+                                className="absolute inset-y-0 rounded-md bg-foreground/25"
+                                style={{
+                                  left: `${startPct}%`,
+                                  width: `${widthPct}%`,
+                                }}
+                              />
+                            </div>
+                            <span className="text-[10px] text-muted-foreground w-8 text-right">
+                              {task.duration}
+                            </span>
+                          </div>
+                        )
+                      })
+                    })()}
+                  </div>
+                  <div className="mt-1.5 flex items-center justify-between text-[10px] text-muted-foreground/50">
+                    <span>0s</span>
+                    <span>
+                      Total:{" "}
+                      {PARALLEL_TASKS.reduce(
+                        (sum, t) => sum + parseFloat(t.duration),
+                        0,
+                      ).toFixed(1)}
+                      s (sum of all)
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Spec table */}
+        <table className="mt-10 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+                Element
+              </th>
+              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Spec
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["Vertical spine", "2px left border in border color"],
+              ["Branches", "Horizontal 16px connector lines to each parallel tool call"],
+              ["Convergence", "Arrow icon + \"merging results\" label after the last branch"],
+              ["Timeline", "Per-task bar chart showing relative duration and start offset"],
+              ["Sequential fallback", "Stacked tool calls with no branching, offset timeline bars"],
+            ].map(([el, spec], i, arr) => (
+              <tr key={el} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
+                <td className="py-3 pr-6 font-medium">{el}</td>
+                <td className="py-3 text-muted-foreground">{spec}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+          The timeline visualization makes the speed benefit of parallelism
+          tangible. Users can see at a glance that parallel execution completes
+          in the duration of the longest task, not the sum of all tasks.
+        </p>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  Section 5 — Decision Flow                                   */}
+      {/* ============================================================ */}
+      <section id="decisions" className="page-section">
+        <p className="section-label mb-3">Decisions</p>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Decision Flow
+        </h2>
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          When the agent needs the user to choose between options that have
+          different consequences. Each option shows what will happen if
+          selected.
+        </p>
+
+        <div className="mt-10">
+          <Controls
+            options={[
+              { key: "pending", label: "Pending" },
+              { key: "resolved", label: "Resolved" },
+            ]}
+            active={decisionState}
+            onToggle={toggleDecisionControl}
+          />
+
+          <div className="border border-border/40 rounded-lg p-6 space-y-3">
+            <div className="flex items-start gap-2">
+              <HugeiconsIcon
+                icon={Alert01Icon}
+                size={14}
+                strokeWidth={1.5}
+                className="mt-0.5 shrink-0 text-muted-foreground"
+              />
+              <p className="text-sm">
+                How should I handle the missing audit log entries for FPT_STM.1?
+              </p>
+            </div>
+
+            {decisionState.pending ? (
+              <div className="space-y-2">
+                {DECISION_OPTIONS.map((opt, i) => (
+                  <button
+                    key={opt.title}
+                    type="button"
+                    onClick={() => {
+                      setSelectedOption(i)
+                      setDecisionState({ pending: false, resolved: true })
+                    }}
+                    className={`w-full rounded-md border p-3 text-left transition-colors ${
+                      selectedOption === i
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:bg-accent"
+                    }`}
+                  >
+                    <span className="text-sm font-medium">{opt.title}</span>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {opt.desc}
+                    </p>
+                    <div className="mt-2 border-l-2 border-muted-foreground/15 pl-2.5 py-1">
+                      <div className="flex items-start gap-1.5">
+                        <HugeiconsIcon
+                          icon={ArrowRight01Icon}
+                          size={11}
+                          strokeWidth={1.5}
+                          className="mt-0.5 shrink-0 text-muted-foreground"
+                        />
+                        <span className="text-[11px] text-muted-foreground">
+                          {opt.consequence}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="actions-fade-in space-y-3">
+                {selectedOption !== null && (
+                  <div className="rounded-md border border-primary bg-primary/5 p-3">
+                    <div className="flex items-center gap-2">
+                      <HugeiconsIcon
+                        icon={Tick01Icon}
+                        size={14}
+                        strokeWidth={1.5}
+                        className="shrink-0 text-muted-foreground"
+                      />
+                      <span className="text-sm font-medium">
+                        {DECISION_OPTIONS[selectedOption].title}
+                      </span>
+                    </div>
+                    <p className="mt-1 pl-[22px] text-xs text-muted-foreground">
+                      {DECISION_OPTIONS[selectedOption].desc}
+                    </p>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <HugeiconsIcon
+                    icon={Tick01Icon}
+                    size={12}
+                    strokeWidth={1.5}
+                    className="shrink-0"
+                  />
+                  <span>Decision confirmed — proceeding with selected action</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Spec table */}
+        <table className="mt-10 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+                Pattern
+              </th>
+              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Spec
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["Pending state", "All options clickable with hover effect and consequence preview"],
+              ["Resolved state", "Selected option highlighted, others hidden, confirmation shown"],
+              ["Selected card", "Primary border + subtle primary background tint"],
+              ["Consequence previews", "Border-left callout with arrow indicator inside each option"],
+              ["Auto-selection", "Never auto-select — always wait for explicit user choice"],
+            ].map(([pat, spec], i, arr) => (
+              <tr key={pat} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
+                <td className="py-3 pr-6 font-medium">{pat}</td>
+                <td className="py-3 text-muted-foreground">{spec}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+          Decisions are the highest-trust pattern in the system — they grant
+          the user explicit control over how the agent proceeds. Never bypass
+          them with auto-selection or hidden defaults.
+        </p>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  Section 6 — Structured Ask                                  */}
+      {/* ============================================================ */}
+      <section id="ask-blocks" className="page-section">
+        <p className="section-label mb-3">Input</p>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Structured Ask
+        </h2>
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          When the agent needs specific text input from the user to proceed.
+          Shows a prompt with context and a typed input field.
+        </p>
+
+        <div className="mt-10">
+          <Controls
+            options={[
+              { key: "open", label: "Open" },
+              { key: "answered", label: "Answered" },
+            ]}
+            active={askState}
+            onToggle={toggleAskControl}
+          />
+
+          <div className="border border-border/40 rounded-lg p-6 space-y-4">
+            <div className="flex items-start gap-2">
+              <HugeiconsIcon
+                icon={TextIcon}
+                size={14}
+                strokeWidth={1.5}
+                className="mt-0.5 shrink-0 text-muted-foreground"
+              />
+              <div>
+                <p className="text-sm">
+                  What assurance level should I target for the evaluation?
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  This determines the depth of analysis for each SFR family
+                  and the applicable CEM work units.
+                </p>
+              </div>
+            </div>
+
+            {!askSubmitted ? (
+              <div className="actions-fade-in space-y-3">
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Target assurance level
+                  </label>
+                  <input
+                    type="text"
+                    value={askInput}
+                    onChange={(e) => setAskInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleAskSubmit()
+                    }}
+                    placeholder="e.g., EAL4+ with ALC_FLR.3"
+                    className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none placeholder:text-muted-foreground/50 focus:border-foreground/20"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAskSubmit}
+                  disabled={!askInput.trim()}
+                  className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors ${
+                    askInput.trim()
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground cursor-not-allowed"
+                  }`}
+                >
+                  <HugeiconsIcon
+                    icon={SentIcon}
+                    size={12}
+                    strokeWidth={1.5}
+                  />
+                  Submit
+                </button>
+              </div>
+            ) : (
+              <div className="actions-fade-in space-y-3">
+                <div className="rounded-md border border-primary bg-primary/5 px-3 py-2.5">
+                  <div className="flex items-center gap-2">
+                    <HugeiconsIcon
+                      icon={Tick01Icon}
+                      size={14}
+                      strokeWidth={1.5}
+                      className="shrink-0 text-muted-foreground"
+                    />
+                    <span className="text-sm">{askInput}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <HugeiconsIcon
+                    icon={Tick01Icon}
+                    size={12}
+                    strokeWidth={1.5}
+                    className="shrink-0"
+                  />
+                  <span>Input received — continuing with analysis</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Spec table */}
+        <table className="mt-10 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+                Property
+              </th>
+              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Spec
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["Open state", "Text input with placeholder, submit button disabled until input"],
+              ["Answered state", "Selected answer highlighted in primary/5 card with check"],
+              ["Input field", "Standard border, bg-background, focus:border-foreground/20"],
+              ["Context", "Muted explanation below the question helps inform the answer"],
+              ["Submit", "Enter key or button click; button disabled when empty"],
+            ].map(([prop, spec], i, arr) => (
+              <tr key={prop} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
+                <td className="py-3 pr-6 font-medium">{prop}</td>
+                <td className="py-3 text-muted-foreground">{spec}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+          Structured asks are for when the agent needs free-text input that
+          cannot be reduced to a set of predefined options. Always provide
+          context so the user understands what format is expected.
+        </p>
+      </section>
+    </article>
+  )
+}
