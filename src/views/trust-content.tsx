@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -314,7 +316,7 @@ const PROSE_STYLE: React.CSSProperties = {
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
 
-export default function Trust() {
+export function TrustContent() {
   useEffect(() => { ensureStyles() }, [])
 
   /* — Autonomy Level — */

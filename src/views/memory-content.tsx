@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect, useCallback } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -132,7 +134,7 @@ function Controls({
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
 
-export default function Memory() {
+export function MemoryContent() {
   useEffect(ensureStyles, [])
 
   /* ── Section 1: Memory Panel ── */

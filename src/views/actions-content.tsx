@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect, useCallback, useRef } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -409,7 +411,7 @@ function PlanStep({
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
 
-export default function Actions() {
+export function ActionsContent() {
   useEffect(ensureStyles, [])
 
   /* ── Section 1: Tool Calls state ── */
