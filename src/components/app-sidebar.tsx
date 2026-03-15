@@ -1,4 +1,7 @@
-import { Link, useLocation } from "wouter"
+"use client"
+
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
 import { useCallback } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -128,7 +131,8 @@ const sections = [
 ]
 
 export function AppSidebar() {
-  const [location, navigate] = useLocation()
+  const pathname = usePathname()
+  const router = useRouter()
 
   const scrollToSection = useCallback(
     (sectionPath: string, elementId: string) => {
@@ -141,14 +145,14 @@ export function AppSidebar() {
         })
       }
 
-      if (location !== sectionPath) {
-        navigate(sectionPath)
+      if (pathname !== sectionPath) {
+        router.push(sectionPath)
         setTimeout(doScroll, 100)
       } else {
         doScroll()
       }
     },
-    [location, navigate]
+    [pathname, router]
   )
 
   return (
@@ -165,7 +169,7 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         {sections.map((section) => {
-          const isActive = location === section.path
+          const isActive = pathname === section.path
           
           // Demo page has no subs — just a link
           if (section.subs.length === 0) {
