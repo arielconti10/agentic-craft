@@ -994,92 +994,124 @@ export default function Actions() {
 
           <div key={parallelAnim} className="border border-border/40 rounded-lg p-6">
             {parallelState.parallel ? (
-              /* Parallel mode — tree view */
-              <div className="actions-slide-in">
+              /* Parallel mode — tree view (Perplexity-style connectors) */
+              <div className="actions-slide-in flex flex-col gap-3 min-w-0 text-muted-foreground relative">
+                {/* Vertical spine — runs from parent icon down to last child */}
+                {treeOpen && (
+                  <span
+                    className="w-px absolute bg-border"
+                    style={{ left: 9, top: 10, bottom: 0 }}
+                  />
+                )}
+
                 {/* Parent row */}
-                <button
-                  type="button"
-                  onClick={() => setTreeOpen((o) => !o)}
-                  className="flex w-full items-center gap-2.5 text-left"
-                >
-                  <HugeiconsIcon
-                    icon={GitBranchIcon}
-                    size={14}
-                    strokeWidth={1.5}
-                    className="shrink-0 text-muted-foreground"
-                  />
-                  <span className="text-sm text-muted-foreground">
-                    Running tasks in parallel
+                <div className="flex items-center gap-2 relative group/tool-wrapper">
+                  <button
+                    type="button"
+                    onClick={() => setTreeOpen((o) => !o)}
+                    className="min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer"
+                  >
+                    {/* Icon with base-color mask to break the spine */}
+                    <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
+                      <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
+                      <HugeiconsIcon
+                        icon={GitBranchIcon}
+                        size={18}
+                        strokeWidth={1.5}
+                        className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="group-hover/tool-wrapper:text-foreground text-sm select-none truncate">
+                        Running tasks in parallel
+                      </span>
+                    </div>
+                    <HugeiconsIcon
+                      icon={ArrowDown01Icon}
+                      size={14}
+                      strokeWidth={1.5}
+                      className={`shrink-0 group-hover/tool-wrapper:text-foreground transition-transform duration-200 ${
+                        treeOpen ? "" : "-rotate-90"
+                      }`}
+                    />
+                  </button>
+                  {/* Hover timestamp */}
+                  <span className="shrink-0 ml-auto transition-opacity duration-300 opacity-0 group-hover/tool-wrapper:opacity-100 hidden md:block text-xs select-none truncate">
+                    10:44 AM · 1s
                   </span>
-                  <HugeiconsIcon
-                    icon={ArrowDown01Icon}
-                    size={12}
-                    strokeWidth={1.5}
-                    className={`ml-auto shrink-0 text-muted-foreground transition-transform duration-200 ${
-                      treeOpen ? "" : "-rotate-90"
-                    }`}
-                  />
-                </button>
+                </div>
 
                 {/* Tree children */}
                 {treeOpen && (
-                  <div className="mt-2 actions-expand">
+                  <div className="pl-7 grid gap-0 grid-cols-1">
                     {PARALLEL_TASKS.map((task, i) => {
                       const isLast = i === PARALLEL_TASKS.length - 1
                       return (
-                        <div key={task.label} className="relative" style={{ paddingLeft: 24 }}>
-                          {/* Vertical connector */}
-                          <div
-                            className="absolute left-[6px] top-0 border-l-2 border-border"
-                            style={{
-                              height: isLast ? "50%" : "100%",
-                              ...(isLast ? { borderBottomLeftRadius: 4 } : {}),
-                            }}
-                          />
-                          {/* Horizontal tick */}
-                          <div
-                            className="absolute left-[6px] top-1/2 h-px w-3 bg-border"
-                            style={{ transform: "translateY(-0.5px)" }}
-                          />
-
-                          {/* Child row */}
-                          <button
-                            type="button"
-                            onClick={() => toggleChildExpand(i)}
-                            className="flex w-full items-center gap-2.5 py-2 text-left group"
-                          >
-                            <HugeiconsIcon
-                              icon={CodeIcon}
-                              size={13}
-                              strokeWidth={1.5}
-                              className="shrink-0 text-muted-foreground"
+                        <div key={task.label} className="relative min-w-0">
+                          {/* Last-child spine mask — hides spine below the L-bend */}
+                          {isLast && (
+                            <div
+                              className="absolute w-px bg-background"
+                              style={{ top: 0, bottom: -24, left: -19 }}
                             />
-                            <span className="text-sm text-muted-foreground">
-                              {task.label}
-                            </span>
-                            <HugeiconsIcon
-                              icon={ArrowRight01Icon}
-                              size={11}
-                              strokeWidth={1.5}
-                              className={`ml-auto shrink-0 text-muted-foreground/50 transition-transform duration-200 ${
-                                childExpanded[i] ? "rotate-90" : ""
-                              }`}
-                            />
-                          </button>
-
-                          {/* Expanded detail */}
-                          {childExpanded[i] && (
-                            <div className="actions-expand pb-2 pl-[21px]">
-                              <div className="space-y-1 rounded-md border border-border/40 px-3 py-2.5">
-                                {task.details.map((d) => (
-                                  <div key={d.key} className="flex gap-2 text-xs">
-                                    <span className="text-muted-foreground">{d.key}:</span>
-                                    <span className="text-foreground">{d.value}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
                           )}
+                          {/* L-shaped connector (border-left + border-bottom, rounded corner) */}
+                          <div
+                            className="absolute rounded-bl-lg border-l border-b border-border"
+                            style={{ top: -5, left: -19, width: 30, height: 16 }}
+                          />
+
+                          <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
+                            <div className="flex items-center gap-2 relative group/tool-wrapper">
+                              <button
+                                type="button"
+                                onClick={() => toggleChildExpand(i)}
+                                className="min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer"
+                              >
+                                {/* Child icon with base mask */}
+                                <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
+                                  <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
+                                  <HugeiconsIcon
+                                    icon={TextIcon}
+                                    size={16}
+                                    strokeWidth={1.5}
+                                    className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground"
+                                  />
+                                </div>
+                                <div className="min-w-0">
+                                  <span className="group-hover/tool-wrapper:text-foreground text-sm select-none truncate">
+                                    {task.label}
+                                  </span>
+                                </div>
+                                <HugeiconsIcon
+                                  icon={ArrowRight01Icon}
+                                  size={14}
+                                  strokeWidth={1.5}
+                                  className={`shrink-0 group-hover/tool-wrapper:text-foreground transition-transform duration-200 ${
+                                    childExpanded[i] ? "rotate-90" : ""
+                                  }`}
+                                />
+                              </button>
+                              {/* Hover timestamp */}
+                              <span className="shrink-0 ml-auto transition-opacity duration-300 opacity-0 group-hover/tool-wrapper:opacity-100 hidden md:block text-xs select-none truncate">
+                                10:44 AM · 1s
+                              </span>
+                            </div>
+
+                            {/* Expanded detail */}
+                            {childExpanded[i] && (
+                              <div className="actions-expand pl-7 -mt-1 pb-1">
+                                <div className="space-y-1 text-xs">
+                                  {task.details.map((d) => (
+                                    <div key={d.key} className="flex gap-2">
+                                      <span className="text-muted-foreground">{d.key}:</span>
+                                      <span className="text-foreground">{d.value}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       )
                     })}
@@ -1161,10 +1193,11 @@ export default function Actions() {
           </thead>
           <tbody>
             {[
-              ["Vertical spine", "2px left border, full height except last child (50% + rounded corner)"],
-              ["Horizontal tick", "12px connector line from spine to each child row"],
-              ["Parent chevron", "Rotates −90° when collapsed, 0° when expanded"],
-              ["Child chevron", "Rotates 90° to expand inline detail panel"],
+              ["Vertical spine", "1px line from parent icon to last child, masked by bg-background behind each icon"],
+              ["L-connectors", "rounded-bl-lg border-l + border-b connecting spine to each child"],
+              ["Icon masking", "size-6 bg-background circle behind size-5 icon creates clean spine breaks"],
+              ["Hover state", "Row label and icon transition to text-foreground; timestamp fades in on right"],
+              ["Last child", "bg-background mask covers spine below the final L-bend"],
               ["Sequential fallback", "Flat list of bordered rows, no tree connectors"],
             ].map(([el, spec], i, arr) => (
               <tr key={el} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
@@ -1176,9 +1209,10 @@ export default function Actions() {
         </table>
 
         <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          The tree view mirrors familiar IDE patterns — collapsible parents,
-          indented children, and minimal chrome. Users can drill into any
-          branch without losing context of the parallel structure.
+          The tree view uses Perplexity-style connectors — a vertical spine
+          with L-shaped branch lines, icons that mask the spine for clean
+          breaks, and hover-revealed timestamps. Each child row is
+          lightweight: no borders, no cards, just text and an expand chevron.
         </p>
       </section>
 

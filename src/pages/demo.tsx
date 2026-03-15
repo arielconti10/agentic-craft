@@ -11,8 +11,8 @@ import {
   Shield01Icon,
   File01Icon,
   SentIcon,
-  Brain01Icon,
 } from "@hugeicons/core-free-icons"
+import InteractiveComposer from "../components/InteractiveComposer"
 
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
@@ -42,32 +42,23 @@ function ensureStyles() {
     .demo-fade-in {
       animation: demo-fade-in 0.2s ease forwards;
     }
-    .demo-shimmer-overlay {
+    .demo-shimmer-text {
       background: linear-gradient(
         90deg,
-        transparent 0%,
-        oklch(0.55 0.02 260 / 0.06) 50%,
-        transparent 100%
+        var(--color-muted-foreground) 0%,
+        var(--color-muted-foreground) 35%,
+        oklch(0.75 0.02 260) 50%,
+        var(--color-muted-foreground) 65%,
+        var(--color-muted-foreground) 100%
       );
       background-size: 200% 100%;
-      animation: demo-shimmer 2s linear infinite;
+      animation: demo-shimmer 2.5s ease-in-out infinite;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
   `
   document.head.appendChild(style)
-}
-
-/* ------------------------------------------------------------------ */
-/*  Agent prose style                                                  */
-/* ------------------------------------------------------------------ */
-
-const PROSE_STYLE: React.CSSProperties = {
-  fontFamily: "'Source Serif 4', serif",
-  fontSize: "16px",
-  lineHeight: "26px",
-  letterSpacing: "-0.4px",
-  fontVariationSettings: '"opsz" 12',
-  WebkitFontSmoothing: "antialiased",
-  color: "oklch(0.2642 0.013 93.9)",
 }
 
 /* ------------------------------------------------------------------ */
@@ -167,23 +158,11 @@ export default function Demo() {
                   prev === "collapsed" ? "expanded" : "completed"
                 )
               }}
-              className="relative w-full cursor-pointer rounded-lg border border-dashed border-border/60 px-4 py-3 text-left transition-colors hover:border-border"
+              className="w-full cursor-pointer px-1 py-2 text-left"
             >
               {/* Shimmer overlay — only while collapsed */}
               {thinkingState === "collapsed" && (
-                <div className="demo-shimmer-overlay pointer-events-none absolute inset-0 rounded-lg" />
-              )}
-
-              {thinkingState === "collapsed" && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <HugeiconsIcon icon={Brain01Icon} size={14} strokeWidth={1.5} />
-                  <span>Thinking</span>
-                  <span className="flex gap-0.5">
-                    <span className="inline-block h-1 w-1 rounded-full bg-muted-foreground/40" style={{ animation: "demo-fade-in 0.6s ease infinite alternate" }} />
-                    <span className="inline-block h-1 w-1 rounded-full bg-muted-foreground/40" style={{ animation: "demo-fade-in 0.6s ease 0.2s infinite alternate" }} />
-                    <span className="inline-block h-1 w-1 rounded-full bg-muted-foreground/40" style={{ animation: "demo-fade-in 0.6s ease 0.4s infinite alternate" }} />
-                  </span>
-                </div>
+                <span className="demo-shimmer-text text-sm">Thinking</span>
               )}
 
               {thinkingState === "expanded" && (
@@ -198,10 +177,7 @@ export default function Demo() {
               )}
 
               {thinkingState === "completed" && (
-                <div className="flex items-center gap-2 text-xs text-muted-foreground/60">
-                  <HugeiconsIcon icon={Brain01Icon} size={12} strokeWidth={1.5} />
-                  <span>Thought for 3.2s</span>
-                </div>
+                <span className="text-xs text-muted-foreground/60">Thought for 3.2s</span>
               )}
             </button>
           </div>
@@ -211,8 +187,8 @@ export default function Demo() {
         {/*  Message 3: Agent response with citations                 */}
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
-          <div className="max-w-[85%]" style={PROSE_STYLE}>
-            <p>
+          <div className="max-w-[85%] font-serif text-base" style={{ lineHeight: "26px", letterSpacing: "-0.4px", fontVariationSettings: '"opsz" 12' }}>
+            <p className="text-foreground">
               I've completed the initial review. The Security Target covers the
               required ASE class components
               <sup className="ml-0.5 font-sans text-xs font-medium text-primary">1</sup>
@@ -234,83 +210,122 @@ export default function Demo() {
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
           <div className="w-full max-w-[85%]">
-            {/* Parent header */}
-            <button
-              type="button"
-              onClick={() => setToolTreeOpen(prev => !prev)}
-              className="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/50"
-            >
-              <HugeiconsIcon icon={GitBranchIcon} size={14} strokeWidth={1.5} />
-              <span>Running 3 tasks in parallel</span>
-              <HugeiconsIcon
-                icon={ArrowDown01Icon}
-                size={12}
-                strokeWidth={1.5}
-                style={{
-                  transform: toolTreeOpen ? "rotate(0deg)" : "rotate(-90deg)",
-                  transition: "transform 0.15s ease",
-                }}
-              />
-            </button>
+            {/* Perplexity-style tree with spine + L-connectors */}
+            <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
+              {/* Vertical spine */}
+              {toolTreeOpen && (
+                <span
+                  className="w-px absolute bg-border"
+                  style={{ left: 9, top: 10, bottom: 0 }}
+                />
+              )}
 
-            {/* Children */}
-            {toolTreeOpen && (
-              <div className="demo-slide-in ml-3 mt-1">
-                {PARALLEL_TASKS.map((task, i) => {
-                  const isLast = i === PARALLEL_TASKS.length - 1
-                  const isExpanded = expandedTask === i
-                  return (
-                    <div key={i} className="relative">
-                      {/* Vertical connector */}
-                      <div
-                        className="absolute left-0 top-0 w-px bg-border"
-                        style={{
-                          height: isLast ? "16px" : "100%",
-                          borderBottomLeftRadius: isLast ? "4px" : "0px",
-                        }}
-                      />
-                      {/* Horizontal tick */}
-                      <div className="absolute left-0 top-[16px] h-px w-3 bg-border" />
-
-                      <div className="ml-5">
-                        <button
-                          type="button"
-                          onClick={() => setExpandedTask(isExpanded ? null : i)}
-                          className="flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-muted/50"
-                        >
-                          <HugeiconsIcon
-                            icon={CodeIcon}
-                            size={13}
-                            strokeWidth={1.5}
-                            className="shrink-0 text-muted-foreground"
-                          />
-                          <span className="text-foreground">{task.label}</span>
-                          <span className="ml-auto text-xs text-muted-foreground/60">
-                            {task.duration}
-                          </span>
-                          <HugeiconsIcon
-                            icon={ArrowRight01Icon}
-                            size={11}
-                            strokeWidth={1.5}
-                            className="shrink-0 text-muted-foreground/40"
-                            style={{
-                              transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
-                              transition: "transform 0.15s ease",
-                            }}
-                          />
-                        </button>
-
-                        {isExpanded && (
-                          <div className="demo-slide-in mb-1 ml-7 mt-0.5 rounded-md bg-muted/30 px-3 py-2 text-xs text-muted-foreground" style={{ lineHeight: "18px" }}>
-                            {TASK_DETAILS[i]}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
+              {/* Parent row */}
+              <div className="flex items-center gap-2 relative group/tool-wrapper">
+                <button
+                  type="button"
+                  onClick={() => setToolTreeOpen(prev => !prev)}
+                  className="min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer"
+                >
+                  <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
+                    <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
+                    <HugeiconsIcon
+                      icon={GitBranchIcon}
+                      size={18}
+                      strokeWidth={1.5}
+                      className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="group-hover/tool-wrapper:text-foreground text-sm select-none truncate">
+                      Running 3 tasks in parallel
+                    </span>
+                  </div>
+                  <HugeiconsIcon
+                    icon={ArrowDown01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className={`shrink-0 group-hover/tool-wrapper:text-foreground transition-transform duration-200 ${
+                      toolTreeOpen ? "" : "-rotate-90"
+                    }`}
+                  />
+                </button>
+                <span className="shrink-0 ml-auto transition-opacity duration-300 opacity-0 group-hover/tool-wrapper:opacity-100 hidden md:block text-xs select-none truncate">
+                  10:44 AM · 1s
+                </span>
               </div>
-            )}
+
+              {/* Tree children */}
+              {toolTreeOpen && (
+                <div className="pl-7 grid gap-0 grid-cols-1 demo-slide-in">
+                  {PARALLEL_TASKS.map((task, i) => {
+                    const isLast = i === PARALLEL_TASKS.length - 1
+                    const isExpanded = expandedTask === i
+                    return (
+                      <div key={i} className="relative min-w-0">
+                        {/* Last-child spine mask */}
+                        {isLast && (
+                          <div
+                            className="absolute w-px bg-background"
+                            style={{ top: 0, bottom: -24, left: -19 }}
+                          />
+                        )}
+                        {/* L-shaped connector */}
+                        <div
+                          className="absolute rounded-bl-lg border-l border-b border-border"
+                          style={{ top: -5, left: -19, width: 30, height: 16 }}
+                        />
+
+                        <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
+                          <div className="flex items-center gap-2 relative group/tool-wrapper">
+                            <button
+                              type="button"
+                              onClick={() => setExpandedTask(isExpanded ? null : i)}
+                              className="min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer"
+                            >
+                              <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
+                                <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
+                                <HugeiconsIcon
+                                  icon={CodeIcon}
+                                  size={16}
+                                  strokeWidth={1.5}
+                                  className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground"
+                                />
+                              </div>
+                              <div className="min-w-0">
+                                <span className="group-hover/tool-wrapper:text-foreground text-sm select-none truncate">
+                                  {task.label}
+                                </span>
+                              </div>
+                              <HugeiconsIcon
+                                icon={ArrowRight01Icon}
+                                size={14}
+                                strokeWidth={1.5}
+                                className={`shrink-0 group-hover/tool-wrapper:text-foreground transition-transform duration-200 ${
+                                  isExpanded ? "rotate-90" : ""
+                                }`}
+                              />
+                            </button>
+                            <span className="shrink-0 ml-auto transition-opacity duration-300 opacity-0 group-hover/tool-wrapper:opacity-100 hidden md:block text-xs select-none truncate">
+                              {task.duration}
+                            </span>
+                          </div>
+
+                          {/* Expanded detail */}
+                          {isExpanded && (
+                            <div className="demo-slide-in pl-7 -mt-1 pb-1">
+                              <p className="text-xs text-muted-foreground" style={{ lineHeight: "18px" }}>
+                                {TASK_DETAILS[i]}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -318,7 +333,7 @@ export default function Demo() {
         {/*  Message 5: Agent response with findings                  */}
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
-          <div className="max-w-[85%]" style={PROSE_STYLE}>
+          <div className="max-w-[85%] font-serif text-base text-foreground" style={{ lineHeight: "26px", letterSpacing: "-0.4px", fontVariationSettings: '"opsz" 12' }}>
             <p>Based on the analysis, here are the findings:</p>
             <ul className="mt-3 space-y-2">
               {FINDINGS.map((f) => (
@@ -339,7 +354,7 @@ export default function Demo() {
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
           <div className="w-full max-w-[85%]">
-            <div style={PROSE_STYLE}>
+            <div className="font-serif text-base text-foreground" style={{ lineHeight: "26px", letterSpacing: "-0.4px", fontVariationSettings: '"opsz" 12' }}>
               <p>I'd like to generate a findings report and send it to the evaluation team.</p>
             </div>
 
@@ -435,6 +450,13 @@ export default function Demo() {
               </button>
             </div>
           </div>
+        </div>
+
+        {/* -------------------------------------------------------- */}
+        {/*  Composer                                                  */}
+        {/* -------------------------------------------------------- */}
+        <div className="mt-8">
+          <InteractiveComposer />
         </div>
 
         {/* -------------------------------------------------------- */}

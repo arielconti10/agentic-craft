@@ -30,19 +30,20 @@ function ensureStyles() {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    .conv-shimmer-overlay {
-      position: relative;
-      overflow: hidden;
-    }
-    .conv-shimmer-overlay::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.06) 50%, transparent 75%);
+    .conv-shimmer-text {
+      background: linear-gradient(
+        90deg,
+        var(--color-muted-foreground) 0%,
+        var(--color-muted-foreground) 35%,
+        oklch(0.75 0.02 260) 50%,
+        var(--color-muted-foreground) 65%,
+        var(--color-muted-foreground) 100%
+      );
       background-size: 200% 100%;
       animation: conv-shimmer 2.5s ease-in-out infinite;
-      pointer-events: none;
-      border-radius: inherit;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     .conv-slide-in {
       animation: conv-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -422,33 +423,15 @@ export default function Conversation() {
         >
           {/* Collapsed state */}
           {thinkMode === "collapsed" && (
-            <div className="conv-shimmer-overlay rounded-md border border-dashed border-border bg-muted/50 px-4 py-3 conv-slide-in">
-              <div className="flex items-center gap-2">
-                <div className="flex gap-1">
-                  <span className="h-1.5 w-1.5 rounded-md bg-muted-foreground/60" />
-                  <span className="h-1.5 w-1.5 rounded-md bg-muted-foreground/40" />
-                  <span className="h-1.5 w-1.5 rounded-md bg-muted-foreground/25" />
-                </div>
-                <span className="text-xs text-muted-foreground">
-                  Thinking...
-                </span>
-              </div>
+            <div className="px-1 py-2 conv-slide-in">
+              <span className="conv-shimmer-text text-sm">Thinking</span>
             </div>
           )}
 
           {/* Expanded state */}
           {thinkMode === "expanded" && (
-            <div className="conv-shimmer-overlay rounded-md border border-dashed border-border bg-muted/50 px-4 py-3 conv-slide-in">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex gap-1">
-                  <span className="h-1.5 w-1.5 rounded-md bg-muted-foreground/60" />
-                  <span className="h-1.5 w-1.5 rounded-md bg-muted-foreground/40" />
-                  <span className="h-1.5 w-1.5 rounded-md bg-muted-foreground/25" />
-                </div>
-                <span className="text-xs text-muted-foreground">
-                  Thinking...
-                </span>
-              </div>
+            <div className="px-1 py-2 conv-slide-in">
+              <span className="conv-shimmer-text text-sm mb-2 inline-block">Thinking</span>
               <p className="text-xs text-muted-foreground italic leading-relaxed conv-fade-in">
                 {THINKING_TEXT}
               </p>
@@ -458,13 +441,8 @@ export default function Conversation() {
           {/* Completed state */}
           {thinkMode === "completed" && (
             <div className="conv-slide-in">
-              <div className="rounded-md border border-dashed border-border bg-muted/50 px-4 py-2.5">
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-muted-foreground/40" />
-                  <span className="text-xs text-muted-foreground">
-                    Thought for 4.2s
-                  </span>
-                </div>
+              <div className="px-1 py-2">
+                <span className="text-xs text-muted-foreground/60">Thought for 4.2s</span>
               </div>
               <div className="mt-4 rounded-lg border border-border bg-muted px-4 py-3 conv-fade-in">
                 <div className="font-serif text-base" style={agentProseStyle}>
@@ -556,12 +534,12 @@ export default function Conversation() {
 
         <div className="mt-10 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
           <p>
-            Thinking blocks use dashed borders and a horizontal shimmer sweep to
-            signal active reasoning without being distracting. The shimmer
-            animates left-to-right across the container as a subtle overlay.
-            After completion, the block collapses to a duration summary — the
-            user can always expand to review reasoning. Expanded thinking content
-            is italic to distinguish it from the agent's final response.
+            Thinking blocks use a text-only shimmer sweep on the word "Thinking"
+            to signal active reasoning without being distracting. No borders,
+            icons, or dots — just the shimmering text. After completion, the block
+            collapses to a duration summary — the user can always expand to review
+            reasoning. Expanded thinking content is italic to distinguish it from
+            the agent's final response.
           </p>
         </div>
       </section>
