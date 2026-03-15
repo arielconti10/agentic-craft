@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -193,7 +195,7 @@ const ERROR_LIST = [
 /*  Main page                                                          */
 /* ------------------------------------------------------------------ */
 
-export default function Observability() {
+export function ObservabilityContent() {
   useEffect(ensureStyles, [])
 
   // Section 1: Activity Timeline

@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -124,7 +126,7 @@ const THINKING_TEXT = `Let me analyze the evaluation findings systematically. Th
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-export default function Conversation() {
+export function ConversationContent() {
   useEffect(() => { ensureStyles() }, [])
 
   /* Thinking block state */

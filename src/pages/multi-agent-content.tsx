@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -153,7 +155,7 @@ const SHARED_CONTEXT_ITEMS = [
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
 
-export default function MultiAgent() {
+export function MultiAgentContent() {
   useEffect(() => {
     ensureStyles()
   }, [])

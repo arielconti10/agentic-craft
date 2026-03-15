@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -97,7 +99,7 @@ const CONTEXT_SOURCES = [
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-export default function Demo() {
+export function DemoContent() {
   useEffect(() => { ensureStyles() }, [])
 
   /* Thinking block state */

@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect, useCallback, useRef } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -165,7 +167,7 @@ function Controls({
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
 
-export default function Feedback() {
+export function FeedbackContent() {
   useEffect(ensureStyles, [])
 
   /* ── Section 1: Thumbs Feedback ── */
