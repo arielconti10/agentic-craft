@@ -150,7 +150,7 @@ function ensureStyles() {
    - Composer sits on top at z:[1] with full rounded border.
    - Attachments live inside the composer card itself.
    ──────────────────────────────────────────────── */
-export default function InteractiveComposer() {
+export default function InteractiveComposer({ showControls = true }: { showControls?: boolean }) {
   useEffect(ensureStyles, [])
 
   const [features, setFeatures] = useState<ComposerState>({
@@ -246,10 +246,10 @@ export default function InteractiveComposer() {
   if (features.replyTo) islandPanels.push("reply")
 
   return (
-    <div className="relative flex min-h-[520px] flex-col">
+    <div className={`relative flex flex-col ${showControls ? "min-h-[520px]" : ""}`}>
 
       {/* ── Controls — float at top of stage ── */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-6">
+      {showControls && <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-6">
         <span className="section-label mr-1">Controls</span>
         {(
           [
@@ -277,10 +277,10 @@ export default function InteractiveComposer() {
             )}
           </button>
         ))}
-      </div>
+      </div>}
 
       {/* ── Spacer — pushes composer assembly to the bottom ── */}
-      <div className="flex-1" />
+      {showControls && <div className="flex-1" />}
 
       {/* ── Stacked Islands + Composer — pinned to bottom center ── */}
       <div className="mx-auto w-full max-w-[720px] flex flex-col items-center">
@@ -562,12 +562,14 @@ export default function InteractiveComposer() {
       )}
 
       {/* Interaction hints */}
-      <div className="mt-3 mb-2 flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-muted-foreground/40 justify-center">
-        <span>Type to auto-expand</span>
-        <span>Enter to send</span>
-        <span>Shift+Enter for newline</span>
-        <span>Click suggestions to fill</span>
-      </div>
+      {showControls && (
+        <div className="mt-3 mb-2 flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-muted-foreground/40 justify-center">
+          <span>Type to auto-expand</span>
+          <span>Enter to send</span>
+          <span>Shift+Enter for newline</span>
+          <span>Click suggestions to fill</span>
+        </div>
+      )}
     </div>
   )
 }

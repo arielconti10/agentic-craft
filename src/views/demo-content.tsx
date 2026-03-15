@@ -272,10 +272,10 @@ export function DemoContent() {
                             style={{ top: 0, bottom: -24, left: -19 }}
                           />
                         )}
-                        {/* L-shaped connector */}
+                        {/* Horizontal branch from spine */}
                         <div
-                          className="absolute rounded-bl-lg border-l border-b border-border"
-                          style={{ top: -5, left: -19, width: 30, height: 16 }}
+                          className="absolute border-b border-border"
+                          style={{ top: 11, left: -19, width: 30 }}
                         />
 
                         <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
@@ -458,7 +458,7 @@ export function DemoContent() {
         {/*  Composer                                                  */}
         {/* -------------------------------------------------------- */}
         <div className="mt-8">
-          <InteractiveComposer />
+          <InteractiveComposer showControls={false} />
         </div>
 
         {/* -------------------------------------------------------- */}
