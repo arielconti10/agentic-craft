@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ActionsContent } from '@/pages/actions-content'
+import { ActionsContent } from '@/views/actions-content'
 
 export const metadata: Metadata = {
   title: 'Agent Actions | Agentic Craft',

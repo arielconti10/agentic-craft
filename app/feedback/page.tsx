@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { FeedbackContent } from '@/pages/feedback-content'
+import { FeedbackContent } from '@/views/feedback-content'
 
 export const metadata: Metadata = {
   title: 'Feedback | Agentic Craft',

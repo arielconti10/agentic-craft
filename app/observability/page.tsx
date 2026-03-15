@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ObservabilityContent } from '@/pages/observability-content'
+import { ObservabilityContent } from '@/views/observability-content'
 
 export const metadata: Metadata = {
   title: 'Observability | Agentic Craft',

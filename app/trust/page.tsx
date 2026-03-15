@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { TrustContent } from '@/pages/trust-content'
+import { TrustContent } from '@/views/trust-content'
 
 export const metadata: Metadata = {
   title: 'Trust & Governance | Agentic Craft',

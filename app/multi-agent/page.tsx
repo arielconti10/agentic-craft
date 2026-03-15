@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { MultiAgentContent } from '@/pages/multi-agent-content'
+import { MultiAgentContent } from '@/views/multi-agent-content'
 
 export const metadata: Metadata = {
   title: 'Multi-Agent | Agentic Craft',

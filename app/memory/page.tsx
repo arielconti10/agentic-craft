@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { MemoryContent } from '@/pages/memory-content'
+import { MemoryContent } from '@/views/memory-content'
 
 export const metadata: Metadata = {
   title: 'Memory & Knowledge | Agentic Craft',
