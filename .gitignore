@@ -24,3 +24,7 @@ dist-ssr
 *.sln
 *.sw?
 dist-backup
+
+# Next.js
+.next/
+next-env.d.ts
