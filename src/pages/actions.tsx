@@ -13,6 +13,9 @@ import {
   SentIcon,
   Tick01Icon,
   TextIcon,
+  CodeIcon,
+  Shield01Icon,
+  RefreshIcon,
 } from "@hugeicons/core-free-icons"
 
 /* ------------------------------------------------------------------ */
@@ -163,29 +166,43 @@ const PLAN_STEPS = [
 
 const PARALLEL_TASKS = [
   {
-    label: "Analyzing SFR coverage",
-    duration: "3.4s",
+    label: "Checking current git status in the project",
     details: [
-      { key: "SFRs analyzed", value: "23" },
-      { key: "Coverage", value: "91.3%" },
+      { key: "Working dir", value: "/eval/smartcard-st-v3" },
+      { key: "Modified files", value: "3 (coverage-matrix.xlsx, SFR-map.json, notes.md)" },
+      { key: "Untracked", value: "1 (test-results-2026-03.csv)" },
     ],
   },
   {
-    label: "Fetching test execution results",
-    duration: "2.1s",
+    label: "Checking remote configuration",
     details: [
-      { key: "Test runs", value: "87 retrieved" },
-      { key: "Pass rate", value: "94.3%" },
+      { key: "Remote", value: "origin → git.itsef.local/eval/smartcard-st" },
+      { key: "Branch", value: "main (up to date)" },
+      { key: "Last push", value: "2026-03-14 09:41 UTC" },
     ],
   },
   {
-    label: "Comparing with previous evaluation",
-    duration: "1.7s",
+    label: "Reading SFR coverage definitions",
     details: [
-      { key: "Previous eval", value: "EAL4 — 2025-08" },
-      { key: "Delta", value: "+4 SFRs, −1 finding" },
+      { key: "File", value: "SFR-map.json" },
+      { key: "SFRs parsed", value: "23 requirements" },
+      { key: "Families", value: "FCS, FDP, FPT, FAU, FIA" },
     ],
   },
+]
+
+const APPROVAL_EMAIL = {
+  recipient: "evaluation@bsi.bund.de",
+  subject: "ETR Submission — SmartCard TOE v3.1 (EAL4+)",
+  body: "Please find attached the Evaluation Technical Report for the SmartCard TOE v3.1 Security Target. This submission covers all CEM work units for EAL4+ with ALC_FLR.3 augmentation. The evaluation was conducted in accordance with CC v3.1 Rev 5.",
+}
+
+const APPROVAL_CHANGES = [
+  { type: "add" as const, text: "Added FCS_COP.1 coverage mapping for AES-256-GCM" },
+  { type: "add" as const, text: "Added test case TC-087 for cryptographic key destruction" },
+  { type: "remove" as const, text: "Removed deprecated FDP_ACF.1 iteration reference" },
+  { type: "add" as const, text: "Added AVA_VAN.3 vulnerability analysis summary" },
+  { type: "remove" as const, text: "Removed placeholder TOE boundary description" },
 ]
 
 const DECISION_OPTIONS = [
@@ -497,18 +514,22 @@ export default function Actions() {
 
   /* ── Section 4: Parallel Execution state ── */
   const [parallelState, setParallelState] = useState({ sequential: false, parallel: true })
-  const [parallelOpens, setParallelOpens] = useState<Record<number, boolean>>({})
+  const [treeOpen, setTreeOpen] = useState(true)
+  const [childExpanded, setChildExpanded] = useState<Record<number, boolean>>({})
+  const [parallelAnim, setParallelAnim] = useState(0)
 
   const toggleParallelControl = useCallback((key: string) => {
     setParallelState(() => {
       if (key === "sequential") return { sequential: true, parallel: false }
       return { sequential: false, parallel: true }
     })
-    setParallelOpens({})
+    setTreeOpen(true)
+    setChildExpanded({})
+    setParallelAnim((p) => p + 1)
   }, [])
 
-  const toggleParallel = useCallback((idx: number) => {
-    setParallelOpens((prev) => ({ ...prev, [idx]: !prev[idx] }))
+  const toggleChildExpand = useCallback((idx: number) => {
+    setChildExpanded((prev) => ({ ...prev, [idx]: !prev[idx] }))
   }, [])
 
   /* ── Section 5: Decision Flow state ── */
@@ -548,6 +569,20 @@ export default function Actions() {
     setAskState({ open: false, answered: true })
   }, [askInput])
 
+  /* ── Section 7: Approval Gate state ── */
+  const [approvalCtrl, setApprovalCtrl] = useState({ email: true, changes: false })
+  const [approvalAnim, setApprovalAnim] = useState(0)
+  const [approvalStatus, setApprovalStatus] = useState<"pending" | "approved" | "denied">("pending")
+
+  const toggleApprovalControl = useCallback((key: string) => {
+    setApprovalCtrl(() => {
+      if (key === "email") return { email: true, changes: false }
+      return { email: false, changes: true }
+    })
+    setApprovalStatus("pending")
+    setApprovalAnim((p) => p + 1)
+  }, [])
+
   return (
     <article>
       <header className="mb-20">
@@ -557,8 +592,8 @@ export default function Actions() {
         </h1>
         <p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Tool calls, subagent orchestration, parallel execution, plan cards,
-          structured asks, and decision flows for agent-driven certification
-          and compliance workflows.
+          structured asks, decision flows, and approval gates for agent-driven
+          certification and compliance workflows.
         </p>
       </header>
 
@@ -942,9 +977,9 @@ export default function Actions() {
           Parallel Execution
         </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Visual branching indicators for operations running concurrently
-          versus sequentially. Toggle between modes to see how execution
-          differs.
+          IDE-style tree connectors for operations running concurrently.
+          The parent row collapses the branch; each child expands to show
+          tool call details inline.
         </p>
 
         <div className="mt-10">
@@ -957,163 +992,155 @@ export default function Actions() {
             onToggle={toggleParallelControl}
           />
 
-          <div className="border border-border/40 rounded-lg p-6">
+          <div key={parallelAnim} className="border border-border/40 rounded-lg p-6">
             {parallelState.parallel ? (
-              /* Parallel mode — branching */
-              <div className="space-y-0">
-                <div className="flex items-center gap-2 pb-3">
+              /* Parallel mode — tree view */
+              <div className="actions-slide-in">
+                {/* Parent row */}
+                <button
+                  type="button"
+                  onClick={() => setTreeOpen((o) => !o)}
+                  className="flex w-full items-center gap-2.5 text-left"
+                >
                   <HugeiconsIcon
                     icon={GitBranchIcon}
                     size={14}
                     strokeWidth={1.5}
-                    className="text-muted-foreground"
+                    className="shrink-0 text-muted-foreground"
                   />
                   <span className="text-sm text-muted-foreground">
-                    Running {PARALLEL_TASKS.length} tasks in parallel
+                    Running tasks in parallel
                   </span>
-                </div>
-
-                <div className="ml-[6px] border-l-2 border-border space-y-0">
-                  {PARALLEL_TASKS.map((task, i) => (
-                    <div key={task.label} className="relative pl-5 py-2">
-                      <div className="absolute left-0 top-1/2 h-px w-4 bg-border" />
-                      <ToolCall
-                        label={task.label}
-                        duration={task.duration}
-                        details={task.details}
-                        open={!!parallelOpens[i]}
-                        onToggle={() => toggleParallel(i)}
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex items-center gap-2 pt-3">
                   <HugeiconsIcon
-                    icon={ArrowRight01Icon}
-                    size={14}
+                    icon={ArrowDown01Icon}
+                    size={12}
                     strokeWidth={1.5}
-                    className="text-muted-foreground"
+                    className={`ml-auto shrink-0 text-muted-foreground transition-transform duration-200 ${
+                      treeOpen ? "" : "-rotate-90"
+                    }`}
                   />
-                  <span className="text-sm text-muted-foreground">
-                    All parallel tasks complete — merging results
-                  </span>
-                </div>
+                </button>
 
-                {/* Timeline visualization */}
-                <div className="mt-4 pt-3 border-t border-border/30">
-                  <p className="text-[10px] text-muted-foreground mb-2">
-                    Timeline (parallel)
-                  </p>
-                  <div className="space-y-1.5">
-                    {PARALLEL_TASKS.map((task) => {
-                      const dur = parseFloat(task.duration)
-                      const pct = (dur / 3.4) * 100
+                {/* Tree children */}
+                {treeOpen && (
+                  <div className="mt-2 actions-expand">
+                    {PARALLEL_TASKS.map((task, i) => {
+                      const isLast = i === PARALLEL_TASKS.length - 1
                       return (
-                        <div key={task.label} className="flex items-center gap-2">
-                          <span className="text-[10px] text-muted-foreground w-[140px] truncate">
-                            {task.label}
-                          </span>
-                          <div className="flex-1 h-1.5 rounded-md bg-muted relative">
-                            <div
-                              className="absolute inset-y-0 left-0 rounded-md bg-foreground/25"
-                              style={{ width: `${pct}%` }}
+                        <div key={task.label} className="relative" style={{ paddingLeft: 24 }}>
+                          {/* Vertical connector */}
+                          <div
+                            className="absolute left-[6px] top-0 border-l-2 border-border"
+                            style={{
+                              height: isLast ? "50%" : "100%",
+                              ...(isLast ? { borderBottomLeftRadius: 4 } : {}),
+                            }}
+                          />
+                          {/* Horizontal tick */}
+                          <div
+                            className="absolute left-[6px] top-1/2 h-px w-3 bg-border"
+                            style={{ transform: "translateY(-0.5px)" }}
+                          />
+
+                          {/* Child row */}
+                          <button
+                            type="button"
+                            onClick={() => toggleChildExpand(i)}
+                            className="flex w-full items-center gap-2.5 py-2 text-left group"
+                          >
+                            <HugeiconsIcon
+                              icon={CodeIcon}
+                              size={13}
+                              strokeWidth={1.5}
+                              className="shrink-0 text-muted-foreground"
                             />
-                          </div>
-                          <span className="text-[10px] text-muted-foreground w-8 text-right">
-                            {task.duration}
-                          </span>
+                            <span className="text-sm text-muted-foreground">
+                              {task.label}
+                            </span>
+                            <HugeiconsIcon
+                              icon={ArrowRight01Icon}
+                              size={11}
+                              strokeWidth={1.5}
+                              className={`ml-auto shrink-0 text-muted-foreground/50 transition-transform duration-200 ${
+                                childExpanded[i] ? "rotate-90" : ""
+                              }`}
+                            />
+                          </button>
+
+                          {/* Expanded detail */}
+                          {childExpanded[i] && (
+                            <div className="actions-expand pb-2 pl-[21px]">
+                              <div className="space-y-1 rounded-md border border-border/40 px-3 py-2.5">
+                                {task.details.map((d) => (
+                                  <div key={d.key} className="flex gap-2 text-xs">
+                                    <span className="text-muted-foreground">{d.key}:</span>
+                                    <span className="text-foreground">{d.value}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )
                     })}
                   </div>
-                  <div className="mt-1.5 flex items-center justify-between text-[10px] text-muted-foreground/50">
-                    <span>0s</span>
-                    <span>Total: 3.4s (longest task)</span>
-                  </div>
-                </div>
+                )}
               </div>
             ) : (
-              /* Sequential mode */
-              <div className="space-y-0">
-                <div className="flex items-center gap-2 pb-3">
+              /* Sequential mode — flat list */
+              <div className="actions-slide-in">
+                <div className="flex items-center gap-2.5 mb-3">
                   <HugeiconsIcon
                     icon={ArrowDown01Icon}
                     size={14}
                     strokeWidth={1.5}
-                    className="text-muted-foreground"
+                    className="shrink-0 text-muted-foreground"
                   />
                   <span className="text-sm text-muted-foreground">
                     Running {PARALLEL_TASKS.length} tasks sequentially
                   </span>
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   {PARALLEL_TASKS.map((task, i) => (
-                    <ToolCall
-                      key={task.label}
-                      label={task.label}
-                      duration={task.duration}
-                      details={task.details}
-                      open={!!parallelOpens[i]}
-                      onToggle={() => toggleParallel(i)}
-                    />
-                  ))}
-                </div>
-
-                {/* Timeline visualization */}
-                <div className="mt-4 pt-3 border-t border-border/30">
-                  <p className="text-[10px] text-muted-foreground mb-2">
-                    Timeline (sequential)
-                  </p>
-                  <div className="space-y-1.5">
-                    {(() => {
-                      const total = PARALLEL_TASKS.reduce(
-                        (sum, t) => sum + parseFloat(t.duration),
-                        0,
-                      )
-                      let offset = 0
-                      return PARALLEL_TASKS.map((task) => {
-                        const dur = parseFloat(task.duration)
-                        const startPct = (offset / total) * 100
-                        const widthPct = (dur / total) * 100
-                        offset += dur
-                        return (
-                          <div
-                            key={task.label}
-                            className="flex items-center gap-2"
-                          >
-                            <span className="text-[10px] text-muted-foreground w-[140px] truncate">
-                              {task.label}
-                            </span>
-                            <div className="flex-1 h-1.5 rounded-md bg-muted relative">
-                              <div
-                                className="absolute inset-y-0 rounded-md bg-foreground/25"
-                                style={{
-                                  left: `${startPct}%`,
-                                  width: `${widthPct}%`,
-                                }}
-                              />
-                            </div>
-                            <span className="text-[10px] text-muted-foreground w-8 text-right">
-                              {task.duration}
-                            </span>
+                    <div key={task.label}>
+                      <button
+                        type="button"
+                        onClick={() => toggleChildExpand(i)}
+                        className="flex w-full items-center gap-2.5 rounded-md border border-border px-3 py-2.5 text-left transition-colors hover:bg-accent/50"
+                      >
+                        <HugeiconsIcon
+                          icon={CodeIcon}
+                          size={13}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-muted-foreground"
+                        />
+                        <span className="text-sm font-normal text-muted-foreground">
+                          {task.label}
+                        </span>
+                        <HugeiconsIcon
+                          icon={ArrowRight01Icon}
+                          size={11}
+                          strokeWidth={1.5}
+                          className={`ml-auto shrink-0 text-muted-foreground/50 transition-transform duration-200 ${
+                            childExpanded[i] ? "rotate-90" : ""
+                          }`}
+                        />
+                      </button>
+                      {childExpanded[i] && (
+                        <div className="actions-expand ml-[21px] mt-1 mb-1">
+                          <div className="space-y-1 rounded-md border border-border/40 px-3 py-2.5">
+                            {task.details.map((d) => (
+                              <div key={d.key} className="flex gap-2 text-xs">
+                                <span className="text-muted-foreground">{d.key}:</span>
+                                <span className="text-foreground">{d.value}</span>
+                              </div>
+                            ))}
                           </div>
-                        )
-                      })
-                    })()}
-                  </div>
-                  <div className="mt-1.5 flex items-center justify-between text-[10px] text-muted-foreground/50">
-                    <span>0s</span>
-                    <span>
-                      Total:{" "}
-                      {PARALLEL_TASKS.reduce(
-                        (sum, t) => sum + parseFloat(t.duration),
-                        0,
-                      ).toFixed(1)}
-                      s (sum of all)
-                    </span>
-                  </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -1134,11 +1161,11 @@ export default function Actions() {
           </thead>
           <tbody>
             {[
-              ["Vertical spine", "2px left border in border color"],
-              ["Branches", "Horizontal 16px connector lines to each parallel tool call"],
-              ["Convergence", "Arrow icon + \"merging results\" label after the last branch"],
-              ["Timeline", "Per-task bar chart showing relative duration and start offset"],
-              ["Sequential fallback", "Stacked tool calls with no branching, offset timeline bars"],
+              ["Vertical spine", "2px left border, full height except last child (50% + rounded corner)"],
+              ["Horizontal tick", "12px connector line from spine to each child row"],
+              ["Parent chevron", "Rotates −90° when collapsed, 0° when expanded"],
+              ["Child chevron", "Rotates 90° to expand inline detail panel"],
+              ["Sequential fallback", "Flat list of bordered rows, no tree connectors"],
             ].map(([el, spec], i, arr) => (
               <tr key={el} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
                 <td className="py-3 pr-6 font-medium">{el}</td>
@@ -1149,9 +1176,9 @@ export default function Actions() {
         </table>
 
         <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          The timeline visualization makes the speed benefit of parallelism
-          tangible. Users can see at a glance that parallel execution completes
-          in the duration of the longest task, not the sum of all tasks.
+          The tree view mirrors familiar IDE patterns — collapsible parents,
+          indented children, and minimal chrome. Users can drill into any
+          branch without losing context of the parallel structure.
         </p>
       </section>
 
@@ -1433,6 +1460,288 @@ export default function Actions() {
           Structured asks are for when the agent needs free-text input that
           cannot be reduced to a set of predefined options. Always provide
           context so the user understands what format is expected.
+        </p>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  Section 7 — Approval Gate                                   */}
+      {/* ============================================================ */}
+      <section id="approval-gate" className="page-section">
+        <p className="section-label mb-3">Confirmation</p>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Approval Gate
+        </h2>
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          Human-in-the-loop confirmation before the agent performs a
+          consequential action. The user reviews the action details and
+          explicitly approves or denies.
+        </p>
+
+        <div className="mt-10">
+          <Controls
+            options={[
+              { key: "email", label: "Send Email" },
+              { key: "changes", label: "Document Changes" },
+            ]}
+            active={approvalCtrl}
+            onToggle={toggleApprovalControl}
+          />
+
+          <div key={approvalAnim} className="border border-border/40 rounded-lg p-6">
+            {approvalCtrl.email ? (
+              /* Email approval variant */
+              <div className="actions-slide-in space-y-4">
+                <div className="flex items-start gap-2.5">
+                  <HugeiconsIcon
+                    icon={Shield01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="mt-0.5 shrink-0 text-muted-foreground"
+                  />
+                  <p className="text-sm">
+                    I'd like to send the ETR submission email. Please review and approve.
+                  </p>
+                </div>
+
+                {approvalStatus === "pending" && (
+                  <div className="actions-fade-in space-y-4">
+                    <div className="rounded-md border border-border/40 bg-muted/30 px-4 py-3 space-y-2">
+                      <div className="flex gap-2 text-xs">
+                        <span className="text-muted-foreground w-16 shrink-0">To</span>
+                        <span className="text-foreground">{APPROVAL_EMAIL.recipient}</span>
+                      </div>
+                      <div className="flex gap-2 text-xs">
+                        <span className="text-muted-foreground w-16 shrink-0">Subject</span>
+                        <span className="text-foreground">{APPROVAL_EMAIL.subject}</span>
+                      </div>
+                      <div className="flex gap-2 text-xs">
+                        <span className="text-muted-foreground w-16 shrink-0">Body</span>
+                        <span className="text-muted-foreground">{APPROVAL_EMAIL.body}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setApprovalStatus("approved")}
+                        className="rounded-md bg-primary px-4 py-1.5 text-sm text-primary-foreground transition-colors hover:bg-primary/90"
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setApprovalStatus("denied")}
+                        className="rounded-md border border-border px-4 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent"
+                      >
+                        Deny
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {approvalStatus === "approved" && (
+                  <div className="actions-fade-in space-y-3">
+                    <div className="rounded-md border border-primary bg-primary/5 px-3 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <HugeiconsIcon
+                          icon={Tick01Icon}
+                          size={14}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-muted-foreground"
+                        />
+                        <span className="text-sm">
+                          Approved — sending email to {APPROVAL_EMAIL.recipient}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setApprovalStatus("pending")}
+                      className="flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                    >
+                      <HugeiconsIcon icon={RefreshIcon} size={11} strokeWidth={1.5} />
+                      Reset
+                    </button>
+                  </div>
+                )}
+
+                {approvalStatus === "denied" && (
+                  <div className="actions-fade-in space-y-3">
+                    <div className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <HugeiconsIcon
+                          icon={Cancel01Icon}
+                          size={14}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-muted-foreground"
+                        />
+                        <span className="text-sm">
+                          Denied — email will not be sent
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setApprovalStatus("pending")}
+                      className="flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                    >
+                      <HugeiconsIcon icon={RefreshIcon} size={11} strokeWidth={1.5} />
+                      Reset
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Document changes variant */
+              <div className="actions-slide-in space-y-4">
+                <div className="flex items-start gap-2.5">
+                  <HugeiconsIcon
+                    icon={Shield01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="mt-0.5 shrink-0 text-muted-foreground"
+                  />
+                  <p className="text-sm">
+                    I'd like to apply these changes to the Security Target. Please review.
+                  </p>
+                </div>
+
+                {approvalStatus === "pending" && (
+                  <div className="actions-fade-in space-y-4">
+                    <div className="rounded-md border border-border/40 bg-muted/30 px-4 py-3 space-y-1.5">
+                      {APPROVAL_CHANGES.map((change, i) => (
+                        <div key={i} className="flex items-start gap-2 text-xs">
+                          <span
+                            className={`shrink-0 select-none ${
+                              change.type === "add"
+                                ? "text-emerald-700/70 dark:text-emerald-400/70"
+                                : "text-red-700/70 dark:text-red-400/70"
+                            }`}
+                          >
+                            {change.type === "add" ? "+" : "−"}
+                          </span>
+                          <span
+                            className={
+                              change.type === "add"
+                                ? "text-emerald-800/80 dark:text-emerald-300/80"
+                                : "text-red-800/80 dark:text-red-300/80"
+                            }
+                          >
+                            {change.text}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setApprovalStatus("approved")}
+                        className="rounded-md bg-primary px-4 py-1.5 text-sm text-primary-foreground transition-colors hover:bg-primary/90"
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setApprovalStatus("denied")}
+                        className="rounded-md border border-border px-4 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent"
+                      >
+                        Deny
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {approvalStatus === "approved" && (
+                  <div className="actions-fade-in space-y-3">
+                    <div className="rounded-md border border-primary bg-primary/5 px-3 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <HugeiconsIcon
+                          icon={Tick01Icon}
+                          size={14}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-muted-foreground"
+                        />
+                        <span className="text-sm">
+                          Approved — applying {APPROVAL_CHANGES.filter((c) => c.type === "add").length} additions, {APPROVAL_CHANGES.filter((c) => c.type === "remove").length} removals
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setApprovalStatus("pending")}
+                      className="flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                    >
+                      <HugeiconsIcon icon={RefreshIcon} size={11} strokeWidth={1.5} />
+                      Reset
+                    </button>
+                  </div>
+                )}
+
+                {approvalStatus === "denied" && (
+                  <div className="actions-fade-in space-y-3">
+                    <div className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <HugeiconsIcon
+                          icon={Cancel01Icon}
+                          size={14}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-muted-foreground"
+                        />
+                        <span className="text-sm">
+                          Denied — changes will not be applied
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setApprovalStatus("pending")}
+                      className="flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                    >
+                      <HugeiconsIcon icon={RefreshIcon} size={11} strokeWidth={1.5} />
+                      Reset
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Spec table */}
+        <table className="mt-10 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+                Property
+              </th>
+              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Spec
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["Action summary", "Shield icon + plain-language description of what the agent wants to do"],
+              ["Detail panel", "Muted background container with key-value or diff preview"],
+              ["Diff format", "Green-ish (+) for additions, red-ish (−) for removals, muted tones"],
+              ["Approve button", "Primary fill — should feel deliberate, not default"],
+              ["Deny button", "Ghost/outline — lower visual weight than approve"],
+              ["Result states", "Success (primary border), denied (destructive border), with reset button"],
+            ].map(([prop, spec], i, arr) => (
+              <tr key={prop} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
+                <td className="py-3 pr-6 font-medium">{prop}</td>
+                <td className="py-3 text-muted-foreground">{spec}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+          Approval gates are the most critical trust pattern in the system.
+          They ensure the agent never takes consequential actions without
+          explicit human confirmation — essential for certification workflows
+          where mistakes have regulatory consequences.
         </p>
       </section>
     </article>

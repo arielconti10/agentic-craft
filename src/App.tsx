@@ -7,18 +7,14 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import Foundations from "@/pages/foundations"
+import Demo from "@/pages/demo"
 import Conversation from "@/pages/conversation"
 import Actions from "@/pages/actions"
-import Previews from "@/pages/previews"
-import Navigation from "@/pages/navigation"
-import Config from "@/pages/config"
-import MultiAgent from "@/pages/multi-agent"
-import Monitoring from "@/pages/monitoring"
-import Memory from "@/pages/memory"
-import Feedback from "@/pages/feedback"
 import Trust from "@/pages/trust"
-import Output from "@/pages/output"
+import Memory from "@/pages/memory"
+import MultiAgent from "@/pages/multi-agent"
+import Feedback from "@/pages/feedback"
+import Observability from "@/pages/observability"
 
 function App() {
   return (
@@ -38,28 +34,24 @@ function App() {
             </div>
             <main className="flex-1 overflow-auto">
               <div className="mx-auto max-w-[860px] px-6 sm:px-10 pt-12 pb-24">
-                <Route path="/" component={Foundations} />
+                <Route path="/" component={Demo} />
                 <Route path="/conversation" component={Conversation} />
                 <Route path="/actions" component={Actions} />
-                <Route path="/previews" component={Previews} />
-                <Route path="/navigation" component={Navigation} />
-                <Route path="/config" component={Config} />
-                <Route path="/multi-agent" component={MultiAgent} />
-                <Route path="/monitoring" component={Monitoring} />
-                <Route path="/memory" component={Memory} />
-                <Route path="/feedback" component={Feedback} />
                 <Route path="/trust" component={Trust} />
-                <Route path="/output" component={Output} />
+                <Route path="/memory" component={Memory} />
+                <Route path="/multi-agent" component={MultiAgent} />
+                <Route path="/feedback" component={Feedback} />
+                <Route path="/observability" component={Observability} />
               </div>
             </main>
             <footer className="border-t border-dashed border-border/40 px-8 py-8 text-center text-xs text-muted-foreground/60">
               <a
-                href="https://www.perplexity.ai/computer"
+                href="https://github.com/arielconti10/agentic-craft"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-muted-foreground transition-colors"
               >
-                Created with Perplexity Computer
+                Agentic Craft — Open Source
               </a>
             </footer>
           </SidebarInset>

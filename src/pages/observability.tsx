@@ -12,7 +12,6 @@ import {
   Tick01Icon,
   Search01Icon,
 } from "@hugeicons/core-free-icons"
-
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
 /* ------------------------------------------------------------------ */
@@ -67,7 +66,6 @@ function ensureStyles() {
   `
   document.head.appendChild(style)
 }
-
 /* ------------------------------------------------------------------ */
 /*  Controls                                                           */
 /* ------------------------------------------------------------------ */
@@ -105,7 +103,6 @@ function Controls({
     </div>
   )
 }
-
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
@@ -123,34 +120,6 @@ function makeToggle(
     })
     animSetter((n) => n + 1)
   }
-}
-
-function MiniSparkline({ data }: { data: number[] }) {
-  const max = Math.max(...data)
-  const min = Math.min(...data)
-  const range = max - min || 1
-  const w = 80
-  const h = 24
-  const points = data
-    .map((v, i) => {
-      const x = (i / (data.length - 1)) * w
-      const y = h - ((v - min) / range) * (h - 4) - 2
-      return `${x},${y}`
-    })
-    .join(" ")
-
-  return (
-    <svg width={w} height={h} className="shrink-0">
-      <polyline
-        points={points}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinejoin="round"
-        className="mon-sparkline-draw text-muted-foreground"
-      />
-    </svg>
-  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -179,33 +148,6 @@ const ACTIVITY_FILTERED = [
   { time: "11:14 AM", action: "Cross-referenced test case mappings — 87 cases", type: "tool" as const, icon: File01Icon },
 ]
 
-const STATUS_CONFIGS = {
-  idle: {
-    dot: "bg-muted-foreground/40",
-    label: "Idle",
-    detail: "Awaiting next instruction",
-    description: "The agent is online and ready. No active tasks or pending operations.",
-  },
-  working: {
-    dot: "bg-foreground",
-    label: "Working",
-    detail: "Analysing FCS_COP.1 algorithm suite",
-    description: "Processing SFR gap analysis for ACME SmartCard Module — step 3 of 5: cross-referencing Security Target v3.1.",
-  },
-  error: {
-    dot: "bg-foreground",
-    label: "Error",
-    detail: "Failed to access evaluation database",
-    description: "Connection to the ITSEF document repository timed out after 30s. Last successful query: 11:44 AM.",
-  },
-  waiting: {
-    dot: "bg-foreground",
-    label: "Waiting for approval",
-    detail: "Human review required",
-    description: "The agent has prepared a vulnerability report for AVA_VAN.3 and needs evaluator sign-off before submitting to the certification body.",
-  },
-}
-
 const TOKEN_CONFIGS = {
   low: { used: 12400, budget: 100000, label: "Well within budget", sessions: 3, costEstimate: "$0.86" },
   medium: { used: 68000, budget: 100000, label: "Approaching limit", sessions: 14, costEstimate: "$4.72" },
@@ -224,24 +166,6 @@ const SESSION_MULTI = [
   { role: "agent" as const, content: "Narrowing scope to network-related SFRs. I found 2 gaps: FTP_ITC.1 lacks a rationale for the chosen trusted channel mechanism, and FCS_CKM.1 references a deprecated key size.", tool: "Cross-referencing Security Target" },
   { role: "user" as const, content: "Generate a remediation report for those gaps." },
   { role: "agent" as const, content: "Report generated with remediation steps for both gaps, including estimated effort and references to relevant PP sections. Saved as gap-remediation-2026-03.pdf.", tool: "Generating coverage report" },
-]
-
-const PERF_SUMMARY = [
-  { label: "Avg. response time", value: "2.4s", trend: [2.8, 2.6, 2.5, 2.4, 2.3, 2.4, 2.4] },
-  { label: "Task success rate", value: "96%", trend: [92, 94, 93, 95, 96, 95, 96] },
-  { label: "Token efficiency", value: "84%", trend: [78, 80, 82, 81, 83, 84, 84] },
-  { label: "Human escalations", value: "4%", trend: [8, 6, 7, 5, 4, 5, 4] },
-]
-
-const PERF_DETAILED = [
-  { label: "Avg. response time", value: "2.4s", sub: "P95: 4.8s · P99: 8.1s" },
-  { label: "Task success rate", value: "96%", sub: "142 of 148 tasks this week" },
-  { label: "Token efficiency", value: "84%", sub: "Useful output / total tokens" },
-  { label: "Human escalations", value: "4%", sub: "6 of 148 required review" },
-  { label: "Avg. tool calls per task", value: "3.2", sub: "Range: 1–8 calls" },
-  { label: "Cache hit rate", value: "62%", sub: "Saved ~18K tokens this week" },
-  { label: "Error recovery rate", value: "71%", sub: "5 of 7 errors self-recovered" },
-  { label: "Avg. cost per task", value: "$0.16", sub: "Down 12% from last week" },
 ]
 
 const ERROR_LIST = [
@@ -269,7 +193,7 @@ const ERROR_LIST = [
 /*  Main page                                                          */
 /* ------------------------------------------------------------------ */
 
-export default function Monitoring() {
+export default function Observability() {
   useEffect(ensureStyles, [])
 
   // Section 1: Activity Timeline
@@ -277,26 +201,18 @@ export default function Monitoring() {
   const [actAnim, setActAnim] = useState(0)
   const toggleAct = makeToggle(setActCtrl, setActAnim)
 
-  // Section 2: Status Indicators
-  const [statusCtrl, setStatusCtrl] = useState<Record<string, boolean>>({ idle: true, working: false, error: false, waiting: false })
-  const [statusAnim, setStatusAnim] = useState(0)
-  const toggleStatus = makeToggle(setStatusCtrl, setStatusAnim)
-
-  // Section 3: Token Usage
+  // Section 2: Token Usage
   const [tokenCtrl, setTokenCtrl] = useState<Record<string, boolean>>({ low: true, medium: false, high: false })
   const [tokenAnim, setTokenAnim] = useState(0)
   const toggleToken = makeToggle(setTokenCtrl, setTokenAnim)
 
+  // Section 3: Session Timeline
   // Section 4: Session Timeline
   const [sessionCtrl, setSessionCtrl] = useState<Record<string, boolean>>({ single: true, multi: false })
   const [sessionAnim, setSessionAnim] = useState(0)
   const toggleSession = makeToggle(setSessionCtrl, setSessionAnim)
 
-  // Section 5: Performance Metrics
-  const [perfCtrl, setPerfCtrl] = useState<Record<string, boolean>>({ summary: true, detailed: false })
-  const [perfAnim, setPerfAnim] = useState(0)
-  const togglePerf = makeToggle(setPerfCtrl, setPerfAnim)
-
+  // Section 4: Error Log
   // Section 6: Error Log
   const [errCtrl, setErrCtrl] = useState<Record<string, boolean>>({ empty: true, withErrors: false })
   const [errAnim, setErrAnim] = useState(0)
@@ -308,13 +224,10 @@ export default function Monitoring() {
   // Derived state
   const activeAct = Object.keys(actCtrl).find((k) => actCtrl[k]) || "live"
   const activityItems = activeAct === "live" ? ACTIVITY_LIVE : activeAct === "history" ? ACTIVITY_HISTORY : ACTIVITY_FILTERED
-  const activeStatus = Object.keys(statusCtrl).find((k) => statusCtrl[k]) || "idle"
-  const statusCfg = STATUS_CONFIGS[activeStatus as keyof typeof STATUS_CONFIGS]
   const activeToken = Object.keys(tokenCtrl).find((k) => tokenCtrl[k]) || "low"
   const tokenCfg = TOKEN_CONFIGS[activeToken as keyof typeof TOKEN_CONFIGS]
   const activeSession = Object.keys(sessionCtrl).find((k) => sessionCtrl[k]) || "single"
   const sessionItems = activeSession === "single" ? SESSION_SINGLE : SESSION_MULTI
-  const activePerf = Object.keys(perfCtrl).find((k) => perfCtrl[k]) || "summary"
   const activeErr = Object.keys(errCtrl).find((k) => errCtrl[k]) || "empty"
 
   const tokenPct = Math.min((tokenCfg.used / tokenCfg.budget) * 100, 100)
@@ -326,12 +239,11 @@ export default function Monitoring() {
       <header className="mb-20">
         <p className="section-label mb-4">Observability</p>
         <h1 className="font-serif text-4xl font-light tracking-tight leading-[1.15]">
-          Monitoring
+          Observability
         </h1>
         <p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Real-time activity streams, status indicators, token tracking, and
-          performance dashboards for continuous agent oversight during evaluation
-          workflows.
+          Activity timelines, token tracking, session history, and error logs
+          for continuous agent oversight.
         </p>
       </header>
 
@@ -431,141 +343,6 @@ export default function Monitoring() {
           action is recorded with a timestamp, type classification, and human-readable
           description. Live mode streams entries as they occur; History and Filtered
           modes enable retrospective analysis during ITSEF evaluations.
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  Section 2 — Status Indicators                                */}
-      {/* ============================================================ */}
-      <section id="status-indicators" className="page-section">
-        <p className="section-label mb-3">State</p>
-        <h2 className="text-xl font-semibold tracking-tight">Status Indicators</h2>
-        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          A single-glance view of the agent's operational state — whether it's
-          idle, actively processing, blocked on an error, or awaiting human
-          approval.
-        </p>
-
-        <div className="mt-10">
-          <Controls
-            options={[
-              { key: "idle", label: "Idle" },
-              { key: "working", label: "Working" },
-              { key: "error", label: "Error" },
-              { key: "waiting", label: "Waiting" },
-            ]}
-            active={statusCtrl}
-            onToggle={toggleStatus}
-          />
-
-          <div className="border border-border/40 rounded-lg p-6" key={statusAnim}>
-            <div className="mon-slide-in">
-              {/* Status header */}
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-                  <HugeiconsIcon icon={Shield01Icon} size={18} strokeWidth={1.5} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">Compliance Assistant</p>
-                    <span className="flex items-center gap-1.5 rounded-md bg-muted px-2 py-0.5 text-xs">
-                      <span className={`h-1.5 w-1.5 rounded-full ${statusCfg.dot} ${activeStatus === "working" ? "mon-pulse" : ""}`} />
-                      {statusCfg.label}
-                    </span>
-                  </div>
-                  <p className="mt-0.5 text-xs text-muted-foreground">{statusCfg.detail}</p>
-                </div>
-              </div>
-
-              {/* Status detail card */}
-              <div className={`mt-4 rounded-md border px-4 py-3 ${
-                activeStatus === "error"
-                  ? "border-foreground/20 bg-foreground/[0.02]"
-                  : activeStatus === "waiting"
-                    ? "border-foreground/10 bg-foreground/[0.01]"
-                    : "border-border/40"
-              }`}>
-                <p className="text-sm text-muted-foreground">{statusCfg.description}</p>
-
-                {activeStatus === "working" && (
-                  <div className="mt-3">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
-                      <span>Step 3 of 5</span>
-                      <span>60%</span>
-                    </div>
-                    <div className="h-1.5 rounded-md bg-muted">
-                      <div
-                        className="h-1.5 rounded-md bg-foreground/50"
-                        style={{ width: "60%", "--target-width": "60%" } as React.CSSProperties}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {activeStatus === "error" && (
-                  <div className="mt-3 flex gap-2">
-                    <button className="rounded-md border border-border px-3 py-1 text-xs transition-colors hover:bg-accent">
-                      Retry connection
-                    </button>
-                    <button className="rounded-md border border-border px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent">
-                      View logs
-                    </button>
-                  </div>
-                )}
-
-                {activeStatus === "waiting" && (
-                  <div className="mt-3 flex gap-2">
-                    <button className="rounded-md border border-border px-3 py-1 text-xs transition-colors hover:bg-accent">
-                      Review and approve
-                    </button>
-                    <button className="rounded-md border border-border px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent">
-                      Dismiss
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-left">
-              <th className="pb-3 pr-6 text-xs font-medium text-muted-foreground">State</th>
-              <th className="pb-3 pr-6 text-xs font-medium text-muted-foreground">Indicator</th>
-              <th className="pb-3 text-xs font-medium text-muted-foreground">Behavior</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Idle</td>
-              <td className="py-3 pr-6">Muted dot</td>
-              <td className="py-3 text-muted-foreground">Static, no progress bar</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Working</td>
-              <td className="py-3 pr-6">Pulsing dot + progress bar</td>
-              <td className="py-3 text-muted-foreground">Shows current step and completion %</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Error</td>
-              <td className="py-3 pr-6">Solid dot + highlighted border</td>
-              <td className="py-3 text-muted-foreground">Shows error detail with retry action</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Waiting</td>
-              <td className="py-3 pr-6">Solid dot + subtle border</td>
-              <td className="py-3 text-muted-foreground">Shows what's pending with approve/dismiss</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Status indicators map to Common Criteria assurance lifecycle states — an agent
-          performing ALC_FLR analysis is "Working," while one blocked on missing evidence
-          is "Waiting." The four-state model covers all operational modes without
-          overwhelming evaluators with intermediate states.
         </div>
       </section>
 
@@ -807,103 +584,6 @@ export default function Monitoring() {
           evaluators need when reviewing how an agent arrived at its conclusions. Multi-turn
           sessions show how iterative refinement (e.g., narrowing scope from all SFRs to
           just FTP/FCS families) leads to more targeted analysis.
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  Section 5 — Performance Metrics                              */}
-      {/* ============================================================ */}
-      <section id="performance-metrics" className="page-section">
-        <p className="section-label mb-3">Analytics</p>
-        <h2 className="text-xl font-semibold tracking-tight">Performance Metrics</h2>
-        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Key performance indicators for agent effectiveness — response times,
-          success rates, token efficiency, and trend lines over the past week.
-        </p>
-
-        <div className="mt-10">
-          <Controls
-            options={[
-              { key: "summary", label: "Summary" },
-              { key: "detailed", label: "Detailed" },
-            ]}
-            active={perfCtrl}
-            onToggle={togglePerf}
-          />
-
-          <div className="border border-border/40 rounded-lg p-6" key={perfAnim}>
-            {activePerf === "summary" ? (
-              <div className="grid grid-cols-2 gap-3">
-                {PERF_SUMMARY.map((kpi, i) => (
-                  <div
-                    key={kpi.label}
-                    className="rounded-md border border-border/30 p-4 mon-slide-in"
-                    style={{ animationDelay: `${i * 60}ms` }}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-xs text-muted-foreground">{kpi.label}</p>
-                        <p className="mt-1 text-2xl font-semibold tracking-tight">{kpi.value}</p>
-                      </div>
-                      <MiniSparkline data={kpi.trend} />
-                    </div>
-                    <p className="mt-1 text-xs text-muted-foreground">7-day trend</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {PERF_DETAILED.map((metric, i) => (
-                  <div
-                    key={metric.label}
-                    className="flex items-center justify-between rounded-md border border-border/30 px-4 py-3 mon-slide-in"
-                    style={{ animationDelay: `${i * 40}ms` }}
-                  >
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm">{metric.label}</p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">{metric.sub}</p>
-                    </div>
-                    <span className="text-lg font-semibold tracking-tight">{metric.value}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-left">
-              <th className="pb-3 pr-6 text-xs font-medium text-muted-foreground">Element</th>
-              <th className="pb-3 text-xs font-medium text-muted-foreground">Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Summary cards</td>
-              <td className="py-3">2×2 grid with large value, mini sparkline, and "7-day trend" label</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Sparklines</td>
-              <td className="py-3">SVG polyline, 80×24px, monochrome stroke, animated draw-in</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Detailed view</td>
-              <td className="py-3">Stacked rows with label, subtitle, and right-aligned value</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Metrics count</td>
-              <td className="py-3">Summary: 4 KPIs; Detailed: 8 metrics with contextual subtitles</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Performance metrics help evaluation teams track agent reliability over time.
-          The summary view surfaces the four most important KPIs at a glance, while the
-          detailed view provides the granularity needed for weekly status reports to
-          certification body oversight committees.
         </div>
       </section>
 

@@ -2,19 +2,15 @@ import { Link, useLocation } from "wouter"
 import { useCallback } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
-  Layers01Icon,
+  Home01Icon,
   BubbleChatIcon,
   ZapIcon,
-  Compass01Icon,
-  Activity01Icon,
   Shield01Icon,
-  ArrowDown01Icon,
-  CheckmarkCircle01Icon,
-  GridIcon,
-  DashboardSpeed01Icon,
   Brain01Icon,
-  CodeIcon,
-  Settings01Icon,
+  GridIcon,
+  Activity01Icon,
+  DashboardSpeed01Icon,
+  ArrowDown01Icon,
 } from "@hugeicons/core-free-icons"
 import {
   Sidebar,
@@ -36,26 +32,18 @@ import {
 
 const sections = [
   {
-    title: "Foundations",
+    title: "Demo",
     path: "/",
-    icon: Layers01Icon,
-    subs: [
-      { title: "UX → AX Paradigm", id: "ux-ax" },
-      { title: "Principles", id: "principles" },
-      { title: "Pattern Taxonomy", id: "taxonomy" },
-      { title: "Autonomy Spectrum", id: "autonomy-spectrum" },
-      { title: "Design Tokens", id: "tokens" },
-    ],
+    icon: Home01Icon,
+    subs: [],
   },
   {
     title: "Conversation",
     path: "/conversation",
     icon: BubbleChatIcon,
     subs: [
-      { title: "Messages", id: "messages" },
-      { title: "Agent Prose", id: "prose" },
+      { title: "Messages & Prose", id: "messages" },
       { title: "Citations", id: "citations" },
-      { title: "Streaming", id: "streaming" },
       { title: "Thinking Blocks", id: "thinking" },
       { title: "Composer", id: "composer" },
     ],
@@ -69,91 +57,9 @@ const sections = [
       { title: "Subagent Cards", id: "subagents" },
       { title: "Parallel Execution", id: "parallel" },
       { title: "Plan Cards", id: "plans" },
-      { title: "Ask Blocks", id: "ask-blocks" },
       { title: "Decision Blocks", id: "decisions" },
-    ],
-  },
-  {
-    title: "Rich Previews",
-    path: "/previews",
-    icon: CheckmarkCircle01Icon,
-    subs: [
-      { title: "Service Cards", id: "service-cards" },
-      { title: "Approval Flows", id: "approvals" },
-      { title: "HITL Gates", id: "hitl-gates" },
-      { title: "Wayfinders", id: "wayfinders" },
-    ],
-  },
-  {
-    title: "Navigation",
-    path: "/navigation",
-    icon: Compass01Icon,
-    subs: [
-      { title: "Command Palette", id: "command-palette" },
-      { title: "Context Banners", id: "banners" },
-      { title: "Scope Banners", id: "scope-banners" },
-      { title: "Thread Sidebar", id: "threads" },
-      { title: "Context Panel", id: "context-panel" },
-    ],
-  },
-  {
-    title: "Agent Config",
-    path: "/config",
-    icon: Settings01Icon,
-    subs: [
-      { title: "Config Wizard", id: "config-wizard" },
-      { title: "Autonomy Controls", id: "autonomy-controls" },
-      { title: "Rule Builder", id: "rule-builder" },
-      { title: "Agent Preview", id: "agent-preview" },
-      { title: "Connector Cards", id: "connectors" },
-    ],
-  },
-  {
-    title: "Multi-Agent Views",
-    path: "/multi-agent",
-    icon: GridIcon,
-    subs: [
-      { title: "Kanban Board", id: "kanban" },
-      { title: "Mission Control", id: "dashboard" },
-      { title: "Agent Inbox", id: "inbox" },
-      { title: "Task List", id: "task-list" },
-      { title: "Calendar", id: "calendar" },
-    ],
-  },
-  {
-    title: "Monitoring",
-    path: "/monitoring",
-    icon: DashboardSpeed01Icon,
-    subs: [
-      { title: "Overview Panel", id: "overview" },
-      { title: "Activity Log", id: "activity-log" },
-      { title: "Work Reports", id: "work-reports" },
-      { title: "Scheduled Tasks", id: "scheduled-tasks" },
-      { title: "Cost & Usage", id: "cost-usage" },
-    ],
-  },
-  {
-    title: "Memory & Knowledge",
-    path: "/memory",
-    icon: Brain01Icon,
-    subs: [
-      { title: "Memory UI", id: "memory-ui" },
-      { title: "Cross-Session", id: "cross-session" },
-      { title: "Context Ring", id: "context-ring" },
-      { title: "RAG Scoping", id: "rag-scoping" },
-      { title: "Connector Catalog", id: "connector-catalog" },
-    ],
-  },
-  {
-    title: "Feedback & Errors",
-    path: "/feedback",
-    icon: Activity01Icon,
-    subs: [
-      { title: "Toasts", id: "toasts" },
-      { title: "Progress", id: "progress" },
-      { title: "Empty States", id: "empty-states" },
-      { title: "Error Recovery", id: "error-recovery" },
-      { title: "Rating & Correction", id: "rating" },
+      { title: "Ask Blocks", id: "ask-blocks" },
+      { title: "Approval Gate", id: "approval-gate" },
     ],
   },
   {
@@ -161,21 +67,62 @@ const sections = [
     path: "/trust",
     icon: Shield01Icon,
     subs: [
-      { title: "Trust Builders", id: "trust-builders" },
-      { title: "Agent Identity", id: "agent-identity" },
-      { title: "Guardrails", id: "guardrails" },
-      { title: "Handoff & Escalation", id: "handoff" },
+      { title: "Autonomy Level", id: "autonomy-level" },
+      { title: "Mode Toggles", id: "mode-toggles" },
+      { title: "Context Scope", id: "context-scope" },
+      { title: "Consent Flow", id: "consent-flow" },
+      { title: "Confidence Display", id: "confidence-display" },
+      { title: "Kill Switch", id: "kill-switch" },
+      { title: "Cost Transparency", id: "cost-transparency" },
+      { title: "Data Provenance", id: "data-provenance" },
+      { title: "Audit Trail", id: "audit-trail" },
     ],
   },
   {
-    title: "Multi-Modal Output",
-    path: "/output",
-    icon: CodeIcon,
+    title: "Memory & Knowledge",
+    path: "/memory",
+    icon: Brain01Icon,
     subs: [
-      { title: "Code Blocks", id: "code-blocks" },
-      { title: "Data Tables", id: "data-tables" },
-      { title: "Artifacts Panel", id: "artifacts" },
-      { title: "Rich Outputs", id: "rich-outputs" },
+      { title: "Memory Panel", id: "memory-panel" },
+      { title: "Memory Entry CRUD", id: "memory-crud" },
+      { title: "Auto-Memory", id: "auto-memory" },
+      { title: "Context Ring", id: "memory-context-ring" },
+      { title: "Privacy Controls", id: "privacy-controls" },
+    ],
+  },
+  {
+    title: "Multi-Agent",
+    path: "/multi-agent",
+    icon: GridIcon,
+    subs: [
+      { title: "Agent Cards", id: "agent-cards" },
+      { title: "Handoff Flow", id: "handoff-flow" },
+      { title: "Parallel Agents", id: "parallel-agents" },
+      { title: "Agent Routing", id: "agent-routing" },
+      { title: "Agent Communication", id: "agent-communication" },
+    ],
+  },
+  {
+    title: "Feedback",
+    path: "/feedback",
+    icon: Activity01Icon,
+    subs: [
+      { title: "Thumbs Feedback", id: "thumbs-feedback" },
+      { title: "Inline Correction", id: "inline-correction" },
+      { title: "Rating Scale", id: "rating-scale" },
+      { title: "Behavioral Consequence", id: "behavioral-consequence" },
+      { title: "Feedback History", id: "feedback-history" },
+    ],
+  },
+  {
+    title: "Observability",
+    path: "/observability",
+    icon: DashboardSpeed01Icon,
+    subs: [
+      { title: "Activity Timeline", id: "activity-timeline" },
+      { title: "Token Usage", id: "token-usage" },
+      { title: "Session Timeline", id: "session-timeline" },
+      { title: "Error Log", id: "error-log" },
     ],
   },
 ]
@@ -209,16 +156,40 @@ export function AppSidebar() {
       <SidebarHeader>
         <div className="flex items-center gap-2 px-2 py-1">
           <span className="text-sm font-semibold tracking-tight">
-            Agentic DS
+            Agentic Craft
           </span>
           <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
-            v2
+            v3
           </span>
         </div>
       </SidebarHeader>
       <SidebarContent>
         {sections.map((section) => {
           const isActive = location === section.path
+          
+          // Demo page has no subs — just a link
+          if (section.subs.length === 0) {
+            return (
+              <SidebarGroup key={section.path}>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      render={<Link href={section.path} />}
+                      isActive={isActive}
+                    >
+                      <HugeiconsIcon
+                        icon={section.icon}
+                        size={16}
+                        strokeWidth={1.5}
+                      />
+                      <span>{section.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroup>
+            )
+          }
+
           return (
             <SidebarGroup key={section.path}>
               <Collapsible defaultOpen={isActive}>

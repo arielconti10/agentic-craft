@@ -10,6 +10,8 @@ import {
   Brain01Icon,
   File01Icon,
   LinkSquare01Icon,
+  Target01Icon,
+  Search01Icon,
 } from "@hugeicons/core-free-icons"
 
 /* ------------------------------------------------------------------ */
@@ -140,6 +142,123 @@ const COST_BREAKDOWN = {
   elapsed: "4.2s",
 }
 
+const AUTONOMY_LEVELS = [
+  {
+    level: 2,
+    name: "Human-in-Command",
+    description: "AI drafts outputs and proposes actions; human approves every one before execution.",
+    uiPattern: "Approval modal",
+    capabilities: [
+      "Draft evaluation findings for review",
+      "Propose SFR-to-test-case mappings",
+      "Suggest evidence requests to developer",
+    ],
+    restrictions: [
+      "Cannot send emails without approval",
+      "Cannot modify evaluation records",
+      "Cannot create or close findings",
+    ],
+  },
+  {
+    level: 3,
+    name: "Human-Delegated",
+    description: "AI handles routine tasks autonomously; human reviews only flagged exceptions.",
+    uiPattern: "Inbox of flagged items",
+    capabilities: [
+      "Automatically cross-reference SFR coverage",
+      "Generate routine status reports",
+      "Send pre-approved notification templates",
+    ],
+    restrictions: [
+      "Flags novel findings for human review",
+      "Cannot submit evidence packages to lab",
+      "Escalates if confidence drops below 70%",
+    ],
+  },
+  {
+    level: 4,
+    name: "Human-in-the-Loop",
+    description: "AI executes freely but escalates when confidence drops below a set threshold.",
+    uiPattern: "Confidence slider",
+    capabilities: [
+      "Execute full evaluation workflows end-to-end",
+      "Send emails and create findings autonomously",
+      "Update Security Target revision history",
+    ],
+    restrictions: [
+      "Escalates on confidence below threshold",
+      "Cannot approve final ETR submission",
+      "Human monitors via activity dashboard",
+    ],
+  },
+]
+
+const MODE_CONFIGS = {
+  compliance: {
+    label: "Compliance",
+    focus: "Ensuring all evaluation evidence meets CEM requirements and PP conformance claims.",
+    tools: [
+      "Evidence completeness checker",
+      "SFR coverage matrix generator",
+      "PP conformance validator",
+      "ALC lifecycle document scanner",
+    ],
+  },
+  research: {
+    label: "Research",
+    focus: "Investigating technical aspects of the TOE, analyzing vulnerability reports, and reviewing cryptographic implementations.",
+    tools: [
+      "Vulnerability database search",
+      "Cryptographic algorithm verifier",
+      "Technical document analyzer",
+      "CAVP certificate lookup",
+    ],
+  },
+  review: {
+    label: "Review",
+    focus: "Reviewing evaluation deliverables, checking consistency across documents, and preparing for lab audits.",
+    tools: [
+      "Cross-document consistency checker",
+      "ETR section reviewer",
+      "Finding classification advisor",
+      "Audit preparation checklist",
+    ],
+  },
+}
+
+const SCOPE_CONFIGS = {
+  device: {
+    label: "Device Only",
+    scope: "ACME SmartCard Module v3.1",
+    documents: [
+      { name: "Security Target v3.1", section: "Full document" },
+      { name: "Test Report TR-2026-003", section: "Device-specific tests" },
+    ],
+  },
+  devicePP: {
+    label: "Device + PP",
+    scope: "ACME SmartCard + PP-CIMC-SLv3",
+    documents: [
+      { name: "Security Target v3.1", section: "Full document" },
+      { name: "Test Report TR-2026-003", section: "All test results" },
+      { name: "PP-CIMC-SLv3", section: "SFR requirements" },
+      { name: "PP Evaluation Report", section: "Conformance claims" },
+    ],
+  },
+  global: {
+    label: "Global",
+    scope: "All evaluation artifacts",
+    documents: [
+      { name: "Security Target v3.1", section: "Full document" },
+      { name: "Test Report TR-2026-003", section: "All test results" },
+      { name: "PP-CIMC-SLv3", section: "Full document" },
+      { name: "Previous ETR (2025-08)", section: "Findings and conclusions" },
+      { name: "CEM v3.1 Supplement", section: "Evaluator actions" },
+      { name: "Vulnerability Analysis Report", section: "AVA_VAN results" },
+    ],
+  },
+}
+
 /* ------------------------------------------------------------------ */
 /*  Controls component                                                 */
 /* ------------------------------------------------------------------ */
@@ -198,6 +317,18 @@ const PROSE_STYLE: React.CSSProperties = {
 export default function Trust() {
   useEffect(() => { ensureStyles() }, [])
 
+  /* — Autonomy Level — */
+  const [autoCtrl, setAutoCtrl] = useState<Record<string, boolean>>({ level2: true, level3: false, level4: false })
+  const [autoAnimKey, setAutoAnimKey] = useState(0)
+
+  /* — Mode Toggles — */
+  const [modeCtrl, setModeCtrl] = useState<Record<string, boolean>>({ compliance: true, research: false, review: false })
+  const [modeAnimKey, setModeAnimKey] = useState(0)
+
+  /* — Context Scope — */
+  const [scopeCtrl, setScopeCtrl] = useState<Record<string, boolean>>({ device: true, devicePP: false, global: false })
+  const [scopeAnimKey, setScopeAnimKey] = useState(0)
+
   /* — Consent Flow — */
   const [consentCtrl, setConsentCtrl] = useState<Record<string, boolean>>({ prompt: true, accepted: false, declined: false })
   const [consentAnimKey, setConsentAnimKey] = useState(0)
@@ -238,6 +369,15 @@ export default function Trust() {
     }
   }
 
+  /* Resolve active autonomy level */
+  const activeLevel = autoCtrl.level2 ? AUTONOMY_LEVELS[0] : autoCtrl.level3 ? AUTONOMY_LEVELS[1] : AUTONOMY_LEVELS[2]
+
+  /* Resolve active mode */
+  const activeMode = modeCtrl.compliance ? MODE_CONFIGS.compliance : modeCtrl.research ? MODE_CONFIGS.research : MODE_CONFIGS.review
+
+  /* Resolve active scope */
+  const activeScope = scopeCtrl.device ? SCOPE_CONFIGS.device : scopeCtrl.devicePP ? SCOPE_CONFIGS.devicePP : SCOPE_CONFIGS.global
+
   return (
     <article>
       <header className="mb-20">
@@ -246,13 +386,387 @@ export default function Trust() {
           Trust &amp; Safety
         </h1>
         <p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Transparency, identity, guardrails, and handoff patterns that establish
-          and maintain user trust in agentic experiences.
+          Autonomy governance, operational configuration, transparency, and
+          guardrail patterns that establish and maintain user trust in agentic
+          experiences.
         </p>
       </header>
 
       {/* ============================================================ */}
-      {/*  Section 1 — Consent Flow                                     */}
+      {/*  Section 1 — Autonomy Level                                   */}
+      {/* ============================================================ */}
+      <section id="autonomy-level" className="page-section">
+        <p className="section-label mb-3">Governance</p>
+        <h2 className="text-xl font-semibold tracking-tight">Autonomy Level</h2>
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          Select how much independence the agent has. Higher levels increase speed
+          but reduce oversight. Uses the 6-level autonomy scale from foundations.
+        </p>
+
+        <div className="mt-8">
+          <Controls
+            options={[
+              { key: "level2", label: "Level 2" },
+              { key: "level3", label: "Level 3" },
+              { key: "level4", label: "Level 4" },
+            ]}
+            active={autoCtrl}
+            onToggle={makeToggle(setAutoCtrl, setAutoAnimKey)}
+          />
+
+          <div className="border border-border/40 rounded-lg p-6" key={autoAnimKey}>
+            <div className="trust-slide-in">
+              {/* Stepped indicator */}
+              <div className="flex items-center gap-1 mb-6">
+                {[1, 2, 3, 4, 5, 6].map((n) => (
+                  <div key={n} className="flex-1 flex flex-col items-center gap-1.5">
+                    <div
+                      className={`h-2 w-full rounded-md transition-colors duration-200 ${
+                        n <= activeLevel.level
+                          ? "bg-foreground/20"
+                          : "bg-muted"
+                      }`}
+                    />
+                    <span className={`text-[10px] tabular-nums ${
+                      n === activeLevel.level ? "text-foreground font-medium" : "text-muted-foreground"
+                    }`}>
+                      {n}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Level details */}
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs text-muted-foreground">Level {activeLevel.level}</span>
+                    <span className="text-xs text-muted-foreground">·</span>
+                    <span className="text-sm font-medium">{activeLevel.name}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{activeLevel.description}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-2">Capabilities</p>
+                    <div className="space-y-1.5">
+                      {activeLevel.capabilities.map((cap) => (
+                        <div key={cap} className="flex items-start gap-2">
+                          <HugeiconsIcon icon={Tick01Icon} size={12} strokeWidth={1.5} className="mt-0.5 shrink-0 text-muted-foreground" />
+                          <span className="text-xs text-muted-foreground">{cap}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-2">Restrictions</p>
+                    <div className="space-y-1.5">
+                      {activeLevel.restrictions.map((r) => (
+                        <div key={r} className="flex items-start gap-2">
+                          <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={1.5} className="mt-0.5 shrink-0 text-muted-foreground" />
+                          <span className="text-xs text-muted-foreground">{r}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 pt-2">
+                  <span className="rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                    UI: {activeLevel.uiPattern}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Spec table */}
+        <div className="mt-8">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Property</th>
+                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Value</th>
+                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">Notes</th>
+              </tr>
+            </thead>
+            <tbody className="text-muted-foreground">
+              <tr className="border-b border-border/50">
+                <td className="py-2.5 pr-4 font-medium text-foreground">Scale</td>
+                <td className="py-2.5 pr-4">6 levels (1–6)</td>
+                <td className="py-2.5">From Human-Augmented to Human-Out-of-the-Loop</td>
+              </tr>
+              <tr className="border-b border-border/50">
+                <td className="py-2.5 pr-4 font-medium text-foreground">Default</td>
+                <td className="py-2.5 pr-4">Level 2</td>
+                <td className="py-2.5">Start conservative, unlock higher levels over time</td>
+              </tr>
+              <tr>
+                <td className="py-2.5 pr-4 font-medium text-foreground">Indicator</td>
+                <td className="py-2.5 pr-4">Stepped bar</td>
+                <td className="py-2.5">Discrete steps, not a continuous slider</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Callout */}
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+          Autonomy levels should be progressive — start at Level 2 for new evaluations and
+          unlock higher levels only after the agent has demonstrated reliability. Never
+          default to full autonomy for evaluation tasks that affect certification outcomes.
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  Section 2 — Mode Toggles                                     */}
+      {/* ============================================================ */}
+      <section id="mode-toggles" className="page-section">
+        <p className="section-label mb-3">Governance</p>
+        <h2 className="text-xl font-semibold tracking-tight">Mode Toggles</h2>
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          Switch the agent's operational mode to focus on different aspects of the
+          evaluation workflow. Each mode changes available tools and priorities.
+        </p>
+
+        <div className="mt-8">
+          <Controls
+            options={[
+              { key: "compliance", label: "Compliance" },
+              { key: "research", label: "Research" },
+              { key: "review", label: "Review" },
+            ]}
+            active={modeCtrl}
+            onToggle={makeToggle(setModeCtrl, setModeAnimKey)}
+          />
+
+          <div className="border border-border/40 rounded-lg p-6" key={modeAnimKey}>
+            <div className="trust-slide-in">
+              <div className="space-y-4">
+                {/* Mode header */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted">
+                    <HugeiconsIcon
+                      icon={modeCtrl.compliance ? Shield01Icon : modeCtrl.research ? Search01Icon : Target01Icon}
+                      size={14}
+                      strokeWidth={1.5}
+                      className="text-muted-foreground"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">{activeMode.label} mode</p>
+                    <p className="text-xs text-muted-foreground">Active</p>
+                  </div>
+                </div>
+
+                {/* Focus */}
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1.5">Focus</p>
+                  <p className="text-sm text-muted-foreground">{activeMode.focus}</p>
+                </div>
+
+                {/* Available tools */}
+                <div>
+                  <p className="text-xs text-muted-foreground mb-2">Available tools</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {activeMode.tools.map((tool, i) => (
+                      <div
+                        key={tool}
+                        className="flex items-center gap-2 rounded-md border border-border/60 px-3 py-2 trust-slide-in"
+                        style={{ animationDelay: `${i * 60}ms` }}
+                      >
+                        <HugeiconsIcon icon={Brain01Icon} size={12} strokeWidth={1.5} className="shrink-0 text-muted-foreground" />
+                        <span className="text-xs">{tool}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Mode selector as toggle buttons */}
+                <div className="pt-2">
+                  <p className="text-xs text-muted-foreground mb-2">Switch mode</p>
+                  <div className="inline-flex rounded-md border border-border bg-muted/30 p-0.5">
+                    {(["compliance", "research", "review"] as const).map((m) => (
+                      <button
+                        key={m}
+                        onClick={() => makeToggle(setModeCtrl, setModeAnimKey)(m)}
+                        className={`rounded-md px-3 py-1.5 text-xs transition-all duration-150 ${
+                          modeCtrl[m]
+                            ? "bg-background text-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {MODE_CONFIGS[m].label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Spec table */}
+        <div className="mt-8">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Mode</th>
+                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Focus</th>
+                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">Tools</th>
+              </tr>
+            </thead>
+            <tbody className="text-muted-foreground">
+              <tr className="border-b border-border/50">
+                <td className="py-2.5 pr-4 font-medium text-foreground">Compliance</td>
+                <td className="py-2.5 pr-4">Evidence and PP conformance</td>
+                <td className="py-2.5">4 compliance-specific tools</td>
+              </tr>
+              <tr className="border-b border-border/50">
+                <td className="py-2.5 pr-4 font-medium text-foreground">Research</td>
+                <td className="py-2.5 pr-4">Technical investigation</td>
+                <td className="py-2.5">4 research-specific tools</td>
+              </tr>
+              <tr>
+                <td className="py-2.5 pr-4 font-medium text-foreground">Review</td>
+                <td className="py-2.5 pr-4">Deliverable review and audit prep</td>
+                <td className="py-2.5">4 review-specific tools</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Callout */}
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+          Mode switching should be instant — no confirmation dialog needed since it only changes
+          tool availability and focus, not data access. Evaluators typically switch modes
+          multiple times during a single evaluation session.
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  Section 3 — Context Scope                                    */}
+      {/* ============================================================ */}
+      <section id="context-scope" className="page-section">
+        <p className="section-label mb-3">Governance</p>
+        <h2 className="text-xl font-semibold tracking-tight">Context Scope</h2>
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          Define which documents and evaluation artifacts the agent can access.
+          Narrower scopes reduce noise; wider scopes enable cross-referencing.
+        </p>
+
+        <div className="mt-8">
+          <Controls
+            options={[
+              { key: "device", label: "Device Only" },
+              { key: "devicePP", label: "Device + PP" },
+              { key: "global", label: "Global" },
+            ]}
+            active={scopeCtrl}
+            onToggle={makeToggle(setScopeCtrl, setScopeAnimKey)}
+          />
+
+          <div className="border border-border/40 rounded-lg p-6" key={scopeAnimKey}>
+            <div className="trust-slide-in">
+              <div className="space-y-4">
+                {/* Scope indicator */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
+                    <HugeiconsIcon icon={Target01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">{activeScope.label}</p>
+                    <p className="text-xs text-muted-foreground">{activeScope.scope}</p>
+                  </div>
+                </div>
+
+                {/* Document list */}
+                <div>
+                  <p className="text-xs text-muted-foreground mb-2">Accessible documents</p>
+                  <div className="space-y-2">
+                    {activeScope.documents.map((doc, i) => (
+                      <div
+                        key={doc.name}
+                        className="flex items-center gap-3 rounded-md border border-border/60 px-3 py-2 trust-slide-in"
+                        style={{ animationDelay: `${i * 50}ms` }}
+                      >
+                        <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} className="shrink-0 text-muted-foreground" />
+                        <div className="flex-1 min-w-0">
+                          <span className="text-xs font-medium">{doc.name}</span>
+                          <span className="text-xs text-muted-foreground ml-2">— {doc.section}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Scope size indicator */}
+                <div className="flex items-center gap-2 pt-2 border-t border-border/50">
+                  <span className="text-xs text-muted-foreground">
+                    {activeScope.documents.length} document{activeScope.documents.length !== 1 ? "s" : ""} in scope
+                  </span>
+                  <div className="flex items-center gap-1 ml-auto">
+                    {["device", "devicePP", "global"].map((s) => (
+                      <div
+                        key={s}
+                        className={`h-1.5 w-4 rounded-md transition-colors ${
+                          (s === "device") ||
+                          (s === "devicePP" && (scopeCtrl.devicePP || scopeCtrl.global)) ||
+                          (s === "global" && scopeCtrl.global)
+                            ? "bg-foreground/20"
+                            : "bg-muted"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Spec table */}
+        <div className="mt-8">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Scope</th>
+                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Documents</th>
+                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">Use case</th>
+              </tr>
+            </thead>
+            <tbody className="text-muted-foreground">
+              <tr className="border-b border-border/50">
+                <td className="py-2.5 pr-4 font-medium text-foreground">Device Only</td>
+                <td className="py-2.5 pr-4">2 documents</td>
+                <td className="py-2.5">Focused work on a single TOE</td>
+              </tr>
+              <tr className="border-b border-border/50">
+                <td className="py-2.5 pr-4 font-medium text-foreground">Device + PP</td>
+                <td className="py-2.5 pr-4">4 documents</td>
+                <td className="py-2.5">Evaluating PP conformance claims</td>
+              </tr>
+              <tr>
+                <td className="py-2.5 pr-4 font-medium text-foreground">Global</td>
+                <td className="py-2.5 pr-4">6 documents</td>
+                <td className="py-2.5">Cross-referencing across full evaluation</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Callout */}
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+          Context scope directly affects response quality and cost. A narrower scope
+          produces faster, cheaper answers but may miss cross-document dependencies.
+          For OR preparation, always use Global scope to ensure nothing is overlooked.
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  Section 4 — Consent Flow                                     */}
       {/* ============================================================ */}
       <section id="consent-flow" className="page-section">
         <p className="section-label mb-3">Permissions</p>
@@ -416,7 +930,7 @@ export default function Trust() {
       </section>
 
       {/* ============================================================ */}
-      {/*  Section 2 — Confidence Display                               */}
+      {/*  Section 5 — Confidence Display                               */}
       {/* ============================================================ */}
       <section id="confidence-display" className="page-section">
         <p className="section-label mb-3">Transparency</p>
@@ -553,7 +1067,7 @@ export default function Trust() {
       </section>
 
       {/* ============================================================ */}
-      {/*  Section 3 — Kill Switch                                      */}
+      {/*  Section 6 — Kill Switch                                      */}
       {/* ============================================================ */}
       <section id="kill-switch" className="page-section">
         <p className="section-label mb-3">Control</p>
@@ -703,7 +1217,7 @@ export default function Trust() {
       </section>
 
       {/* ============================================================ */}
-      {/*  Section 4 — Cost Transparency                                */}
+      {/*  Section 7 — Cost Transparency                                */}
       {/* ============================================================ */}
       <section id="cost-transparency" className="page-section">
         <p className="section-label mb-3">Transparency</p>
@@ -819,7 +1333,7 @@ export default function Trust() {
       </section>
 
       {/* ============================================================ */}
-      {/*  Section 5 — Data Provenance                                  */}
+      {/*  Section 8 — Data Provenance                                  */}
       {/* ============================================================ */}
       <section id="data-provenance" className="page-section">
         <p className="section-label mb-3">Transparency</p>
@@ -951,7 +1465,7 @@ export default function Trust() {
       </section>
 
       {/* ============================================================ */}
-      {/*  Section 6 — Audit Trail                                      */}
+      {/*  Section 9 — Audit Trail                                      */}
       {/* ============================================================ */}
       <section id="audit-trail" className="page-section">
         <p className="section-label mb-3">Accountability</p>
