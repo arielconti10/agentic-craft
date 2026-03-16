@@ -16,10 +16,12 @@ import {
   ToolTree,
   ToolTreeTrigger,
   ToolTreeContent,
-  ToolTreeItem,
-  ToolTreeItemTrigger,
-  ToolTreeItemContent,
 } from "@/components/ui/tool-tree"
+import {
+  ToolCall,
+  ToolCallLabel,
+  ToolCallContent,
+} from "@/components/ui/tool-call"
 
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
@@ -215,16 +217,14 @@ export function DemoContent() {
               </ToolTreeTrigger>
               <ToolTreeContent>
                 {PARALLEL_TASKS.map((task, i) => (
-                  <ToolTreeItem key={task.label}>
-                    <ToolTreeItemTrigger icon={CodeIcon} timestamp={task.duration}>
-                      {task.label}
-                    </ToolTreeItemTrigger>
-                    <ToolTreeItemContent>
+                  <ToolCall key={task.label} icon={CodeIcon} status="completed" timestamp={task.duration}>
+                    <ToolCallLabel>{task.label}</ToolCallLabel>
+                    <ToolCallContent>
                       <p className="text-xs text-muted-foreground" style={{ lineHeight: "18px" }}>
                         {TASK_DETAILS[i]}
                       </p>
-                    </ToolTreeItemContent>
-                  </ToolTreeItem>
+                    </ToolCallContent>
+                  </ToolCall>
                 ))}
               </ToolTreeContent>
             </ToolTree>

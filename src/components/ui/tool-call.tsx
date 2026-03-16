@@ -52,9 +52,7 @@ function ToolCall({
   const [hover, setHover] = React.useState(false)
 
   const hasContent = React.Children.toArray(children).some(
-    (child) =>
-      React.isValidElement(child) &&
-      (child.props as Record<string, unknown>)?.["data-slot"] === "tool-call-content",
+    (child) => React.isValidElement(child) && child.type === ToolCallContent,
   )
 
   const canExpand = status !== "running" && (hasContent || !!error)
@@ -97,7 +95,12 @@ function ToolCall({
                 )}
               />
             </div>
-            {children}
+            {/* Render only non-content children (labels) in the trigger */}
+            {React.Children.map(children, (child) =>
+              React.isValidElement(child) && child.type === ToolCallContent
+                ? null
+                : child,
+            )}
             {canExpand && (
               <HugeiconsIcon
                 icon={ArrowRight01Icon}
@@ -124,8 +127,7 @@ function ToolCall({
         {expanded && hasContent && (
           <div className="animate-composer-slide">
             {React.Children.map(children, (child) =>
-              React.isValidElement(child) &&
-              (child.props as Record<string, unknown>)?.["data-slot"] === "tool-call-content"
+              React.isValidElement(child) && child.type === ToolCallContent
                 ? child
                 : null,
             )}

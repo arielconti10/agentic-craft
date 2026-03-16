@@ -23,10 +23,12 @@ import {
   ToolTree,
   ToolTreeTrigger,
   ToolTreeContent,
-  ToolTreeItem,
-  ToolTreeItemTrigger,
-  ToolTreeItemContent,
 } from "@/components/ui/tool-tree"
+import {
+  ToolCall,
+  ToolCallLabel,
+  ToolCallContent,
+} from "@/components/ui/tool-call"
 
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
@@ -271,89 +273,6 @@ function Controls({
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  ToolCall sub-component                                             */
-/* ------------------------------------------------------------------ */
-
-function ToolCall({
-  label,
-  duration,
-  error,
-  details,
-  open,
-  onToggle,
-  animate,
-}: {
-  label: string
-  duration: string
-  error?: string
-  details?: { key: string; value: string }[]
-  open: boolean
-  onToggle: () => void
-  animate?: boolean
-}) {
-  return (
-    <div
-      className={`rounded-md border transition-colors duration-200 ${
-        error ? "border-destructive/40" : "border-border"
-      } ${animate ? "actions-slide-in" : ""}`}
-    >
-      <button
-        type="button"
-        onClick={onToggle}
-        className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left"
-      >
-        <HugeiconsIcon
-          icon={Wrench01Icon}
-          size={14}
-          strokeWidth={1.5}
-          className="shrink-0 text-muted-foreground"
-        />
-        <span className="text-sm font-normal">{label}</span>
-        <span
-          className={`ml-auto text-xs ${
-            error ? "text-destructive" : "text-muted-foreground"
-          }`}
-        >
-          {error ? `failed · ${duration}` : duration}
-        </span>
-        <HugeiconsIcon
-          icon={ArrowDown01Icon}
-          size={12}
-          strokeWidth={1.5}
-          className={`shrink-0 text-muted-foreground transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-
-      {open && (
-        <div className="actions-expand border-t border-border px-3 py-2.5">
-          {error ? (
-            <div className="space-y-2.5">
-              <p className="text-xs text-muted-foreground">{error}</p>
-              <button
-                type="button"
-                className="rounded-md border border-border px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
-              >
-                Retry
-              </button>
-            </div>
-          ) : details ? (
-            <div className="space-y-1">
-              {details.map((d) => (
-                <div key={d.key} className="flex gap-2 text-xs">
-                  <span className="text-muted-foreground">{d.key}:</span>
-                  <span className="text-foreground">{d.value}</span>
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </div>
-      )}
-    </div>
-  )
-}
 
 /* ------------------------------------------------------------------ */
 /*  PlanStep sub-component                                             */
@@ -424,30 +343,15 @@ export function ActionsContent() {
 
   /* ── Section 1: Tool Calls state ── */
   const [toolState, setToolState] = useState({ expandAll: false, error: false, grouped: false })
-  const [toolOpens, setToolOpens] = useState<Record<number, boolean>>({})
 
   const toggleToolControl = useCallback((key: string) => {
-    setToolState((prev) => {
-      const next = { ...prev, [key]: !prev[key as keyof typeof prev] }
-      if (key === "expandAll") {
-        // Open/close all tool calls
-        const newOpens: Record<number, boolean> = {}
-        TOOL_CALLS_DATA.forEach((_, i) => { newOpens[i] = next.expandAll })
-        setToolOpens(newOpens)
-      }
-      return next
-    })
-  }, [])
-
-  const toggleTool = useCallback((idx: number) => {
-    setToolOpens((prev) => ({ ...prev, [idx]: !prev[idx] }))
+    setToolState((prev) => ({ ...prev, [key]: !prev[key as keyof typeof prev] }))
   }, [])
 
   /* ── Section 2: Subagent state ── */
   const [subagentState, setSubagentState] = useState({ running: true, complete: false })
   const [subagentProgress, setSubagentProgress] = useState(0)
   const [subagentOpen, setSubagentOpen] = useState(true)
-  const [subToolOpens, setSubToolOpens] = useState<Record<number, boolean>>({})
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const toggleSubagentControl = useCallback((key: string) => {
@@ -486,10 +390,6 @@ export function ActionsContent() {
       setSubagentProgress(0)
     }
   }, [subagentState.running, subagentState.complete])
-
-  const toggleSubTool = useCallback((idx: number) => {
-    setSubToolOpens((prev) => ({ ...prev, [idx]: !prev[idx] }))
-  }, [])
 
   /* ── Section 3: Plan Cards state ── */
   const [planState, setPlanState] = useState({ executing: true, editable: false })
@@ -633,35 +533,39 @@ export function ActionsContent() {
           <div className="border border-border/40 rounded-lg p-6">
             <div className={`space-y-1.5 ${toolState.grouped ? "border-l-2 border-border pl-3" : ""}`}>
               {toolState.error ? (
-                /* Error state: show one normal + one errored */
                 <>
-                  <ToolCall
-                    label={TOOL_CALLS_DATA[0].label}
-                    duration={TOOL_CALLS_DATA[0].duration}
-                    details={TOOL_CALLS_DATA[0].details}
-                    open={!!toolOpens[0]}
-                    onToggle={() => toggleTool(0)}
-                    animate
-                  />
-                  <ToolCall
-                    label={ERROR_TOOL.label}
-                    duration={ERROR_TOOL.duration}
-                    error={ERROR_TOOL.error}
-                    open
-                    onToggle={() => {}}
-                    animate
-                  />
+                  <ToolCall icon={Wrench01Icon} status="completed" timestamp={TOOL_CALLS_DATA[0].duration}>
+                    <ToolCallLabel>{TOOL_CALLS_DATA[0].label}</ToolCallLabel>
+                    <ToolCallContent>
+                      <div className="space-y-1 text-xs">
+                        {TOOL_CALLS_DATA[0].details.map((d) => (
+                          <div key={d.key} className="flex gap-2">
+                            <span className="text-muted-foreground">{d.key}:</span>
+                            <span className="text-foreground">{d.value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </ToolCallContent>
+                  </ToolCall>
+                  <ToolCall icon={Wrench01Icon} status="failed" error={ERROR_TOOL.error} timestamp={ERROR_TOOL.duration}>
+                    <ToolCallLabel>{ERROR_TOOL.label}</ToolCallLabel>
+                  </ToolCall>
                 </>
               ) : (
-                TOOL_CALLS_DATA.map((tool, i) => (
-                  <ToolCall
-                    key={tool.label}
-                    label={tool.label}
-                    duration={tool.duration}
-                    details={tool.details}
-                    open={!!toolOpens[i]}
-                    onToggle={() => toggleTool(i)}
-                  />
+                TOOL_CALLS_DATA.map((tool) => (
+                  <ToolCall key={tool.label} icon={Wrench01Icon} status="completed" timestamp={tool.duration}>
+                    <ToolCallLabel>{tool.label}</ToolCallLabel>
+                    <ToolCallContent>
+                      <div className="space-y-1 text-xs">
+                        {tool.details.map((d) => (
+                          <div key={d.key} className="flex gap-2">
+                            <span className="text-muted-foreground">{d.key}:</span>
+                            <span className="text-foreground">{d.value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </ToolCallContent>
+                  </ToolCall>
                 ))
               )}
             </div>
@@ -776,15 +680,20 @@ export function ActionsContent() {
                   </div>
                   {/* Nested tool calls */}
                   <div className="mt-2 space-y-1.5 pl-2 border-l border-border/60">
-                    {SUBAGENT_TOOLS.map((tool, i) => (
-                      <ToolCall
-                        key={tool.label}
-                        label={tool.label}
-                        duration={tool.duration}
-                        details={tool.details}
-                        open={!!subToolOpens[i]}
-                        onToggle={() => toggleSubTool(i)}
-                      />
+                    {SUBAGENT_TOOLS.map((tool) => (
+                      <ToolCall key={tool.label} icon={Wrench01Icon} status="completed" timestamp={tool.duration}>
+                        <ToolCallLabel>{tool.label}</ToolCallLabel>
+                        <ToolCallContent>
+                          <div className="space-y-1 text-xs">
+                            {tool.details.map((d) => (
+                              <div key={d.key} className="flex gap-2">
+                                <span className="text-muted-foreground">{d.key}:</span>
+                                <span className="text-foreground">{d.value}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </ToolCallContent>
+                      </ToolCall>
                     ))}
                   </div>
                 </div>
@@ -1011,11 +920,9 @@ export function ActionsContent() {
                   </ToolTreeTrigger>
                   <ToolTreeContent>
                     {PARALLEL_TASKS.map((task) => (
-                      <ToolTreeItem key={task.label}>
-                        <ToolTreeItemTrigger icon={TextIcon} timestamp="10:44 AM · 1s">
-                          {task.label}
-                        </ToolTreeItemTrigger>
-                        <ToolTreeItemContent>
+                      <ToolCall key={task.label} icon={TextIcon} status="completed" timestamp="10:44 AM · 1s">
+                        <ToolCallLabel>{task.label}</ToolCallLabel>
+                        <ToolCallContent>
                           <div className="space-y-1 text-xs">
                             {task.details.map((d) => (
                               <div key={d.key} className="flex gap-2">
@@ -1024,8 +931,8 @@ export function ActionsContent() {
                               </div>
                             ))}
                           </div>
-                        </ToolTreeItemContent>
-                      </ToolTreeItem>
+                        </ToolCallContent>
+                      </ToolCall>
                     ))}
                   </ToolTreeContent>
                 </ToolTree>
