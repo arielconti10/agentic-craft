@@ -51,6 +51,17 @@
   animation: composer-slide-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+/* ── ToolCall ── */
+
+@keyframes tool-call-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-tool-call-pulse {
+  animation: tool-call-pulse 2s ease-in-out infinite;
+}
+
 /* ── ToolTree ── */
 
 /* Opaque connector color — prevents double-opacity overlap
