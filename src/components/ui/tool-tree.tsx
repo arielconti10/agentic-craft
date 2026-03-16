@@ -105,7 +105,7 @@ function ToolTreeTrigger({
   const { open, onOpenChange } = useToolTree()
 
   return (
-    <div data-slot="tool-tree-trigger" className="flex items-center gap-2 relative group/tool-wrapper">
+    <div data-slot="tool-tree-trigger" className="flex items-center gap-2 relative z-[1] group/tool-wrapper">
       <button type="button" onClick={() => onOpenChange(!open)} className={cn("min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer", className)} {...props}>
         {icon && <TreeIcon icon={icon} size={18} />}
         <span className="min-w-0 group-hover/tool-wrapper:text-foreground text-sm select-none truncate">{children}</span>
@@ -128,10 +128,10 @@ function ToolTreeContent({
 
   return (
     <>
-      {/* Vertical spine */}
+      {/* Vertical spine — uses opaque color to match L-connectors */}
       <span
-        className="w-px absolute bg-border"
-        style={{ left: 9, top: 10, bottom: 0 }}
+        className="w-px absolute"
+        style={{ left: 9, top: 10, bottom: 0, backgroundColor: "var(--tool-tree-connector)" }}
       />
       <div
         data-slot="tool-tree-content"
@@ -162,21 +162,17 @@ function ToolTreeItem({
   return (
     <ToolTreeItemContext.Provider value={ctx}>
       <div data-slot="tool-tree-item" className={cn("relative min-w-0", className)} {...props}>
-        {/* Background mask behind border-l to prevent double-opacity overlap with spine in dark mode */}
+        {/* L-connector with rounded bottom-left corner — uses opaque --tool-tree-connector
+            to prevent double-opacity overlap with the spine in dark mode */}
         <div
-          className="absolute bg-background"
-          style={{ top: -5, left: -19, width: 1, height: 16 }}
-        />
-        {/* L-connector with rounded bottom-left corner */}
-        <div
-          className="absolute rounded-bl-lg border-l border-b border-border"
-          style={{ top: -5, left: -19, width: 30, height: 16 }}
+          className="absolute rounded-bl-lg border-l border-b"
+          style={{ top: -5, left: -19, width: 30, height: 16, borderColor: "var(--tool-tree-connector)" }}
         />
         {/* Last-child spine mask (shown via CSS only on :last-child) */}
         <div
           data-spine-mask
           className="absolute w-px bg-background"
-          style={{ top: 0, bottom: -24, left: -19 }}
+          style={{ top: 11, bottom: -24, left: -19 }}
         />
 
         <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">

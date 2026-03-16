@@ -51,7 +51,22 @@
   animation: composer-slide-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* ── ToolTree: show spine mask only on last item ── */
+/* ── ToolTree ── */
+
+/* Opaque connector color — prevents double-opacity overlap
+   when spine (bg) and L-connector (border) share the same pixels.
+   Dark mode --border is semi-transparent (oklch(1 0 0 / 10%)),
+   so overlapping elements double the brightness. These are the
+   resolved opaque equivalents. */
+:root {
+  --tool-tree-connector: oklch(0.922 0 0);
+}
+
+.dark {
+  --tool-tree-connector: oklch(0.23 0 0);
+}
+
+/* Show spine mask only on last item */
 [data-slot="tool-tree-item"] [data-spine-mask] {
   display: none;
 }
