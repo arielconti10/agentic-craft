@@ -73,23 +73,26 @@ export function ComposerContextRing({
   total: number
   label?: string
 }) {
+  const [hover, setHover] = React.useState(false)
   const pct = total > 0 ? used / total : 0
-  const r = 8
+  const r = 6
   const circ = 2 * Math.PI * r
   const offset = circ * (1 - pct)
-  const displayLabel = label ?? `${used} / ${total}`
+  const displayLabel = label ?? `${used}k / ${total}k tokens`
+  const pctLabel = `${Math.round(pct * 100)}%`
 
   return (
     <div
       data-slot="composer-context-ring"
-      className={cn("mr-1 flex items-center gap-1.5", className)}
-      title={displayLabel}
+      className={cn("relative mr-1 flex items-center gap-1.5", className)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
       {...props}
     >
-      <svg width="20" height="20" viewBox="0 0 20 20" className="opacity-50">
+      <svg width="16" height="16" viewBox="0 0 16 16" className="opacity-50">
         <circle
-          cx="10"
-          cy="10"
+          cx="8"
+          cy="8"
           r={r}
           fill="none"
           stroke="currentColor"
@@ -97,8 +100,8 @@ export function ComposerContextRing({
           opacity="0.15"
         />
         <circle
-          cx="10"
-          cy="10"
+          cx="8"
+          cy="8"
           r={r}
           fill="none"
           stroke="currentColor"
@@ -106,10 +109,16 @@ export function ComposerContextRing({
           strokeDasharray={circ}
           strokeDashoffset={offset}
           strokeLinecap="round"
-          transform="rotate(-90 10 10)"
+          transform="rotate(-90 8 8)"
           className="text-muted-foreground"
         />
       </svg>
+      {hover && (
+        <div className="absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1.5 text-xs text-background shadow-sm">
+          <span>{displayLabel} ({pctLabel})</span>
+          <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-foreground" />
+        </div>
+      )}
     </div>
   )
 }

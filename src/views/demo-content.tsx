@@ -8,7 +8,6 @@ import {
   Cancel01Icon,
   ThumbsUpIcon,
   ThumbsDownIcon,
-  Shield01Icon,
   File01Icon,
   SentIcon,
 } from "@hugeicons/core-free-icons"
@@ -94,12 +93,6 @@ const FINDINGS = [
   { id: "TOE Boundary", text: "HSM module omitted from physical boundary diagram" },
 ]
 
-const CONTEXT_SOURCES = [
-  "Security Target v3.1",
-  "PP-Configuration for Network Devices",
-  "CC Part 2 (SFR catalog)",
-  "Previous evaluation notes",
-]
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
@@ -128,7 +121,6 @@ export function DemoContent() {
   const [feedback, setFeedback] = useState<"none" | "up" | "down">("none")
 
   /* Context ring hover */
-  const [contextHover, setContextHover] = useState(false)
 
   return (
     <article>
@@ -369,62 +361,6 @@ export function DemoContent() {
           <InteractiveComposer showControls={false} />
         </div>
 
-        {/* -------------------------------------------------------- */}
-        {/*  Context ring + Memory indicator                          */}
-        {/* -------------------------------------------------------- */}
-        <div className="mt-8 flex items-center gap-4 border-t border-border/30 pt-4">
-          {/* Context ring */}
-          <div
-            className="relative"
-            onMouseEnter={() => setContextHover(true)}
-            onMouseLeave={() => setContextHover(false)}
-          >
-            <svg width="28" height="28" viewBox="0 0 28 28">
-              <circle
-                cx="14"
-                cy="14"
-                r="11"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                className="text-border"
-              />
-              <circle
-                cx="14"
-                cy="14"
-                r="11"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeDasharray={`${(4 / 6) * 2 * Math.PI * 11} ${2 * Math.PI * 11}`}
-                strokeDashoffset="0"
-                strokeLinecap="round"
-                className="text-foreground/50"
-                style={{ transform: "rotate(-90deg)", transformOrigin: "center" }}
-              />
-            </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[9px] font-medium text-muted-foreground">
-              4
-            </span>
-
-            {/* Tooltip */}
-            {contextHover && (
-              <div className="demo-fade-in absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 rounded-md bg-foreground px-3 py-2 text-xs text-background shadow-sm">
-                <p className="mb-1 font-medium">Sources used</p>
-                {CONTEXT_SOURCES.map((s) => (
-                  <p key={s} className="text-background/70">{s}</p>
-                ))}
-                {/* Caret */}
-                <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-foreground" />
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground/50">
-            <HugeiconsIcon icon={Shield01Icon} size={12} strokeWidth={1.5} />
-            <span>2 memories used</span>
-          </div>
-        </div>
       </div>
     </article>
   )
