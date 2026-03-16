@@ -17,51 +17,26 @@ const ToolTreeContext = React.createContext<ToolTreeContextValue | null>(null)
 
 function useToolTree(): ToolTreeContextValue {
   const ctx = React.useContext(ToolTreeContext)
-  if (!ctx) {
-    throw new Error("useToolTree must be used within a <ToolTree />")
-  }
+  if (!ctx) throw new Error("useToolTree must be used within a <ToolTree />")
   return ctx
 }
 
-/* ── Item context (per-branch expand state) ── */
+/* ── Item context ── */
 
 interface ToolTreeItemContextValue {
   expanded: boolean
   onExpandedChange: (expanded: boolean) => void
 }
 
-const ToolTreeItemContext =
-  React.createContext<ToolTreeItemContextValue | null>(null)
+const ToolTreeItemContext = React.createContext<ToolTreeItemContextValue | null>(null)
 
 function useToolTreeItem(): ToolTreeItemContextValue {
   const ctx = React.useContext(ToolTreeItemContext)
-  if (!ctx) {
-    throw new Error("useToolTreeItem must be used within a <ToolTreeItem />")
-  }
+  if (!ctx) throw new Error("useToolTreeItem must be used within a <ToolTreeItem />")
   return ctx
 }
 
-/* ── Internal shared primitives ── */
-
-function BranchCurve() {
-  return (
-    <svg
-      width="19"
-      height="12"
-      viewBox="0 0 19 12"
-      fill="none"
-      className="absolute"
-      style={{ left: -19, top: 0 }}
-    >
-      <path
-        d="M 0,0 C 0,8 6,12 19,12"
-        stroke="var(--color-border)"
-        strokeWidth="1"
-        fill="none"
-      />
-    </svg>
-  )
-}
+/* ── Shared internals ── */
 
 function TreeIcon({ icon, size = 16 }: { icon: IconSvgElement; size?: number }) {
   return (
@@ -104,21 +79,11 @@ function ToolTree({
     [onOpenChangeProp],
   )
 
-  const ctx = React.useMemo(
-    () => ({ open, onOpenChange }),
-    [open, onOpenChange],
-  )
+  const ctx = React.useMemo(() => ({ open, onOpenChange }), [open, onOpenChange])
 
   return (
     <ToolTreeContext.Provider value={ctx}>
-      <div
-        data-slot="tool-tree"
-        className={cn(
-          "flex flex-col gap-3 min-w-0 text-muted-foreground relative",
-          className,
-        )}
-        {...props}
-      >
+      <div data-slot="tool-tree" className={cn("flex flex-col gap-3 min-w-0 text-muted-foreground relative", className)} {...props}>
         {children}
       </div>
     </ToolTreeContext.Provider>
@@ -170,10 +135,12 @@ function ToolTreeContent({
       />
       <div
         data-slot="tool-tree-content"
-        className={cn("pl-7 grid grid-cols-1", className)}
+        className={cn("pl-[28px]", className)}
         {...props}
       >
-        {children}
+        <div className="grid gap-1.5 grid-cols-1">
+          {children}
+        </div>
       </div>
     </>
   )
@@ -190,27 +157,26 @@ function ToolTreeItem({
   defaultExpanded?: boolean
 }) {
   const [expanded, setExpanded] = React.useState(defaultExpanded)
-
-  const ctx = React.useMemo(
-    () => ({ expanded, onExpandedChange: setExpanded }),
-    [expanded],
-  )
+  const ctx = React.useMemo(() => ({ expanded, onExpandedChange: setExpanded }), [expanded])
 
   return (
     <ToolTreeItemContext.Provider value={ctx}>
-      <div
-        data-slot="tool-tree-item"
-        className={cn("relative min-w-0 pt-1.5", className)}
-        {...props}
-      >
-        {/* Curvy SVG branch connector */}
-        <BranchCurve />
-
+      <div data-slot="tool-tree-item" className={cn("relative min-w-0", className)} {...props}>
+        {/* Background mask behind border-l to prevent double-opacity overlap with spine in dark mode */}
+        <div
+          className="absolute bg-background"
+          style={{ top: -5, left: -19, width: 1, height: 16 }}
+        />
+        {/* L-connector with rounded bottom-left corner */}
+        <div
+          className="absolute rounded-bl-lg border-l border-b border-border"
+          style={{ top: -5, left: -19, width: 30, height: 16 }}
+        />
         {/* Last-child spine mask (shown via CSS only on :last-child) */}
         <div
           data-spine-mask
           className="absolute w-px bg-background"
-          style={{ top: 12, bottom: -24, left: -19 }}
+          style={{ top: 0, bottom: -24, left: -19 }}
         />
 
         <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
@@ -258,11 +224,7 @@ function ToolTreeItemContent({
   if (!expanded) return null
 
   return (
-    <div
-      data-slot="tool-tree-item-content"
-      className={cn("animate-composer-slide pl-7 -mt-1 pb-1", className)}
-      {...props}
-    >
+    <div data-slot="tool-tree-item-content" className={cn("animate-composer-slide pl-7 -mt-1 pb-1", className)} {...props}>
       {children}
     </div>
   )
