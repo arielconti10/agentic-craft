@@ -4,7 +4,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { HugeiconsIcon } from "@hugeicons/react"
 import type { IconSvgElement } from "@hugeicons/react"
-import { ArrowDown01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons"
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons"
 
 /* ── Context ── */
 
@@ -19,41 +19,6 @@ function useToolTree(): ToolTreeContextValue {
   const ctx = React.useContext(ToolTreeContext)
   if (!ctx) throw new Error("useToolTree must be used within a <ToolTree />")
   return ctx
-}
-
-/* ── Item context ── */
-
-interface ToolTreeItemContextValue {
-  expanded: boolean
-  onExpandedChange: (expanded: boolean) => void
-  isLast: boolean
-}
-
-const ToolTreeItemContext = React.createContext<ToolTreeItemContextValue | null>(null)
-
-function useToolTreeItem(): ToolTreeItemContextValue {
-  const ctx = React.useContext(ToolTreeItemContext)
-  if (!ctx) throw new Error("useToolTreeItem must be used within a <ToolTreeItem />")
-  return ctx
-}
-
-/* ── Shared internals ── */
-
-function TreeIcon({ icon, size = 16 }: { icon: IconSvgElement; size?: number }) {
-  return (
-    <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
-      <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
-      <HugeiconsIcon icon={icon} size={size} strokeWidth={1.5} className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground" />
-    </div>
-  )
-}
-
-function TreeTimestamp({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="shrink-0 ml-auto transition-opacity duration-300 opacity-0 group-hover/tool-wrapper:opacity-100 hidden md:block text-xs select-none truncate">
-      {children}
-    </span>
-  )
 }
 
 /* ── ToolTree (root) ── */
@@ -115,16 +80,26 @@ function ToolTreeTrigger({
   return (
     <div data-slot="tool-tree-trigger" className="flex items-center gap-2 relative group/tool-wrapper">
       <button type="button" onClick={() => onOpenChange(!open)} className={cn("min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer", className)} {...props}>
-        {icon && <TreeIcon icon={icon} size={18} />}
+        {icon && (
+          <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
+            <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
+            <HugeiconsIcon icon={icon} size={18} strokeWidth={1.5} className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground" />
+          </div>
+        )}
         <span className="min-w-0 group-hover/tool-wrapper:text-foreground text-sm select-none truncate">{children}</span>
         <HugeiconsIcon icon={ArrowDown01Icon} size={14} strokeWidth={1.5} className={cn("shrink-0 group-hover/tool-wrapper:text-foreground transition-transform duration-200", !open && "-rotate-90")} />
       </button>
-      {timestamp && <TreeTimestamp>{timestamp}</TreeTimestamp>}
+      {timestamp && (
+        <span className="shrink-0 ml-auto transition-opacity duration-300 opacity-0 group-hover/tool-wrapper:opacity-100 hidden md:block text-xs select-none truncate">
+          {timestamp}
+        </span>
+      )}
     </div>
   )
 }
 
-/* ── ToolTreeContent ── */
+/* ── ToolTreeContent ──
+   Wraps each child (ToolCall) with L-connector and spine mask for the last item. */
 
 function ToolTreeContent({
   className,
@@ -143,95 +118,27 @@ function ToolTreeContent({
       {...props}
     >
       <div className="grid gap-1.5 grid-cols-1">
-        {items.map((child, i) =>
-          React.isValidElement(child)
-            ? React.cloneElement(child as React.ReactElement<{ "data-last"?: boolean }>, { "data-last": i === items.length - 1 })
-            : child,
-        )}
+        {items.map((child, i) => {
+          const isLast = i === items.length - 1
+          return (
+            <div key={i} className="relative min-w-0">
+              {/* Last-child: mask FIRST so connector paints on top */}
+              {isLast && (
+                <div
+                  className="absolute w-px bg-background"
+                  style={{ top: 0, bottom: -24, left: -19 }}
+                />
+              )}
+              {/* L-connector with rounded bottom-left corner */}
+              <div
+                className="absolute rounded-bl-lg border-l border-b"
+                style={{ top: -5, left: -19, width: 30, height: 16, borderColor: "var(--tool-tree-connector)" }}
+              />
+              {child}
+            </div>
+          )
+        })}
       </div>
-    </div>
-  )
-}
-
-/* ── ToolTreeItem ── */
-
-function ToolTreeItem({
-  defaultExpanded = false,
-  className,
-  children,
-  "data-last": isLast = false,
-  ...props
-}: React.ComponentProps<"div"> & {
-  defaultExpanded?: boolean
-  "data-last"?: boolean
-}) {
-  const [expanded, setExpanded] = React.useState(defaultExpanded)
-  const ctx = React.useMemo(() => ({ expanded, onExpandedChange: setExpanded, isLast }), [expanded, isLast])
-
-  return (
-    <ToolTreeItemContext.Provider value={ctx}>
-      <div data-slot="tool-tree-item" className={cn("relative min-w-0", className)} {...props}>
-        {/* Last-child: mask FIRST (bg-color covers spine from item top down),
-            then connector paints on top. Matches Perplexity DOM order. */}
-        {isLast && (
-          <div
-            className="absolute w-px bg-background"
-            style={{ top: 0, bottom: -24, left: -19 }}
-          />
-        )}
-        {/* L-connector with rounded bottom-left corner */}
-        <div
-          className="absolute rounded-bl-lg border-l border-b"
-          style={{ top: -5, left: -19, width: 30, height: 16, borderColor: "var(--tool-tree-connector)" }}
-        />
-
-        <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
-          {children}
-        </div>
-      </div>
-    </ToolTreeItemContext.Provider>
-  )
-}
-
-/* ── ToolTreeItemTrigger ── */
-
-function ToolTreeItemTrigger({
-  icon,
-  timestamp,
-  className,
-  children,
-  ...props
-}: React.ComponentProps<"button"> & {
-  icon?: IconSvgElement
-  timestamp?: string
-}) {
-  const { expanded, onExpandedChange } = useToolTreeItem()
-
-  return (
-    <div className="flex items-center gap-2 relative group/tool-wrapper">
-      <button type="button" onClick={() => onExpandedChange(!expanded)} className={cn("min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer", className)} {...props}>
-        {icon && <TreeIcon icon={icon} />}
-        <span className="min-w-0 group-hover/tool-wrapper:text-foreground text-sm select-none truncate">{children}</span>
-        <HugeiconsIcon icon={ArrowRight01Icon} size={14} strokeWidth={1.5} className={cn("shrink-0 group-hover/tool-wrapper:text-foreground transition-transform duration-200", expanded && "rotate-90")} />
-      </button>
-      {timestamp && <TreeTimestamp>{timestamp}</TreeTimestamp>}
-    </div>
-  )
-}
-
-/* ── ToolTreeItemContent ── */
-
-function ToolTreeItemContent({
-  className,
-  children,
-  ...props
-}: React.ComponentProps<"div">) {
-  const { expanded } = useToolTreeItem()
-  if (!expanded) return null
-
-  return (
-    <div data-slot="tool-tree-item-content" className={cn("animate-composer-slide pl-7 -mt-1 pb-1", className)} {...props}>
-      {children}
     </div>
   )
 }
@@ -240,9 +147,5 @@ export {
   ToolTree,
   ToolTreeTrigger,
   ToolTreeContent,
-  ToolTreeItem,
-  ToolTreeItemTrigger,
-  ToolTreeItemContent,
   useToolTree,
-  useToolTreeItem,
 }
