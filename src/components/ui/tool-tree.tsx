@@ -85,14 +85,6 @@ function ToolTree({
   return (
     <ToolTreeContext.Provider value={ctx}>
       <div data-slot="tool-tree" className={cn("flex flex-col gap-3 min-w-0 text-muted-foreground relative", className)} {...props}>
-        {/* Spine rendered FIRST so trigger paints on top of it (DOM paint order).
-            Matches Perplexity structure: spine → trigger → content */}
-        {open && (
-          <span
-            className="w-px absolute"
-            style={{ left: 9, top: 24, bottom: 0, backgroundColor: "var(--tool-tree-connector)" }}
-          />
-        )}
         {children}
       </div>
     </ToolTreeContext.Provider>
@@ -143,7 +135,13 @@ function ToolTreeContent({
       className={cn("pl-[28px]", className)}
       {...props}
     >
-      <div className="grid gap-1.5 grid-cols-1">
+      <div className="relative grid gap-1.5 grid-cols-1">
+        {/* Spine scoped to the grid: top: -5 aligns with first connector's
+            border-l start; bottom: 0 ends at last item bottom */}
+        <span
+          className="w-px absolute"
+          style={{ left: -19, top: -5, bottom: 0, backgroundColor: "var(--tool-tree-connector)" }}
+        />
         {items.map((child, i) =>
           React.isValidElement(child)
             ? React.cloneElement(child as React.ReactElement<{ "data-last"?: boolean }>, { "data-last": i === items.length - 1 })
