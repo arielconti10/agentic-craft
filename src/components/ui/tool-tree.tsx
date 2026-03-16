@@ -45,8 +45,20 @@ function useToolTreeItem(): ToolTreeItemContextValue {
 
 function BranchCurve() {
   return (
-    <svg width="19" height="16" viewBox="0 0 19 16" fill="none" className="absolute" style={{ left: -19, top: 3 }}>
-      <path d="M 0,0 C 0,12 8,16 19,16" stroke="var(--color-border)" strokeWidth="1" fill="none" />
+    <svg
+      width="19"
+      height="12"
+      viewBox="0 0 19 12"
+      fill="none"
+      className="absolute"
+      style={{ left: -19, top: 0 }}
+    >
+      <path
+        d="M 0,0 C 0,8 6,12 19,12"
+        stroke="var(--color-border)"
+        strokeWidth="1"
+        fill="none"
+      />
     </svg>
   )
 }
@@ -158,7 +170,7 @@ function ToolTreeContent({
       />
       <div
         data-slot="tool-tree-content"
-        className={cn("pl-7 grid gap-0 grid-cols-1", className)}
+        className={cn("pl-7 grid grid-cols-1", className)}
         {...props}
       >
         {children}
@@ -188,7 +200,7 @@ function ToolTreeItem({
     <ToolTreeItemContext.Provider value={ctx}>
       <div
         data-slot="tool-tree-item"
-        className={cn("relative min-w-0", className)}
+        className={cn("relative min-w-0 pt-1.5", className)}
         {...props}
       >
         {/* Curvy SVG branch connector */}
@@ -198,7 +210,7 @@ function ToolTreeItem({
         <div
           data-spine-mask
           className="absolute w-px bg-background"
-          style={{ top: 0, bottom: -24, left: -19 }}
+          style={{ top: 12, bottom: -24, left: -19 }}
         />
 
         <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
