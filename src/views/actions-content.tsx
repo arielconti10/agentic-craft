@@ -19,6 +19,14 @@ import {
   Shield01Icon,
   RefreshIcon,
 } from "@hugeicons/core-free-icons"
+import {
+  ToolTree,
+  ToolTreeTrigger,
+  ToolTreeContent,
+  ToolTreeItem,
+  ToolTreeItemTrigger,
+  ToolTreeItemContent,
+} from "@/components/ui/tool-tree"
 
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
@@ -996,129 +1004,31 @@ export function ActionsContent() {
 
           <div key={parallelAnim} className="border border-border/40 rounded-lg p-6">
             {parallelState.parallel ? (
-              /* Parallel mode — tree view (Perplexity-style connectors) */
-              <div className="actions-slide-in flex flex-col gap-3 min-w-0 text-muted-foreground relative">
-                {/* Vertical spine — runs from parent icon down to last child */}
-                {treeOpen && (
-                  <span
-                    className="w-px absolute bg-border"
-                    style={{ left: 9, top: 10, bottom: 0 }}
-                  />
-                )}
-
-                {/* Parent row */}
-                <div className="flex items-center gap-2 relative group/tool-wrapper">
-                  <button
-                    type="button"
-                    onClick={() => setTreeOpen((o) => !o)}
-                    className="min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer"
-                  >
-                    {/* Icon with base-color mask to break the spine */}
-                    <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
-                      <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
-                      <HugeiconsIcon
-                        icon={GitBranchIcon}
-                        size={18}
-                        strokeWidth={1.5}
-                        className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground"
-                      />
-                    </div>
-                    <div className="min-w-0">
-                      <span className="group-hover/tool-wrapper:text-foreground text-sm select-none truncate">
-                        Running tasks in parallel
-                      </span>
-                    </div>
-                    <HugeiconsIcon
-                      icon={ArrowDown01Icon}
-                      size={14}
-                      strokeWidth={1.5}
-                      className={`shrink-0 group-hover/tool-wrapper:text-foreground transition-transform duration-200 ${
-                        treeOpen ? "" : "-rotate-90"
-                      }`}
-                    />
-                  </button>
-                  {/* Hover timestamp */}
-                  <span className="shrink-0 ml-auto transition-opacity duration-300 opacity-0 group-hover/tool-wrapper:opacity-100 hidden md:block text-xs select-none truncate">
-                    10:44 AM · 1s
-                  </span>
-                </div>
-
-                {/* Tree children */}
-                {treeOpen && (
-                  <div className="pl-7 grid gap-0 grid-cols-1">
-                    {PARALLEL_TASKS.map((task, i) => {
-                      const isLast = i === PARALLEL_TASKS.length - 1
-                      return (
-                        <div key={task.label} className="relative min-w-0">
-                          {/* Last-child spine mask — hides spine below the L-bend */}
-                          {isLast && (
-                            <div
-                              className="absolute w-px bg-background"
-                              style={{ top: 0, bottom: -24, left: -19 }}
-                            />
-                          )}
-                          {/* Horizontal branch from spine */}
-                          <div
-                            className="absolute border-b border-border"
-                            style={{ top: 11, left: -19, width: 30 }}
-                          />
-
-                          <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
-                            <div className="flex items-center gap-2 relative group/tool-wrapper">
-                              <button
-                                type="button"
-                                onClick={() => toggleChildExpand(i)}
-                                className="min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer"
-                              >
-                                {/* Child icon with base mask */}
-                                <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
-                                  <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
-                                  <HugeiconsIcon
-                                    icon={TextIcon}
-                                    size={16}
-                                    strokeWidth={1.5}
-                                    className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground"
-                                  />
-                                </div>
-                                <div className="min-w-0">
-                                  <span className="group-hover/tool-wrapper:text-foreground text-sm select-none truncate">
-                                    {task.label}
-                                  </span>
-                                </div>
-                                <HugeiconsIcon
-                                  icon={ArrowRight01Icon}
-                                  size={14}
-                                  strokeWidth={1.5}
-                                  className={`shrink-0 group-hover/tool-wrapper:text-foreground transition-transform duration-200 ${
-                                    childExpanded[i] ? "rotate-90" : ""
-                                  }`}
-                                />
-                              </button>
-                              {/* Hover timestamp */}
-                              <span className="shrink-0 ml-auto transition-opacity duration-300 opacity-0 group-hover/tool-wrapper:opacity-100 hidden md:block text-xs select-none truncate">
-                                10:44 AM · 1s
-                              </span>
-                            </div>
-
-                            {/* Expanded detail */}
-                            {childExpanded[i] && (
-                              <div className="actions-expand pl-7 -mt-1 pb-1">
-                                <div className="space-y-1 text-xs">
-                                  {task.details.map((d) => (
-                                    <div key={d.key} className="flex gap-2">
-                                      <span className="text-muted-foreground">{d.key}:</span>
-                                      <span className="text-foreground">{d.value}</span>
-                                    </div>
-                                  ))}
-                                </div>
+              <div className="actions-slide-in">
+                <ToolTree open={treeOpen} onOpenChange={setTreeOpen}>
+                  <ToolTreeTrigger icon={GitBranchIcon} timestamp="10:44 AM · 1s">
+                    Running tasks in parallel
+                  </ToolTreeTrigger>
+                  <ToolTreeContent>
+                    {PARALLEL_TASKS.map((task) => (
+                      <ToolTreeItem key={task.label}>
+                        <ToolTreeItemTrigger icon={TextIcon} timestamp="10:44 AM · 1s">
+                          {task.label}
+                        </ToolTreeItemTrigger>
+                        <ToolTreeItemContent>
+                          <div className="space-y-1 text-xs">
+                            {task.details.map((d) => (
+                              <div key={d.key} className="flex gap-2">
+                                <span className="text-muted-foreground">{d.key}:</span>
+                                <span className="text-foreground">{d.value}</span>
                               </div>
-                            )}
+                            ))}
                           </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
+                        </ToolTreeItemContent>
+                      </ToolTreeItem>
+                    ))}
+                  </ToolTreeContent>
+                </ToolTree>
               </div>
             ) : (
               /* Sequential mode — flat list */

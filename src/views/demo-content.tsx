@@ -5,8 +5,6 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import {
   GitBranchIcon,
   CodeIcon,
-  ArrowDown01Icon,
-  ArrowRight01Icon,
   Cancel01Icon,
   ThumbsUpIcon,
   ThumbsDownIcon,
@@ -15,6 +13,14 @@ import {
   SentIcon,
 } from "@hugeicons/core-free-icons"
 import InteractiveComposer from "../components/InteractiveComposer"
+import {
+  ToolTree,
+  ToolTreeTrigger,
+  ToolTreeContent,
+  ToolTreeItem,
+  ToolTreeItemTrigger,
+  ToolTreeItemContent,
+} from "@/components/ui/tool-tree"
 
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
@@ -114,7 +120,6 @@ export function DemoContent() {
 
   /* Tool call expansion */
   const [toolTreeOpen, setToolTreeOpen] = useState(true)
-  const [expandedTask, setExpandedTask] = useState<number | null>(null)
 
   /* Approval gate */
   const [approvalState, setApprovalState] = useState<"pending" | "approved" | "denied">("pending")
@@ -212,122 +217,25 @@ export function DemoContent() {
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
           <div className="w-full max-w-[85%]">
-            {/* Perplexity-style tree with spine + L-connectors */}
-            <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
-              {/* Vertical spine */}
-              {toolTreeOpen && (
-                <span
-                  className="w-px absolute bg-border"
-                  style={{ left: 9, top: 10, bottom: 0 }}
-                />
-              )}
-
-              {/* Parent row */}
-              <div className="flex items-center gap-2 relative group/tool-wrapper">
-                <button
-                  type="button"
-                  onClick={() => setToolTreeOpen(prev => !prev)}
-                  className="min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer"
-                >
-                  <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
-                    <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
-                    <HugeiconsIcon
-                      icon={GitBranchIcon}
-                      size={18}
-                      strokeWidth={1.5}
-                      className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="group-hover/tool-wrapper:text-foreground text-sm select-none truncate">
-                      Running 3 tasks in parallel
-                    </span>
-                  </div>
-                  <HugeiconsIcon
-                    icon={ArrowDown01Icon}
-                    size={14}
-                    strokeWidth={1.5}
-                    className={`shrink-0 group-hover/tool-wrapper:text-foreground transition-transform duration-200 ${
-                      toolTreeOpen ? "" : "-rotate-90"
-                    }`}
-                  />
-                </button>
-                <span className="shrink-0 ml-auto transition-opacity duration-300 opacity-0 group-hover/tool-wrapper:opacity-100 hidden md:block text-xs select-none truncate">
-                  10:44 AM · 1s
-                </span>
-              </div>
-
-              {/* Tree children */}
-              {toolTreeOpen && (
-                <div className="pl-7 grid gap-0 grid-cols-1 demo-slide-in">
-                  {PARALLEL_TASKS.map((task, i) => {
-                    const isLast = i === PARALLEL_TASKS.length - 1
-                    const isExpanded = expandedTask === i
-                    return (
-                      <div key={i} className="relative min-w-0">
-                        {/* Last-child spine mask */}
-                        {isLast && (
-                          <div
-                            className="absolute w-px bg-background"
-                            style={{ top: 0, bottom: -24, left: -19 }}
-                          />
-                        )}
-                        {/* Horizontal branch from spine */}
-                        <div
-                          className="absolute border-b border-border"
-                          style={{ top: 11, left: -19, width: 30 }}
-                        />
-
-                        <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
-                          <div className="flex items-center gap-2 relative group/tool-wrapper">
-                            <button
-                              type="button"
-                              onClick={() => setExpandedTask(isExpanded ? null : i)}
-                              className="min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer"
-                            >
-                              <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
-                                <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
-                                <HugeiconsIcon
-                                  icon={CodeIcon}
-                                  size={16}
-                                  strokeWidth={1.5}
-                                  className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground"
-                                />
-                              </div>
-                              <div className="min-w-0">
-                                <span className="group-hover/tool-wrapper:text-foreground text-sm select-none truncate">
-                                  {task.label}
-                                </span>
-                              </div>
-                              <HugeiconsIcon
-                                icon={ArrowRight01Icon}
-                                size={14}
-                                strokeWidth={1.5}
-                                className={`shrink-0 group-hover/tool-wrapper:text-foreground transition-transform duration-200 ${
-                                  isExpanded ? "rotate-90" : ""
-                                }`}
-                              />
-                            </button>
-                            <span className="shrink-0 ml-auto transition-opacity duration-300 opacity-0 group-hover/tool-wrapper:opacity-100 hidden md:block text-xs select-none truncate">
-                              {task.duration}
-                            </span>
-                          </div>
-
-                          {/* Expanded detail */}
-                          {isExpanded && (
-                            <div className="demo-slide-in pl-7 -mt-1 pb-1">
-                              <p className="text-xs text-muted-foreground" style={{ lineHeight: "18px" }}>
-                                {TASK_DETAILS[i]}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
+            <ToolTree open={toolTreeOpen} onOpenChange={setToolTreeOpen}>
+              <ToolTreeTrigger icon={GitBranchIcon} timestamp="10:44 AM · 1s">
+                Running 3 tasks in parallel
+              </ToolTreeTrigger>
+              <ToolTreeContent>
+                {PARALLEL_TASKS.map((task, i) => (
+                  <ToolTreeItem key={task.label}>
+                    <ToolTreeItemTrigger icon={CodeIcon} timestamp={task.duration}>
+                      {task.label}
+                    </ToolTreeItemTrigger>
+                    <ToolTreeItemContent>
+                      <p className="text-xs text-muted-foreground" style={{ lineHeight: "18px" }}>
+                        {TASK_DETAILS[i]}
+                      </p>
+                    </ToolTreeItemContent>
+                  </ToolTreeItem>
+                ))}
+              </ToolTreeContent>
+            </ToolTree>
           </div>
         </div>
 

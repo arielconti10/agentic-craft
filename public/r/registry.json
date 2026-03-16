@@ -1,0 +1,88 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "agentic-craft",
+  "homepage": "https://agentic-craft.dev",
+  "items": [
+    {
+      "name": "composer",
+      "type": "registry:ui",
+      "title": "Composer",
+      "description": "A composable AI chat input with stacked island panels, file attachments, suggestion chips, and context usage visualization.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons",
+        "@base-ui/react"
+      ],
+      "registryDependencies": ["dropdown-menu"],
+      "files": [
+        { "path": "registry/base-nova/ui/composer.tsx", "type": "registry:ui" },
+        { "path": "registry/base-nova/ui/composer-input.tsx", "type": "registry:ui" },
+        { "path": "registry/base-nova/ui/composer-toolbar.tsx", "type": "registry:ui" },
+        { "path": "registry/base-nova/ui/composer-islands.tsx", "type": "registry:ui" },
+        { "path": "registry/base-nova/ui/composer-attachments.tsx", "type": "registry:ui" },
+        { "path": "registry/base-nova/ui/composer-suggestions.tsx", "type": "registry:ui" }
+      ],
+      "css": {
+        "@keyframes composer-send-press": {
+          "0%": { "transform": "scale(1)" },
+          "40%": { "transform": "scale(0.82)" },
+          "100%": { "transform": "scale(1)" }
+        },
+        "@keyframes composer-island-enter": {
+          "from": { "opacity": "0", "transform": "translateY(16px)" },
+          "to": { "opacity": "1", "transform": "translateY(0)" }
+        },
+        "@keyframes composer-arrow-up": {
+          "0%": { "transform": "translateY(0)", "opacity": "1" },
+          "50%": { "transform": "translateY(-6px)", "opacity": "0" },
+          "51%": { "transform": "translateY(6px)", "opacity": "0" },
+          "100%": { "transform": "translateY(0)", "opacity": "1" }
+        },
+        "@keyframes composer-chip-fill": {
+          "0%": { "background-color": "transparent" },
+          "30%": { "background-color": "var(--color-muted)" },
+          "100%": { "background-color": "transparent" }
+        },
+        "@keyframes composer-slide-in": {
+          "from": { "opacity": "0", "transform": "translateY(4px)" },
+          "to": { "opacity": "1", "transform": "translateY(0)" }
+        },
+        "@utility animate-composer-send": {
+          "animation": "composer-send-press 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)"
+        },
+        "@utility animate-composer-island": {
+          "animation": "composer-island-enter 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards"
+        },
+        "@utility animate-composer-arrow": {
+          "animation": "composer-arrow-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)"
+        },
+        "@utility animate-composer-chip": {
+          "animation": "composer-chip-fill 0.4s ease"
+        },
+        "@utility animate-composer-slide": {
+          "animation": "composer-slide-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards"
+        },
+        "[data-slot=\"tool-tree-item\"] [data-spine-mask]": {
+          "display": "none"
+        },
+        "[data-slot=\"tool-tree-item\"]:last-child [data-spine-mask]": {
+          "display": "block"
+        }
+      }
+    },
+    {
+      "name": "tool-tree",
+      "type": "registry:ui",
+      "title": "Tool Tree",
+      "description": "A composable tree visualization for parallel tool calls with curvy SVG branch connectors, expandable children, and hover timestamps.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": ["composer"],
+      "files": [
+        { "path": "registry/base-nova/ui/tool-tree.tsx", "type": "registry:ui" }
+      ]
+    }
+  ]
+}
