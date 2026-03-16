@@ -71,15 +71,28 @@
       }
     },
     {
-      "name": "tool-tree",
+      "name": "tool-call",
       "type": "registry:ui",
-      "title": "Tool Tree",
-      "description": "A composable tree visualization for parallel tool calls with curvy SVG branch connectors, expandable children, and hover timestamps.",
+      "title": "Tool Call",
+      "description": "Universal tool call component with running/completed/failed status states. Works standalone for sequential calls or inside ToolTree for parallel execution.",
       "dependencies": [
         "@hugeicons/react",
         "@hugeicons/core-free-icons"
       ],
-      "registryDependencies": ["composer"],
+      "files": [
+        { "path": "registry/base-nova/ui/tool-call.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "tool-tree",
+      "type": "registry:ui",
+      "title": "Tool Tree",
+      "description": "A composable tree visualization for parallel tool calls with L-connectors, expandable children, and hover timestamps. Wraps ToolCall children.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": ["tool-call"],
       "files": [
         { "path": "registry/base-nova/ui/tool-tree.tsx", "type": "registry:ui" }
       ]
