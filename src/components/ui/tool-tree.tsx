@@ -85,6 +85,13 @@ function ToolTree({
   return (
     <ToolTreeContext.Provider value={ctx}>
       <div data-slot="tool-tree" className={cn("flex flex-col gap-3 min-w-0 text-muted-foreground relative", className)} {...props}>
+        {/* Spine: first child so trigger paints on top (DOM order) */}
+        {open && (
+          <span
+            className="w-px absolute"
+            style={{ left: 9, top: 10, bottom: 0, backgroundColor: "var(--tool-tree-connector)" }}
+          />
+        )}
         {children}
       </div>
     </ToolTreeContext.Provider>
@@ -135,13 +142,7 @@ function ToolTreeContent({
       className={cn("pl-[28px]", className)}
       {...props}
     >
-      <div className="relative grid gap-1.5 grid-cols-1">
-        {/* Spine scoped to the grid: top: -5 aligns with first connector's
-            border-l start; bottom: 0 ends at last item bottom */}
-        <span
-          className="w-px absolute"
-          style={{ left: -19, top: -5, bottom: 0, backgroundColor: "var(--tool-tree-connector)" }}
-        />
+      <div className="grid gap-1.5 grid-cols-1">
         {items.map((child, i) =>
           React.isValidElement(child)
             ? React.cloneElement(child as React.ReactElement<{ "data-last"?: boolean }>, { "data-last": i === items.length - 1 })
@@ -170,18 +171,19 @@ function ToolTreeItem({
   return (
     <ToolTreeItemContext.Provider value={ctx}>
       <div data-slot="tool-tree-item" className={cn("relative min-w-0", className)} {...props}>
+        {/* Last-child: mask FIRST (bg-color covers spine from item top down),
+            then connector paints on top. Matches Perplexity DOM order. */}
+        {isLast && (
+          <div
+            className="absolute w-px bg-background"
+            style={{ top: 0, bottom: -24, left: -19 }}
+          />
+        )}
         {/* L-connector with rounded bottom-left corner */}
         <div
           className="absolute rounded-bl-lg border-l border-b"
           style={{ top: -5, left: -19, width: 30, height: 16, borderColor: "var(--tool-tree-connector)" }}
         />
-        {/* Last-child spine mask — covers spine below final branch */}
-        {isLast && (
-          <div
-            className="absolute bg-background"
-            style={{ top: 11, bottom: -24, left: -20, width: 3 }}
-          />
-        )}
 
         <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
           {children}
