@@ -26,6 +26,7 @@ function useToolTree(): ToolTreeContextValue {
 interface ToolTreeItemContextValue {
   expanded: boolean
   onExpandedChange: (expanded: boolean) => void
+  isLast: boolean
 }
 
 const ToolTreeItemContext = React.createContext<ToolTreeItemContextValue | null>(null)
@@ -84,6 +85,14 @@ function ToolTree({
   return (
     <ToolTreeContext.Provider value={ctx}>
       <div data-slot="tool-tree" className={cn("flex flex-col gap-3 min-w-0 text-muted-foreground relative", className)} {...props}>
+        {/* Spine rendered FIRST so trigger paints on top of it (DOM paint order).
+            Matches Perplexity structure: spine → trigger → content */}
+        {open && (
+          <span
+            className="w-px absolute"
+            style={{ left: 9, top: 24, bottom: 0, backgroundColor: "var(--tool-tree-connector)" }}
+          />
+        )}
         {children}
       </div>
     </ToolTreeContext.Provider>
@@ -105,7 +114,7 @@ function ToolTreeTrigger({
   const { open, onOpenChange } = useToolTree()
 
   return (
-    <div data-slot="tool-tree-trigger" className="flex items-center gap-2 relative z-[1] group/tool-wrapper">
+    <div data-slot="tool-tree-trigger" className="flex items-center gap-2 relative group/tool-wrapper">
       <button type="button" onClick={() => onOpenChange(!open)} className={cn("min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer", className)} {...props}>
         {icon && <TreeIcon icon={icon} size={18} />}
         <span className="min-w-0 group-hover/tool-wrapper:text-foreground text-sm select-none truncate">{children}</span>
@@ -126,23 +135,22 @@ function ToolTreeContent({
   const { open } = useToolTree()
   if (!open) return null
 
+  const items = React.Children.toArray(children)
+
   return (
-    <>
-      {/* Vertical spine — uses opaque color to match L-connectors */}
-      <span
-        className="w-px absolute"
-        style={{ left: 9, top: 10, bottom: 0, backgroundColor: "var(--tool-tree-connector)" }}
-      />
-      <div
-        data-slot="tool-tree-content"
-        className={cn("pl-[28px]", className)}
-        {...props}
-      >
-        <div className="grid gap-1.5 grid-cols-1">
-          {children}
-        </div>
+    <div
+      data-slot="tool-tree-content"
+      className={cn("pl-[28px]", className)}
+      {...props}
+    >
+      <div className="grid gap-1.5 grid-cols-1">
+        {items.map((child, i) =>
+          React.isValidElement(child)
+            ? React.cloneElement(child as React.ReactElement<{ "data-last"?: boolean }>, { "data-last": i === items.length - 1 })
+            : child,
+        )}
       </div>
-    </>
+    </div>
   )
 }
 
@@ -152,28 +160,30 @@ function ToolTreeItem({
   defaultExpanded = false,
   className,
   children,
+  "data-last": isLast = false,
   ...props
 }: React.ComponentProps<"div"> & {
   defaultExpanded?: boolean
+  "data-last"?: boolean
 }) {
   const [expanded, setExpanded] = React.useState(defaultExpanded)
-  const ctx = React.useMemo(() => ({ expanded, onExpandedChange: setExpanded }), [expanded])
+  const ctx = React.useMemo(() => ({ expanded, onExpandedChange: setExpanded, isLast }), [expanded, isLast])
 
   return (
     <ToolTreeItemContext.Provider value={ctx}>
       <div data-slot="tool-tree-item" className={cn("relative min-w-0", className)} {...props}>
-        {/* L-connector with rounded bottom-left corner — uses opaque --tool-tree-connector
-            to prevent double-opacity overlap with the spine in dark mode */}
+        {/* L-connector with rounded bottom-left corner */}
         <div
           className="absolute rounded-bl-lg border-l border-b"
           style={{ top: -5, left: -19, width: 30, height: 16, borderColor: "var(--tool-tree-connector)" }}
         />
-        {/* Last-child spine mask (shown via CSS only on :last-child) */}
-        <div
-          data-spine-mask
-          className="absolute w-px bg-background"
-          style={{ top: 11, bottom: -24, left: -19 }}
-        />
+        {/* Last-child spine mask — covers spine below final branch */}
+        {isLast && (
+          <div
+            className="absolute bg-background"
+            style={{ top: 11, bottom: -24, left: -20, width: 3 }}
+          />
+        )}
 
         <div className="flex flex-col gap-3 min-w-0 text-muted-foreground relative">
           {children}

@@ -66,11 +66,3 @@
   --tool-tree-connector: oklch(0.23 0 0);
 }
 
-/* Show spine mask only on last item */
-[data-slot="tool-tree-item"] [data-spine-mask] {
-  display: none;
-}
-
-[data-slot="tool-tree-item"]:last-child [data-spine-mask] {
-  display: block;
-}
