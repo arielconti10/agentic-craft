@@ -4,10 +4,12 @@
 > been fixed and visually re-verified (light + dark, 390/768/1024/1440px,
 > zero console errors, zero horizontal overflow). Deliberately left as-is:
 > the cream workbench pane in dark mode (reads as a light webpage inside a
-> browser frame), the repeated auto-generated "Pattern Pieces" boilerplate
-> (content authoring, not layout), and the app-wide muted-text opacity scale
+> browser frame), and the app-wide muted-text opacity scale
 > beyond the specific spots called out (footer, empty-state hints, handoff
 > stepper) — a full contrast retune deserves its own design pass.
+> The "Pattern Pieces" boilerplate was subsequently fixed too: spec text now
+> comes from each item's registry.json description, with short factual
+> descriptions for stock shadcn primitives.
 
 Date: 2026-06-09
 Scope: every route (10 pattern/index pages + 8 template pages), light and dark
@@ -186,7 +188,7 @@ page — let cells wrap instead of `truncate`.
 - The "N" avatar / red "1 Issue" pill overlapping the sidebar footer is the
   Next.js dev-tools indicator, dev-only.
 - "Black serif text on dark pages" in some automated captures is a
-  headless-Chromium *element-screenshot* artifact; full-viewport renders and
+  headless-Chromium _element-screenshot_ artifact; full-viewport renders and
   computed styles are correct in the real DOM.
 - Composer "Suggestions" showing an empty composer in one capture was the
   capture toggling the (default-on) control off — the default state renders

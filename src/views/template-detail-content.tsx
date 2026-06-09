@@ -11,6 +11,7 @@ import { PatternStateMatrix } from "@/components/reference/pattern-state-matrix"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { pieceSpec } from "@/content/registry-pieces"
 import { getTemplateDetail, type TemplateSlug } from "@/content/templates"
 
 function TemplateDetailContent({ slug }: { slug: TemplateSlug }) {
@@ -87,7 +88,7 @@ function TemplateDetailContent({ slug }: { slug: TemplateSlug }) {
         <PatternSpecTable
           rows={template.pieces.map((piece) => ({
             element: piece,
-            spec: `Compose ${piece} into the workflow without hard-coding the whole page as one component.`,
+            spec: pieceSpec(piece),
           }))}
         />
         <PatternGuidelines
@@ -95,15 +96,18 @@ function TemplateDetailContent({ slug }: { slug: TemplateSlug }) {
           items={[
             {
               title: "Approval",
-              description: "Risky external actions use a Decision Surface before execution.",
+              description:
+                "Risky external actions use a Decision Surface before execution.",
             },
             {
               title: "Provenance",
-              description: "Sources, memory, cost, and owner metadata stay visible at the decision point.",
+              description:
+                "Sources, memory, cost, and owner metadata stay visible at the decision point.",
             },
             {
               title: "Recovery",
-              description: "Blocked states expose the next input needed instead of showing indefinite activity.",
+              description:
+                "Blocked states expose the next input needed instead of showing indefinite activity.",
             },
           ]}
         />
