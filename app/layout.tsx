@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next"
 import { Albert_Sans, Source_Serif_4 } from "next/font/google"
-import Script from "next/script"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { ThemeProvider } from "@/components/theme-provider"
 import {
@@ -72,9 +71,11 @@ export default function RootLayout({
       className={`${albertSans.variable} ${sourceSerif4.variable}`}
     >
       <body>
-        <Script
+        {/* Plain inline script (not next/script): it must run synchronously
+            during HTML parsing, before any content paints, or dark-mode
+            loads flash the light theme. */}
+        <script
           id="agentic-craft-theme"
-          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: themeInitializerScript }}
         />
         <a
@@ -106,12 +107,12 @@ export default function RootLayout({
                     {children}
                   </div>
                 </main>
-                <footer className="border-t border-dashed border-border/40 px-4 py-8 text-center text-xs text-muted-foreground/60 sm:px-8">
+                <footer className="border-t border-dashed border-border/40 px-4 py-8 text-center text-xs text-muted-foreground sm:px-8">
                   <a
                     href="https://github.com/arielconti10/agentic-craft"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex min-h-8 items-center transition-colors hover:text-muted-foreground"
+                    className="inline-flex min-h-8 items-center transition-colors hover:text-foreground"
                   >
                     Agentic Craft — Open Source
                   </a>

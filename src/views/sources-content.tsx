@@ -101,7 +101,7 @@ function SourceMarker({
       aria-label={`Inspect source ${id}`}
       aria-pressed={active}
       onClick={onSelect}
-      className="inline-flex translate-y-[-1px] items-center rounded-md border border-border bg-background px-1.5 py-0.5 font-sans text-xs leading-none text-muted-foreground transition-[background-color,border-color,color,box-shadow] hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-pressed:border-primary/30 aria-pressed:bg-primary/10 aria-pressed:text-primary"
+      className="relative inline-flex translate-y-[-1px] items-center rounded-md border border-border bg-background px-1.5 py-0.5 font-sans text-xs leading-none text-muted-foreground transition-[background-color,border-color,color,box-shadow] after:absolute after:-inset-x-1 after:-inset-y-2 after:content-[''] hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-pressed:border-primary/30 aria-pressed:bg-primary/10 aria-pressed:text-primary"
     >
       {id}
     </button>

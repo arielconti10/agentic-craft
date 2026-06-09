@@ -377,13 +377,9 @@ export function ActionsContent() {
       }
 
       progressRef.current = setInterval(() => {
-        setSubagentProgress((prev) => {
-          const next = Math.min(prev + 1, 8)
-          if (next >= 8) {
-            stopProgress()
-          }
-          return next
-        })
+        // Loop while "Running" is selected so the demo never drifts into the
+        // complete state with the Running control still pressed.
+        setSubagentProgress((prev) => (prev >= 7 ? 0 : prev + 1))
       }, 600)
     }
 
@@ -588,9 +584,11 @@ export function ActionsContent() {
               {toolState.error ? (
                 <>
                   <ToolCall
+                    key={`error-ok-${toolState.expandAll}`}
                     icon={Wrench01Icon}
                     status="completed"
                     timestamp={TOOL_CALLS_DATA[0].duration}
+                    defaultExpanded={toolState.expandAll}
                   >
                     <ToolCallTrigger>
                       <ToolCallLabel>{TOOL_CALLS_DATA[0].label}</ToolCallLabel>
@@ -622,10 +620,11 @@ export function ActionsContent() {
               ) : (
                 TOOL_CALLS_DATA.map((tool) => (
                   <ToolCall
-                    key={tool.label}
+                    key={`${tool.label}-${toolState.expandAll}`}
                     icon={Wrench01Icon}
                     status="completed"
                     timestamp={tool.duration}
+                    defaultExpanded={toolState.expandAll}
                   >
                     <ToolCallTrigger>
                       <ToolCallLabel>{tool.label}</ToolCallLabel>
@@ -741,7 +740,7 @@ export function ActionsContent() {
                 <span className="text-sm font-normal">Source Review Agent</span>
                 <Badge variant="secondary">
                   {subagentProgress >= 8
-                    ? "complete"
+                    ? "Complete"
                     : `${subagentProgress} of 8 families`}
                 </Badge>
                 {subagentState.running && subagentProgress < 8 && (

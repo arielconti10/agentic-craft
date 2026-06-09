@@ -31,7 +31,7 @@ high-trust agent experiences.
   documents, and usage meters.
 - `Agent Actions`: tool calls, subagents, parallel execution, plans, decision
   flows, clarifying interruptions, and approval gates.
-- `Trust & Governance`: autonomy settings, consent, context scope, provenance,
+- `Trust & Control Plane`: autonomy settings, consent, context scope, provenance,
   audit trails, cost transparency, and kill-switch behavior.
 - `Memory`: memory panels, ledger items, provenance previews, memory CRUD,
   auto-memory, context rings, and privacy controls.

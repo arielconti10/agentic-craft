@@ -480,7 +480,7 @@ export function TrustContent() {
       <header className="mb-20">
         <p className="section-label mb-4">Patterns</p>
         <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
-          Trust &amp; Safety
+          Trust &amp; Control Plane
         </h1>
         <p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Autonomy governance, operational configuration, transparency, and

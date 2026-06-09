@@ -1,7 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { Brain01Icon, Clock01Icon, File01Icon } from "@hugeicons/core-free-icons"
+import {
+  Brain01Icon,
+  Clock01Icon,
+  File01Icon,
+} from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
 import { Badge } from "@/components/ui/badge"
@@ -40,7 +44,7 @@ function MemoryLedgerItem({
     <ReferenceItem.Root
       data-slot="memory-ledger-item"
       className={cn(
-        "flex-wrap sm:flex-nowrap",
+        "@container/ledger flex-wrap @md/ledger:flex-nowrap",
         selected && "border-foreground/20 bg-muted/25",
         className
       )}
@@ -51,7 +55,9 @@ function MemoryLedgerItem({
       </ReferenceItem.Media>
       <ReferenceItem.Content>
         <ReferenceItem.Header>
-          <ReferenceItem.Title className="whitespace-normal">
+          {/* text-clip drops the inherited truncate so wrapped lines don't
+              each get clipped with an ellipsis */}
+          <ReferenceItem.Title className="text-clip whitespace-normal">
             {value}
           </ReferenceItem.Title>
           <Badge variant="outline">{scope}</Badge>
@@ -69,7 +75,7 @@ function MemoryLedgerItem({
           <span>Expires {expiry}</span>
         </ReferenceItem.Meta>
       </ReferenceItem.Content>
-      <ReferenceItem.Actions className="ml-11 w-full justify-start sm:ml-0 sm:w-auto sm:justify-end">
+      <ReferenceItem.Actions className="ml-11 w-full justify-start @md/ledger:ml-0 @md/ledger:w-auto @md/ledger:justify-end">
         {onInspect && (
           <Button
             type="button"

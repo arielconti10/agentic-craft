@@ -235,20 +235,12 @@ article > header {
   }
 }
 
-/* Content density
-   Keep the reference pages specimen-first: route headers provide context, while
-   repeated section summaries, spec tables, and explainer callouts stay out of
-   the default reading path. */
-.page-section > h2 + p.text-muted-foreground,
-.page-section > .max-w-\[660px\] > h2 + p.text-muted-foreground,
-.page-section > [data-slot="table-container"],
-.page-section [data-slot="table-container"]:has(> table.mt-10),
-.page-section
-  > div.mt-8:has(> [data-slot="table-container"] > table.w-full.text-sm),
-.page-section > p.border-l-2,
-.page-section > div.border-l-2 {
-  display: none;
-}
+/* Content density note: an earlier rule block hid section summaries, spec
+   tables, and callouts here via structural :has() selectors. It silently
+   emptied whole sections (e.g. /sources "Required states", /templates "Run
+   Monitor") and fought the page sources, so it was removed. If density
+   control is reintroduced, gate it on an explicit class and never hide a
+   section's only content. */
 
 /* Section label — small caps category */
 .section-label {
@@ -514,7 +506,10 @@ article > header {
 
 .conv-shimmer-text,
 .demo-shimmer-text {
-  background: linear-gradient(
+  /* Longhand on purpose: the `background` shorthand would be re-declared by
+     the lab() compatibility fallback, resetting background-clip and leaving
+     the text invisible behind an opaque gradient box. */
+  background-image: linear-gradient(
     90deg,
     var(--color-muted-foreground) 0%,
     var(--color-muted-foreground) 35%,

@@ -412,7 +412,7 @@ export function MemoryContent() {
                 <p className="text-sm font-medium text-muted-foreground/70">
                   No memories yet
                 </p>
-                <p className="mt-1 max-w-xs text-xs text-muted-foreground/50">
+                <p className="mt-1 max-w-xs text-xs text-muted-foreground">
                   As you work with the agent, it will learn your review
                   preferences, frequently referenced reference documents, and
                   workflow habits.
@@ -422,7 +422,7 @@ export function MemoryContent() {
 
             {/* Populated / Search entries */}
             {!panelState.empty && (
-              <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_360px]">
+              <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_360px]">
                 <div className="flex flex-col gap-2">
                   {filteredEntries.map((entry) => (
                     <MemoryLedgerItem
@@ -442,7 +442,7 @@ export function MemoryContent() {
                 </div>
                 {filteredEntries.length > 0 && (
                   <SourcePreview
-                    className="lg:sticky lg:top-4"
+                    className="self-start xl:sticky xl:top-4"
                     title={activeMemory.source}
                     excerpt={activeMemory.excerpt}
                     location={activeMemory.page}
@@ -452,8 +452,8 @@ export function MemoryContent() {
                 {panelState.search &&
                   searchQuery &&
                   filteredEntries.length === 0 && (
-                    <div className="memory-fade-in py-6 text-center lg:col-span-2">
-                      <p className="text-sm text-muted-foreground/60">
+                    <div className="memory-fade-in py-6 text-center xl:col-span-2">
+                      <p className="text-sm text-muted-foreground">
                         No memories match &ldquo;{searchQuery}&rdquo;
                       </p>
                     </div>

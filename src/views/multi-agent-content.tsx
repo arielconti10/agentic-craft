@@ -324,7 +324,7 @@ export function MultiAgentContent() {
               {AGENT_CARDS.map((agent, i) => (
                 <div
                   key={agent.name}
-                  className="ma-slide-in min-w-0 flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:px-4 sm:py-0 sm:first:pl-0 sm:last:pr-0"
+                  className="ma-slide-in flex min-w-0 flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:px-4 sm:py-0 sm:first:pl-0 sm:last:pr-0"
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
                   {/* Header */}
@@ -341,7 +341,9 @@ export function MultiAgentContent() {
                       <p className="text-sm leading-snug font-medium">
                         {agent.name}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      {/* Reserve two lines so a wrapping role doesn't break
+                          the rhythm across the three-card grid */}
+                      <p className="min-h-[2lh] text-xs text-muted-foreground">
                         {agent.role}
                       </p>
                     </div>
@@ -528,7 +530,7 @@ export function MultiAgentContent() {
                           ? "border-foreground/25 bg-foreground/[0.03]"
                           : stepState === "active"
                             ? "border-foreground/15 bg-foreground/[0.02]"
-                            : "border-border/40 opacity-50"
+                            : "border-border/40 opacity-70"
                       }`}
                     >
                       <div className="flex items-center gap-2">
@@ -544,7 +546,7 @@ export function MultiAgentContent() {
                         ) : stepState === "active" ? (
                           <span className="ma-pulse h-2 w-2 rounded-full bg-foreground/70" />
                         ) : (
-                          <span className="h-2 w-2 rounded-full bg-muted-foreground/30" />
+                          <span className="h-2 w-2 rounded-full bg-muted-foreground/50" />
                         )}
                         <span className="text-[10px] text-muted-foreground">
                           Step {i + 1}
@@ -567,7 +569,7 @@ export function MultiAgentContent() {
                             activeHandoff === "complete" ||
                             (activeHandoff === "inprogress" && i === 0)
                               ? "text-foreground/50"
-                              : "text-muted-foreground/30"
+                              : "text-muted-foreground/50"
                           }`}
                         />
                       </div>
@@ -615,7 +617,7 @@ export function MultiAgentContent() {
                 Pending state
               </TableCell>
               <TableCell className="py-3">
-                First step highlighted, remaining steps muted at 50% opacity
+                First step highlighted, remaining steps gently muted
               </TableCell>
             </TableRow>
             <TableRow className="border-b border-border/50">
@@ -680,7 +682,7 @@ export function MultiAgentContent() {
                         className="text-muted-foreground"
                       />
                     </div>
-                    <div className="min-w-0 flex-1 flex flex-col gap-2">
+                    <div className="flex min-w-0 flex-1 flex-col gap-2">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm font-medium">{agent.name}</p>

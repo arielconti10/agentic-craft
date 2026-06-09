@@ -23,11 +23,11 @@ function TemplateFlowPreview({
       data-slot="template-flow-preview"
       className={cn("border-y border-border/60 py-3 sm:py-4", className)}
     >
-      <div className="grid divide-y divide-border/50 md:grid-cols-5 md:divide-x md:divide-y-0">
+      <div className="grid divide-y divide-border/50 lg:grid-cols-5 lg:divide-x lg:divide-y-0">
         {steps.map((step, index) => (
           <div
             key={step.label}
-            className="relative min-w-0 py-3 first:pt-0 last:pb-0 md:px-3 md:py-0 md:first:pl-0 md:last:pr-0"
+            className="relative min-w-0 py-3 first:pt-0 last:pb-0 lg:px-3 lg:py-0 lg:first:pl-0 lg:last:pr-0"
           >
             <div className="flex h-full min-w-0 flex-col">
               <div className="flex items-center justify-between gap-2">
@@ -52,7 +52,7 @@ function TemplateFlowPreview({
                 icon={ArrowRight01Icon}
                 size={14}
                 strokeWidth={1.5}
-                className="absolute top-1/2 right-[-13px] hidden -translate-y-1/2 text-muted-foreground/50 md:block"
+                className="absolute top-1/2 right-[-13px] hidden -translate-y-1/2 text-muted-foreground/50 lg:block"
                 aria-hidden="true"
               />
             )}

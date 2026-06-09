@@ -33,7 +33,9 @@ import { useTheme } from "@/components/theme-provider"
 import { sections } from "@/content/navigation"
 
 const themeOptions = [
-  { value: "system", label: "System", icon: ComputerIcon },
+  // "Auto" instead of "System": the full word truncates at the default
+  // sidebar width
+  { value: "system", label: "Auto", icon: ComputerIcon },
   { value: "light", label: "Light", icon: Sun02Icon },
   { value: "dark", label: "Dark", icon: Moon02Icon },
 ] as const

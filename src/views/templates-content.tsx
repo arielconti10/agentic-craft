@@ -293,7 +293,11 @@ export function TemplatesContent() {
                 </ReferenceItem.Media>
                 <ReferenceItem.Content>
                   <ReferenceItem.Header>
-                    <ReferenceItem.Title>{template.title}</ReferenceItem.Title>
+                    {/* text-clip drops the inherited truncate: titles wrap
+                        instead of ellipsizing mid-word in the 2-col grid */}
+                    <ReferenceItem.Title className="text-clip whitespace-normal">
+                      {template.title}
+                    </ReferenceItem.Title>
                     <Badge variant="outline">Template</Badge>
                   </ReferenceItem.Header>
                   <ReferenceItem.Description>

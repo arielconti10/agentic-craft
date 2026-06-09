@@ -48,7 +48,7 @@ const FEEDBACK_HISTORY = [
     id: "fb-1",
     timestamp: "2026-03-14 · 14:32",
     message:
-      "The project brief defines 14 requirements across 5 classes. implementation notes summarize the workflow behavior and open dependencies.",
+      "The project brief defines 14 requirements across 5 classes. Implementation notes summarize the workflow behavior and open dependencies.",
     type: "positive" as const,
     detail:
       "Accurate requirement count and implementation notes description confirmed against Brief v3.",

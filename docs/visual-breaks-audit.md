@@ -1,5 +1,14 @@
 # Deep Visual-Break Audit
 
+> **Status update (2026-06-09):** every break and "looks bad" item below has
+> been fixed and visually re-verified (light + dark, 390/768/1024/1440px,
+> zero console errors, zero horizontal overflow). Deliberately left as-is:
+> the cream workbench pane in dark mode (reads as a light webpage inside a
+> browser frame), the repeated auto-generated "Pattern Pieces" boilerplate
+> (content authoring, not layout), and the app-wide muted-text opacity scale
+> beyond the specific spots called out (footer, empty-state hints, handoff
+> stepper) — a full contrast retune deserves its own design pass.
+
 Date: 2026-06-09
 Scope: every route (10 pattern/index pages + 8 template pages), light and dark
 themes, every demo-control state (~180 section-state captures), tablet widths
