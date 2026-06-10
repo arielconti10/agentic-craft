@@ -51,7 +51,7 @@ export function ComposerSuggestions({
           aria-label={`Use suggestion: ${s}`}
           onClick={() => handleClick(s)}
           className={cn(
-            "min-h-7 shrink-0 whitespace-nowrap rounded-lg border border-border/60 bg-background/70 px-2.5 py-1 text-left text-xs leading-4 text-muted-foreground transition-colors duration-200 hover:border-border hover:bg-muted/40 hover:text-foreground sm:text-center sm:leading-snug",
+            "min-h-7 shrink-0 rounded-lg border border-border/60 bg-background/70 px-2.5 py-1 text-left text-xs leading-4 whitespace-nowrap text-muted-foreground transition-colors duration-200 hover:border-border hover:bg-muted/40 hover:text-foreground sm:text-center sm:leading-snug",
             flashChip === s ? "animate-composer-chip" : ""
           )}
         >

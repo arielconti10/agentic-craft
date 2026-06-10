@@ -2,14 +2,13 @@
 
 import * as React from "react"
 import {
-  Activity01Icon,
   Alert01Icon,
   Clock01Icon,
+  Loading03Icon,
   Tick01Icon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
-import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 type RunTraceStatus =
@@ -37,7 +36,7 @@ type RunTraceProps = React.ComponentProps<"section"> & {
   events: RunTraceEvent[]
 }
 
-const statusLabel = {
+const indicatorLabel = {
   queued: "Queued",
   running: "Running",
   complete: "Complete",
@@ -46,26 +45,14 @@ const statusLabel = {
   error: "Error",
 } satisfies Record<RunTraceStatus, string>
 
-const statusVariant = {
-  queued: "outline",
-  running: "secondary",
-  complete: "default",
-  blocked: "outline",
-  warning: "secondary",
-  error: "destructive",
-} satisfies Record<
-  RunTraceStatus,
-  React.ComponentProps<typeof Badge>["variant"]
->
-
 const statusIcon = {
   queued: Clock01Icon,
-  running: Activity01Icon,
+  running: Loading03Icon,
   complete: Tick01Icon,
   blocked: Alert01Icon,
   warning: Alert01Icon,
   error: Alert01Icon,
-} satisfies Record<RunTraceStatus, typeof Activity01Icon>
+} satisfies Record<RunTraceStatus, typeof Tick01Icon>
 
 function RunTrace({
   title,
@@ -87,8 +74,10 @@ function RunTrace({
         <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
           <h3 className="min-w-0 text-sm font-medium text-foreground">
             {title}
+            <span className="ml-2 font-normal text-muted-foreground">
+              {events.length} events
+            </span>
           </h3>
-          <Badge variant="outline">{events.length} events</Badge>
         </div>
         {description && (
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
@@ -108,8 +97,11 @@ function RunTrace({
               data-status={event.status}
               className="group/run-trace-event"
             >
-              <summary className="grid cursor-pointer list-none grid-cols-[24px_1fr] gap-3 px-3 py-3 outline-none transition-colors hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50 sm:px-4 [&::-webkit-details-marker]:hidden">
-                <span className="relative mt-0.5 flex size-6 items-center justify-center rounded-md border border-border/70 bg-muted/30 text-muted-foreground">
+              <summary className="grid cursor-pointer list-none grid-cols-[24px_1fr] gap-3 px-3 py-3 transition-colors outline-none hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50 sm:px-4 [&::-webkit-details-marker]:hidden">
+                <span
+                  title={indicatorLabel[event.status]}
+                  className="relative mt-0.5 flex size-6 items-center justify-center rounded-md border border-border/70 bg-muted/30 text-muted-foreground"
+                >
                   {!isLast && (
                     <span
                       aria-hidden="true"
@@ -120,17 +112,20 @@ function RunTrace({
                     icon={Icon}
                     size={13}
                     strokeWidth={1.5}
+                    className={
+                      event.status === "running"
+                        ? "animate-spin motion-reduce:animate-none"
+                        : undefined
+                    }
                     aria-hidden="true"
                   />
+                  <span className="sr-only">
+                    {indicatorLabel[event.status]}
+                  </span>
                 </span>
                 <span className="min-w-0">
-                  <span className="flex min-w-0 flex-wrap items-center gap-2">
-                    <span className="min-w-0 truncate font-medium text-foreground">
-                      {event.title}
-                    </span>
-                    <Badge variant={statusVariant[event.status]}>
-                      {statusLabel[event.status]}
-                    </Badge>
+                  <span className="block min-w-0 truncate font-medium text-foreground">
+                    {event.title}
                   </span>
                   {event.description && (
                     <span className="mt-1 block text-xs leading-5 text-muted-foreground">

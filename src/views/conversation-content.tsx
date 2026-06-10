@@ -10,7 +10,11 @@ import {
   ThumbsDownIcon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
-import { ObservableWork } from "@/components/ui/observable-work"
+import {
+  ObservableWork,
+  type ObservableWorkStatus,
+} from "@/components/ui/observable-work"
+import { StatusIndicator } from "@/components/ui/status-indicator"
 import { SourcePreview } from "@/components/ui/source-preview"
 import {
   Table,
@@ -87,7 +91,12 @@ const agentProseBaseStyle: React.CSSProperties = {
   WebkitFontSmoothing: "antialiased",
 }
 
-const PROGRESS_STEPS = [
+const PROGRESS_STEPS: {
+  label: string
+  detail: string
+  status: ObservableWorkStatus
+  source?: string
+}[] = [
   {
     label: "Searched project sources",
     detail: "Roadmap, support notes, and launch checklist",
@@ -104,15 +113,13 @@ const PROGRESS_STEPS = [
     label: "Checking unresolved assumptions",
     detail: "Enterprise onboarding scope is still missing an owner",
     status: "active",
-    source: "live",
   },
   {
     label: "Draft findings summary",
     detail: "Hidden until source checks finish",
     status: "pending",
-    source: "pending",
   },
-] as const
+]
 
 const COMPOSER_CHECKS = [
   {
@@ -654,37 +661,27 @@ export function ConversationContent() {
 
         <div key={workAnim} className="mt-4 border-y border-border/40 py-4">
           {workMode === "collapsed" && (
-            <div className="conv-slide-in grid gap-3 px-1 py-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+            <div className="conv-slide-in grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 px-1 py-2">
               <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-medium text-foreground">
-                    Checking launch sources
-                  </span>
-                  <span className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-                    Active
-                  </span>
-                </div>
+                <span className="block text-sm font-medium text-foreground">
+                  Checking launch sources
+                </span>
                 <p className="mt-1 truncate text-xs text-muted-foreground">
-                  Launch checklist, issue triage policy, source scope
+                  Launch checklist, issue triage policy, source scope · 2 done ·
+                  1 waiting
                 </p>
               </div>
-              <span className="w-fit rounded-md border border-border px-2 py-1 text-xs text-muted-foreground">
-                2 done / 1 active / 1 waiting
-              </span>
+              <StatusIndicator status="active" className="mt-0.5" />
             </div>
           )}
 
           {workMode === "expanded" && (
             <div className="conv-slide-in">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-1">
-                <div className="flex min-w-0 flex-wrap items-center gap-2">
-                  <span className="text-sm font-medium text-foreground">
-                    Checking launch sources
-                  </span>
-                  <span className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-                    Active
-                  </span>
-                </div>
+                <span className="flex min-w-0 items-center gap-2 text-sm font-medium text-foreground">
+                  Checking launch sources
+                  <StatusIndicator status="active" />
+                </span>
                 <span className="text-xs text-muted-foreground">
                   Sources visible
                 </span>

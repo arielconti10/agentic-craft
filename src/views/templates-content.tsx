@@ -27,6 +27,7 @@ import {
 import { DecisionSurface } from "@/components/ui/decision-surface"
 import { ObservableWork } from "@/components/ui/observable-work"
 import { ReferenceItem } from "@/components/ui/reference-item"
+import { StatusIndicator } from "@/components/ui/status-indicator"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -327,7 +328,6 @@ export function TemplatesContent() {
               title="Collect source material"
               description="Read user-selected files, previous decisions, and current requirements."
               source="4 sources"
-              meta="completed"
             >
               <ObservableWork.Detail>
                 Project brief v3, Launch Policy v2, the support readiness
@@ -340,7 +340,6 @@ export function TemplatesContent() {
               title="Compare claims against evidence"
               description="Check whether conclusions are backed by source excerpts."
               source="2 files"
-              meta="running"
               defaultOpen
             >
               <ObservableWork.Detail>
@@ -352,7 +351,6 @@ export function TemplatesContent() {
               status="pending"
               title="Prepare reviewable result"
               description="Generate a summary only after the evidence pass finishes."
-              source="pending"
             >
               <ObservableWork.Detail>
                 The summary will cite every claim back to a pinned source and
@@ -467,7 +465,7 @@ export function TemplatesContent() {
                 <ReferenceItem.Title>
                   Preferred review format
                 </ReferenceItem.Title>
-                <Badge variant="secondary">Proposed</Badge>
+                <StatusIndicator status="pending" label="Proposed" />
               </ReferenceItem.Header>
               <ReferenceItem.Description>
                 Use concise source-backed summaries for future review tasks.

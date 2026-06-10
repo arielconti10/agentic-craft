@@ -33,6 +33,7 @@ import {
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { ActionPreview } from "@/components/ui/action-preview"
 import { Badge } from "@/components/ui/badge"
+import { StatusIndicator } from "@/components/ui/status-indicator"
 import { Button } from "@/components/ui/button"
 import {
   ClarifyingQuestions,
@@ -202,18 +203,22 @@ const DECISION_OPTIONS = [
     desc: "Add to the open findings list for reviewer approval in the next review meeting.",
     consequence:
       "Impact: Adds 1 open finding to the launch summary. Requires team response within 10 days.",
+    // Escalates to people — strongest accent of the three.
+    accent: "border-foreground/40",
   },
   {
     title: "Request source material",
     desc: "Send an automated source request to the developer with a 5-day deadline.",
     consequence:
       "Impact: Review paused for Timestamp handling pending team response.",
+    accent: "border-foreground/20",
   },
   {
     title: "Mark for later",
     desc: "Add to the deferred items list for the next review cycle.",
     consequence:
       "Impact: No immediate delay. Risk carried forward to next cycle.",
+    accent: "border-muted-foreground/15",
   },
 ]
 
@@ -261,13 +266,11 @@ const CLARIFYING_QUESTION = {
 /* ------------------------------------------------------------------ */
 
 function PlanStep({
-  index,
   label,
   state,
   editable,
   onRemove,
 }: {
-  index: number
   label: string
   state: "done" | "active" | "pending"
   editable?: boolean
@@ -301,7 +304,7 @@ function PlanStep({
               : "text-muted-foreground/60"
         }`}
       >
-        {index + 1}. {label}
+        {label}
       </span>
       {editable && onRemove && (
         <Button
@@ -738,14 +741,14 @@ export function ActionsContent() {
                   className="shrink-0 text-muted-foreground"
                 />
                 <span className="text-sm font-normal">Source Review Agent</span>
-                <Badge variant="secondary">
-                  {subagentProgress >= 8
-                    ? "Complete"
-                    : `${subagentProgress} of 8 families`}
-                </Badge>
-                {subagentState.running && subagentProgress < 8 && (
-                  <span className="actions-pulse-dot h-1.5 w-1.5 rounded-full bg-foreground/40" />
+                {subagentProgress < 8 && (
+                  <span className="text-xs text-muted-foreground tabular-nums">
+                    {subagentProgress} of 8 families
+                  </span>
                 )}
+                <StatusIndicator
+                  status={subagentProgress >= 8 ? "complete" : "active"}
+                />
                 <HugeiconsIcon
                   icon={ArrowDown01Icon}
                   size={12}
@@ -906,7 +909,6 @@ export function ActionsContent() {
                 return (
                   <PlanStep
                     key={`${step}-${i}`}
-                    index={i}
                     label={step}
                     state={planState.editable ? "pending" : state}
                     editable={planState.editable}
@@ -1268,7 +1270,9 @@ export function ActionsContent() {
                     <p className="mt-1 text-xs text-muted-foreground">
                       {opt.desc}
                     </p>
-                    <div className="mt-2 border-l-2 border-muted-foreground/15 py-1 pl-2.5">
+                    <div
+                      className={`mt-2 border-l-2 py-1 pl-2.5 ${opt.accent}`}
+                    >
                       <div className="flex items-start gap-1.5">
                         <HugeiconsIcon
                           icon={ArrowRight01Icon}
@@ -1588,6 +1592,7 @@ export function ActionsContent() {
                         },
                         {
                           label: "Consequence",
+                          emphasis: true,
                           value:
                             "External communication is sent and cannot be recalled.",
                         },
@@ -1597,6 +1602,7 @@ export function ActionsContent() {
                         },
                         {
                           label: "Rollback",
+                          emphasis: true,
                           value: "Follow-up correction only",
                         },
                       ]}
@@ -1768,6 +1774,7 @@ export function ActionsContent() {
                         },
                         {
                           label: "Consequence",
+                          emphasis: true,
                           value:
                             "Document content changes and downstream review summaries must be regenerated.",
                         },
@@ -1777,6 +1784,7 @@ export function ActionsContent() {
                         },
                         {
                           label: "Rollback",
+                          emphasis: true,
                           value: "Restore previous document version",
                         },
                       ]}

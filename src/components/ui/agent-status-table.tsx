@@ -2,8 +2,11 @@
 
 import * as React from "react"
 
-import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
+import {
+  StatusIndicator,
+  type StatusIndicatorStatus,
+} from "@/components/ui/status-indicator"
 import {
   Table,
   TableBody,
@@ -44,16 +47,13 @@ const statusCopy: Record<AgentStatus, string> = {
   error: "Error",
 }
 
-const statusVariant: Record<
-  AgentStatus,
-  React.ComponentProps<typeof Badge>["variant"]
-> = {
-  working: "secondary",
-  idle: "outline",
-  blocked: "outline",
-  handoff: "secondary",
-  complete: "default",
-  error: "destructive",
+const indicatorStatus: Record<AgentStatus, StatusIndicatorStatus> = {
+  working: "active",
+  idle: "idle",
+  blocked: "blocked",
+  handoff: "active",
+  complete: "complete",
+  error: "error",
 }
 
 function formatPercent(value?: number) {
@@ -90,7 +90,7 @@ function AgentStatusTable({
       <TableBody>
         {agents.map((agent) => (
           <TableRow key={agent.id}>
-            <TableCell className="min-w-44">
+            <TableCell className="min-w-32">
               <div className="min-w-0">
                 <p className="truncate font-medium">{agent.name}</p>
                 {agent.role && (
@@ -101,11 +101,17 @@ function AgentStatusTable({
               </div>
             </TableCell>
             <TableCell>
-              <Badge variant={statusVariant[agent.status]}>
-                {statusCopy[agent.status]}
-              </Badge>
+              <span className="flex items-center gap-1.5">
+                <StatusIndicator
+                  status={indicatorStatus[agent.status]}
+                  label={statusCopy[agent.status]}
+                />
+                <span className="text-xs text-muted-foreground">
+                  {statusCopy[agent.status]}
+                </span>
+              </span>
             </TableCell>
-            <TableCell className="min-w-64 max-w-80 whitespace-normal text-muted-foreground">
+            <TableCell className="max-w-64 min-w-44 whitespace-normal text-muted-foreground">
               {agent.task ?? "No active task"}
             </TableCell>
             <TableCell className="min-w-32">
@@ -116,7 +122,7 @@ function AgentStatusTable({
                     className="min-w-20"
                     aria-label={`${agent.name} progress`}
                   />
-                  <span className="text-xs tabular-nums text-muted-foreground">
+                  <span className="text-xs text-muted-foreground tabular-nums">
                     {formatPercent(agent.progress)}
                   </span>
                 </div>
@@ -124,10 +130,10 @@ function AgentStatusTable({
                 <span className="text-muted-foreground">n/a</span>
               )}
             </TableCell>
-            <TableCell className="tabular-nums text-muted-foreground">
+            <TableCell className="text-muted-foreground tabular-nums">
               {formatPercent(agent.confidence)}
             </TableCell>
-            <TableCell className="tabular-nums text-muted-foreground">
+            <TableCell className="text-muted-foreground tabular-nums">
               {agent.cost ?? "n/a"}
             </TableCell>
             <TableCell className="text-muted-foreground">
@@ -148,9 +154,15 @@ function AgentStatusCell({
   className?: string
 }) {
   return (
-    <Badge className={cn(className)} variant={statusVariant[status]}>
-      {statusCopy[status]}
-    </Badge>
+    <span className={cn("flex items-center gap-1.5", className)}>
+      <StatusIndicator
+        status={indicatorStatus[status]}
+        label={statusCopy[status]}
+      />
+      <span className="text-xs text-muted-foreground">
+        {statusCopy[status]}
+      </span>
+    </span>
   )
 }
 

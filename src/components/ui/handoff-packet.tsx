@@ -9,8 +9,11 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import {
+  StatusIndicator,
+  type StatusIndicatorStatus,
+} from "@/components/ui/status-indicator"
 import { cn } from "@/lib/utils"
 
 type HandoffPacketStatus =
@@ -44,16 +47,13 @@ const statusLabel = {
   expired: "Expired",
 } satisfies Record<HandoffPacketStatus, string>
 
-const statusVariant = {
-  draft: "outline",
-  sent: "secondary",
-  accepted: "default",
-  rejected: "destructive",
-  expired: "outline",
-} satisfies Record<
-  HandoffPacketStatus,
-  React.ComponentProps<typeof Badge>["variant"]
->
+const indicatorStatus = {
+  draft: "pending",
+  sent: "active",
+  accepted: "complete",
+  rejected: "error",
+  expired: "blocked",
+} satisfies Record<HandoffPacketStatus, StatusIndicatorStatus>
 
 function HandoffPacket({
   sender,
@@ -81,13 +81,15 @@ function HandoffPacket({
       <div className="border-b border-border/70 px-3 py-3 sm:px-4">
         <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <div className="flex min-w-0 items-start justify-between gap-3 sm:justify-start">
               <h3 className="min-w-0 text-sm font-medium text-foreground">
                 {title}
               </h3>
-              <Badge variant={statusVariant[status]}>
-                {statusLabel[status]}
-              </Badge>
+              <StatusIndicator
+                status={indicatorStatus[status]}
+                label={statusLabel[status]}
+                className="mt-0.5"
+              />
             </div>
             {description && (
               <p className="mt-1 max-w-[620px] text-xs leading-5 text-muted-foreground">

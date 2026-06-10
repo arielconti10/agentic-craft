@@ -57,20 +57,23 @@ const AGENT_CARDS = [
   {
     name: "Source Collector",
     role: "Gather project artifacts",
-    task: "Collecting delivery readiness delivery artifacts",
+    task: "Collecting delivery readiness artifacts",
     progress: "12 of 18 items gathered",
+    idleNote: "No collection target — waiting for a review scope",
   },
   {
     name: "Requirements Mapper",
     role: "Map requirements to controls",
     task: "Mapping Export workflow to internal control library",
     progress: "24 of 31 requirements mapped",
+    idleNote: "Waiting for a source packet to map",
   },
   {
     name: "Document Drafter",
     role: "Author project brief sections",
     task: "Drafting implementation notes product summary",
     progress: "Section 6.2 in progress",
+    idleNote: "Waiting for mapped requirements to draft against",
   },
 ]
 
@@ -371,7 +374,7 @@ export function MultiAgentContent() {
                   {activeCardMode === "idle" && (
                     <div>
                       <p className="text-xs text-muted-foreground">
-                        Awaiting instructions
+                        {agent.idleNote}
                       </p>
                     </div>
                   )}
@@ -956,8 +959,8 @@ export function MultiAgentContent() {
         </Table>
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-          Routing decisions in CC workflows must be transparent and auditable.
-          Auto-routing uses task type classification to match
+          Routing decisions in regulated workflows must be transparent and
+          auditable. Auto-routing uses task type classification to match
           requirement-related tasks to the Requirements Mapper, source tasks to
           the Source Collector, and policy tasks to the Policy Analyst. Manual
           override ensures the reviewer retains final authority over agent

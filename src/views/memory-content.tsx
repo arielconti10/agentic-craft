@@ -926,9 +926,9 @@ export function MemoryContent() {
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           Auto-memory is opt-in by design. The agent detects patterns but never
-          persists without explicit reviewer consent. This is critical for CC
-          environments where auditors may need to justify what data the tool
-          retains.
+          persists without explicit reviewer consent. This is critical for
+          regulated environments where auditors may need to justify what data
+          the tool retains.
         </div>
       </section>
 

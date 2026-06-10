@@ -1,32 +1,66 @@
 /* ── Composer Keyframes ── */
 
 @keyframes composer-send-press {
-  0% { transform: scale(1); }
-  40% { transform: scale(0.82); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.82);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes composer-island-enter {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes composer-arrow-up {
-  0% { transform: translateY(0); opacity: 1; }
-  50% { transform: translateY(-6px); opacity: 0; }
-  51% { transform: translateY(6px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+  51% {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes composer-chip-fill {
-  0% { background-color: transparent; }
-  30% { background-color: var(--color-muted); }
-  100% { background-color: transparent; }
+  0% {
+    background-color: transparent;
+  }
+  30% {
+    background-color: var(--color-muted);
+  }
+  100% {
+    background-color: transparent;
+  }
 }
 
 @keyframes composer-slide-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── Utility classes ── */
@@ -54,8 +88,13 @@
 /* ── ToolCall ── */
 
 @keyframes tool-call-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 .animate-tool-call-pulse {

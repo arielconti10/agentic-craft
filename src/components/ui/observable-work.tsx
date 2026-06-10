@@ -1,15 +1,10 @@
 "use client"
 
 import * as React from "react"
-import {
-  Alert01Icon,
-  ArrowDown01Icon,
-  Clock01Icon,
-  Loading03Icon,
-  Tick01Icon,
-} from "@hugeicons/core-free-icons"
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
+import { StatusIndicator } from "@/components/ui/status-indicator"
 import { cn } from "@/lib/utils"
 
 type ObservableWorkStatus =
@@ -18,14 +13,6 @@ type ObservableWorkStatus =
   | "complete"
   | "blocked"
   | "error"
-
-const statusLabels: Record<ObservableWorkStatus, string> = {
-  pending: "Pending",
-  active: "Active",
-  complete: "Complete",
-  blocked: "Blocked",
-  error: "Error",
-}
 
 function ObservableWorkRoot({
   className,
@@ -38,62 +25,6 @@ function ObservableWorkRoot({
       className={cn("flex flex-col rounded-lg border border-border", className)}
       {...props}
     />
-  )
-}
-
-/* Icon-only status with distinct shapes per state (not color alone), plus
-   visually hidden text so the status survives screen readers. */
-function ObservableWorkStatusIndicator({
-  status,
-}: {
-  status: ObservableWorkStatus
-}) {
-  return (
-    <span
-      data-slot="observable-work-status"
-      data-status={status}
-      title={statusLabels[status]}
-      className="flex size-5 shrink-0 items-center justify-center"
-    >
-      {status === "complete" ? (
-        <span className="flex size-5 items-center justify-center rounded-md bg-foreground/10">
-          <HugeiconsIcon
-            icon={Tick01Icon}
-            size={12}
-            strokeWidth={2}
-            className="text-foreground/70"
-            aria-hidden="true"
-          />
-        </span>
-      ) : status === "active" ? (
-        <HugeiconsIcon
-          icon={Loading03Icon}
-          size={14}
-          strokeWidth={1.5}
-          className="animate-spin text-foreground/70 motion-reduce:animate-none"
-          aria-hidden="true"
-        />
-      ) : status === "pending" ? (
-        <span className="size-3 rounded-full border border-dashed border-muted-foreground/70" />
-      ) : status === "blocked" ? (
-        <HugeiconsIcon
-          icon={Clock01Icon}
-          size={14}
-          strokeWidth={1.5}
-          className="text-muted-foreground"
-          aria-hidden="true"
-        />
-      ) : (
-        <HugeiconsIcon
-          icon={Alert01Icon}
-          size={14}
-          strokeWidth={1.5}
-          className="text-destructive"
-          aria-hidden="true"
-        />
-      )}
-      <span className="sr-only">{statusLabels[status]}</span>
-    </span>
   )
 }
 
@@ -132,7 +63,7 @@ function ObservableWorkStepHeader({
         )}
       </span>
       <span className="mt-0.5 flex shrink-0 items-center gap-2 self-start">
-        <ObservableWorkStatusIndicator status={status} />
+        <StatusIndicator status={status} />
         {chevron && (
           <span
             aria-hidden="true"

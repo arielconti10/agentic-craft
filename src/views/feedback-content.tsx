@@ -1004,7 +1004,6 @@ export function FeedbackContent() {
                             />
                             {entry.timestamp}
                           </span>
-                          <Badge variant="secondary">{entry.type}</Badge>
                         </div>
                         <p className="mt-1 truncate text-sm text-foreground/80">
                           {entry.message}
@@ -1107,9 +1106,9 @@ export function FeedbackContent() {
         </Table>
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-          The feedback history doubles as an audit trail — useful for CC reviews
-          where traceability of reviewer decisions matters. Expandable rows keep
-          the list scannable while preserving full detail on demand.
+          The feedback history doubles as an audit trail — useful for compliance
+          reviews where traceability of reviewer decisions matters. Expandable
+          rows keep the list scannable while preserving full detail on demand.
         </div>
       </section>
     </article>

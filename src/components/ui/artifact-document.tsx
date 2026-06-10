@@ -93,12 +93,7 @@ function ArtifactDocument({
           </Badge>
           {version && <Badge variant="secondary">{version}</Badge>}
           {onOpen && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={onOpen}
-            >
+            <Button type="button" variant="ghost" size="sm" onClick={onOpen}>
               Open
               <HugeiconsIcon
                 icon={ArrowExpand01Icon}
@@ -143,17 +138,18 @@ function ArtifactDocument({
               <p className="text-xs font-medium text-foreground">
                 {section.title}
               </p>
-              {section.status && (
-                <Badge
-                  variant={
+              {/* "Cited" is proven by the visible source link in the body,
+                  so only states that need attention get a label. */}
+              {section.status && section.status !== "cited" && (
+                <p
+                  className={
                     section.status === "needs-source"
-                      ? "destructive"
-                      : "outline"
+                      ? "mt-1 text-xs font-medium text-destructive"
+                      : "mt-1 text-xs text-muted-foreground"
                   }
-                  className="mt-2"
                 >
                   {sectionStatusLabels[section.status]}
-                </Badge>
+                </p>
               )}
             </div>
             <div className="min-w-0 text-sm leading-6 text-muted-foreground">

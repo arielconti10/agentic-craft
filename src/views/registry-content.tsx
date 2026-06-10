@@ -37,11 +37,8 @@ function RegistryItemList({ items }: { items: typeof registryItems }) {
               </p>
               <p className="mt-1 text-xs text-muted-foreground">{item.name}</p>
             </div>
-            <Badge variant="outline">
-              {item.type.replace("registry:", "")}
-            </Badge>
           </div>
-          <p className="mt-2 line-clamp-1 text-xs leading-5 text-muted-foreground">
+          <p className="mt-2 text-xs leading-5 text-muted-foreground">
             {item.description}
           </p>
         </div>
@@ -57,14 +54,13 @@ function RegistryItemTable({ items }: { items: typeof registryItems }) {
         <TableHeader>
           <TableRow>
             <TableHead>Item</TableHead>
-            <TableHead>Type</TableHead>
             <TableHead className="hidden lg:table-cell">Use</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {items.map((item) => (
             <TableRow key={item.name}>
-              <TableCell>
+              <TableCell className="min-w-44">
                 <div className="min-w-0">
                   <p className="font-medium text-foreground">{item.title}</p>
                   <p className="mt-1 text-xs text-muted-foreground">
@@ -72,13 +68,8 @@ function RegistryItemTable({ items }: { items: typeof registryItems }) {
                   </p>
                 </div>
               </TableCell>
-              <TableCell>
-                <Badge variant="outline">
-                  {item.type.replace("registry:", "")}
-                </Badge>
-              </TableCell>
-              <TableCell className="hidden max-w-[360px] whitespace-normal text-muted-foreground lg:table-cell">
-                <span className="line-clamp-1">{item.description}</span>
+              <TableCell className="hidden whitespace-normal text-muted-foreground lg:table-cell">
+                {item.description}
               </TableCell>
             </TableRow>
           ))}

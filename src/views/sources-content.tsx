@@ -237,15 +237,19 @@ export function SourcesContent() {
                 {source.id}
               </span>
               <span className="min-w-0">
-                <span className="block text-sm font-medium text-foreground">
-                  {source.title}
+                <span className="flex min-w-0 items-baseline gap-2">
+                  <span className="truncate text-sm font-medium text-foreground">
+                    {source.title}
+                  </span>
+                  <span className="shrink-0 text-xs text-muted-foreground">
+                    {source.location}
+                  </span>
                 </span>
                 <span className="mt-1 block truncate text-xs text-muted-foreground">
                   {source.source}
                 </span>
               </span>
-              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                {source.location}
+              <span className="inline-flex items-center self-center text-muted-foreground">
                 <HugeiconsIcon
                   icon={ArrowExpand01Icon}
                   strokeWidth={1.5}

@@ -1,11 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {
-  Brain01Icon,
-  Clock01Icon,
-  File01Icon,
-} from "@hugeicons/core-free-icons"
+import { Brain01Icon, File01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
 import { Badge } from "@/components/ui/badge"
@@ -68,10 +64,9 @@ function MemoryLedgerItem({
             <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} />
             <span className="truncate">{source}</span>
           </span>
-          <span className="inline-flex items-center gap-1">
-            <HugeiconsIcon icon={Clock01Icon} size={12} strokeWidth={1.5} />
-            {lastUsed}
-          </span>
+          <span aria-hidden="true">·</span>
+          <span>{lastUsed}</span>
+          <span aria-hidden="true">·</span>
           <span>Expires {expiry}</span>
         </ReferenceItem.Meta>
       </ReferenceItem.Content>

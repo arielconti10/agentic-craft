@@ -290,7 +290,6 @@ const REVIEW_RUN_TRACE: RunTraceEvent[] = [
     status: "running",
     source: "Review session",
     timestamp: "now",
-    duration: "running",
   },
 ]
 
@@ -474,11 +473,12 @@ export function ObservabilityContent() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm">{item.action}</p>
-                    <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+                    <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
                       <span>{item.time}</span>
-                      <Badge variant="secondary">
+                      <span aria-hidden="true">·</span>
+                      <span>
                         {item.type === "tool" ? "Tool call" : "Message"}
-                      </Badge>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -534,7 +534,8 @@ export function ObservabilityContent() {
                 Action types
               </TableCell>
               <TableCell className="py-3">
-                Tool call and Message — displayed as muted chip badges
+                Tool call and Message — quiet text after the timestamp; the row
+                icon carries the type
               </TableCell>
             </TableRow>
             <TableRow className="border-b border-border/50">
@@ -549,11 +550,11 @@ export function ObservabilityContent() {
         </Table>
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-          The activity timeline serves as the activity log audit log surface —
-          every agent action is recorded with a timestamp, type classification,
-          and human-readable description. Live mode streams entries as they
-          occur; History and Filtered modes enable retrospective analysis during
-          review team sessions.
+          The activity timeline is the audit surface for agent activity — every
+          agent action is recorded with a timestamp, type classification, and
+          human-readable description. Live mode streams entries as they occur;
+          History and Filtered modes enable retrospective analysis during review
+          team sessions.
         </div>
       </section>
 
@@ -733,7 +734,7 @@ export function ObservabilityContent() {
         </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           A vertical timeline showing the sequence of requests, tool calls, and
-          agent responses within an review session.
+          agent responses within a review session.
         </p>
 
         <div className="mt-10">

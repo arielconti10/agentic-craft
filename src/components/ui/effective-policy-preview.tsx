@@ -4,7 +4,10 @@ import * as React from "react"
 import { Shield01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
-import { Badge } from "@/components/ui/badge"
+import {
+  StatusIndicator,
+  type StatusIndicatorStatus,
+} from "@/components/ui/status-indicator"
 import { cn } from "@/lib/utils"
 
 type EffectivePolicy = {
@@ -25,6 +28,16 @@ const statusLabel = {
   allowed: "Allowed",
   blocked: "Blocked",
 } satisfies Record<NonNullable<EffectivePolicy["status"]>, string>
+
+const policyIndicatorStatus = {
+  required: "warning",
+  review: "pending",
+  allowed: "complete",
+  blocked: "error",
+} satisfies Record<
+  NonNullable<EffectivePolicy["status"]>,
+  StatusIndicatorStatus
+>
 
 function EffectivePolicyPreview({
   title = "Effective policy",
@@ -69,14 +82,15 @@ function EffectivePolicyPreview({
               )}
             </div>
             {policy.status && (
-              <Badge
-                variant={
-                  policy.status === "blocked" ? "destructive" : "secondary"
-                }
-                className="w-fit"
-              >
-                {statusLabel[policy.status]}
-              </Badge>
+              <span className="flex items-center gap-1.5">
+                <StatusIndicator
+                  status={policyIndicatorStatus[policy.status]}
+                  label={statusLabel[policy.status]}
+                />
+                <span className="text-xs text-muted-foreground">
+                  {statusLabel[policy.status]}
+                </span>
+              </span>
             )}
           </div>
         ))}

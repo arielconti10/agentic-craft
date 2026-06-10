@@ -4,12 +4,13 @@ import * as React from "react"
 import { LockKeyIcon, Shield01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
-import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 type ActionPreviewItem = {
   label: string
   value: React.ReactNode
+  /** Promote consequential fields (consequence, rollback) out of the grid. */
+  emphasis?: boolean
 }
 
 type ActionPreviewProps = React.ComponentProps<"div"> & {
@@ -62,23 +63,45 @@ function ActionPreview({
             {description}
           </p>
         </div>
-        <Badge variant={status === "denied" ? "destructive" : "outline"}>
+        <span
+          className={cn(
+            "shrink-0 text-xs",
+            status === "denied" ? "text-destructive" : "text-muted-foreground"
+          )}
+        >
           {statusLabels[status]}
-        </Badge>
+        </span>
       </div>
 
       <div className="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2">
-        {items.map((item) => (
-          <div key={item.label} className="min-w-0">
-            <p className="text-[11px] font-medium text-muted-foreground">
-              {item.label}
-            </p>
-            <div className="mt-1 text-sm leading-5 break-words text-foreground">
-              {item.value}
+        {items
+          .filter((item) => !item.emphasis)
+          .map((item) => (
+            <div key={item.label} className="min-w-0">
+              <p className="text-[11px] font-medium text-muted-foreground">
+                {item.label}
+              </p>
+              <div className="mt-1 text-sm leading-5 break-words text-foreground">
+                {item.value}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
+
+      {items.some((item) => item.emphasis) && (
+        <div className="mt-4 flex flex-col gap-2 border-l-2 border-foreground/30 py-1 pl-3">
+          {items
+            .filter((item) => item.emphasis)
+            .map((item) => (
+              <p key={item.label} className="text-sm leading-5">
+                <span className="font-medium text-foreground">
+                  {item.label}
+                </span>{" "}
+                <span className="text-muted-foreground">{item.value}</span>
+              </p>
+            ))}
+        </div>
+      )}
 
       {children && <div className="mt-4">{children}</div>}
     </div>

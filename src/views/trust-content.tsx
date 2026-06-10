@@ -16,7 +16,6 @@ import {
   Search01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   EffectivePolicyPreview,
@@ -42,7 +41,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -642,9 +640,9 @@ export function TrustContent() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 pt-2">
-                  <Badge variant="outline">UI: {activeLevel.uiPattern}</Badge>
-                </div>
+                <p className="pt-2 text-xs text-muted-foreground">
+                  Surface: {activeLevel.uiPattern}
+                </p>
               </div>
             </div>
           </div>
@@ -772,11 +770,11 @@ export function TrustContent() {
                   <p className="mb-2 text-xs text-muted-foreground">
                     Available tools
                   </p>
-                  <div className="grid grid-cols-2 gap-x-3 gap-y-2">
+                  <div className="divide-y divide-border/50">
                     {activeMode.tools.map((tool, i) => (
                       <div
                         key={tool}
-                        className="trust-slide-in flex items-center gap-2 bg-foreground/[0.02] px-3 py-2"
+                        className="trust-slide-in flex items-center gap-2 py-1.5"
                         style={{ animationDelay: `${i * 60}ms` }}
                       >
                         <HugeiconsIcon
@@ -789,39 +787,6 @@ export function TrustContent() {
                       </div>
                     ))}
                   </div>
-                </div>
-
-                {/* Mode selector as toggle buttons */}
-                <div className="pt-2">
-                  <p className="mb-2 text-xs text-muted-foreground">
-                    Switch mode
-                  </p>
-                  <ToggleGroup
-                    value={(
-                      Object.keys(modeCtrl) as Array<keyof typeof modeCtrl>
-                    ).filter((key) => modeCtrl[key])}
-                    onValueChange={(value) => {
-                      const next = value[0] as keyof typeof modeCtrl | undefined
-                      if (next) {
-                        makeToggle(setModeCtrl, setModeAnimKey)(next)
-                      }
-                    }}
-                    variant="outline"
-                    size="sm"
-                    spacing={0}
-                  >
-                    {(["requirements", "research", "review"] as const).map(
-                      (m) => (
-                        <ToggleGroupItem
-                          key={m}
-                          value={m}
-                          aria-label={`Switch to ${MODE_CONFIGS[m].label}`}
-                        >
-                          {MODE_CONFIGS[m].label}
-                        </ToggleGroupItem>
-                      )
-                    )}
-                  </ToggleGroup>
                 </div>
               </div>
             </div>
@@ -1099,8 +1064,8 @@ export function TrustContent() {
                         Action requires your approval
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        The agent wants to send an project finding summary to
-                        the developer contact for product Portal-v3.
+                        The agent wants to send a project finding summary to the
+                        developer contact for product Portal-v3.
                       </p>
                     </div>
                   </div>
@@ -1321,8 +1286,14 @@ export function TrustContent() {
               {/* High confidence */}
               {confCtrl.high && (
                 <div className="flex flex-col gap-4">
-                  <div className="mb-3 flex items-center gap-2">
-                    <Badge variant="secondary">High confidence</Badge>
+                  <div className="mb-3 flex items-center justify-end gap-1.5">
+                    <span
+                      aria-hidden="true"
+                      className="size-2 rounded-full bg-[oklch(0.62_0.14_155)]"
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      High confidence
+                    </span>
                   </div>
                   <div style={PROSE_STYLE}>
                     Export workflow requires CSV and JSON export encryption for
@@ -1347,8 +1318,14 @@ export function TrustContent() {
               {/* Medium confidence */}
               {confCtrl.medium && (
                 <div className="flex flex-col gap-4">
-                  <div className="mb-3 flex items-center gap-2">
-                    <Badge variant="outline">Medium confidence</Badge>
+                  <div className="mb-3 flex items-center justify-end gap-1.5">
+                    <span
+                      aria-hidden="true"
+                      className="size-2 rounded-full bg-[oklch(0.75_0.13_85)]"
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      Medium confidence
+                    </span>
                   </div>
                   <div style={PROSE_STYLE}>
                     Based on the available documentation, Timestamp handling
@@ -1375,8 +1352,14 @@ export function TrustContent() {
               {/* Low confidence */}
               {confCtrl.low && (
                 <div className="flex flex-col gap-4">
-                  <div className="mb-3 flex items-center gap-2">
-                    <Badge variant="destructive">Low confidence</Badge>
+                  <div className="mb-3 flex items-center justify-end gap-1.5">
+                    <span
+                      aria-hidden="true"
+                      className="size-2 rounded-full bg-[oklch(0.6_0.19_25)]"
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      Low confidence
+                    </span>
                   </div>
                   <div style={PROSE_STYLE}>
                     I'm unable to determine whether the current risk review was
@@ -1515,7 +1498,11 @@ export function TrustContent() {
                         </p>
                       </div>
                     </div>
-                    <Button variant="outline" size="xs">
+                    <Button
+                      variant="ghost"
+                      size="xs"
+                      className="text-muted-foreground"
+                    >
                       Stop
                     </Button>
                   </div>
@@ -1909,12 +1896,14 @@ export function TrustContent() {
                         />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="truncate text-sm font-medium">
+                        <p className="flex min-w-0 items-baseline gap-2">
+                          <span className="truncate text-sm font-medium">
                             {src.document}
-                          </p>
-                          <Badge variant="outline">{src.type}</Badge>
-                        </div>
+                          </span>
+                          <span className="shrink-0 text-xs text-muted-foreground">
+                            {src.type}
+                          </span>
+                        </p>
                         <p className="mt-0.5 text-xs text-muted-foreground">
                           {src.section}
                         </p>
@@ -2178,11 +2167,11 @@ export function TrustContent() {
 
         {/* Callout */}
         <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-          Audit trails are a regulatory requirement in CC and release governance
-          contexts. Every agent action must be logged with enough detail for an
-          review team sessioner to reconstruct exactly what happened. The
-          summary view keeps daily work manageable while the detailed view
-          satisfies formal review needs.
+          Audit trails are a regulatory requirement in compliance and
+          release-governance contexts. Every agent action must be logged with
+          enough detail for an review team sessioner to reconstruct exactly what
+          happened. The summary view keeps daily work manageable while the
+          detailed view satisfies formal review needs.
         </div>
       </section>
     </article>

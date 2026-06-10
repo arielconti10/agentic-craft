@@ -2,10 +2,7 @@
 
 import * as React from "react"
 
-import {
-  Progress,
-  ProgressLabel,
-} from "@/components/ui/progress"
+import { Progress, ProgressLabel } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
 
 type UsageMeterItem = {
@@ -47,11 +44,7 @@ function UsageMeter({
       </div>
       <div className="grid gap-3 sm:grid-cols-3">
         {items.map((item) => (
-          <Progress
-            key={item.id}
-            value={item.value}
-            className="min-w-0 gap-2"
-          >
+          <Progress key={item.id} value={item.value} className="min-w-0 gap-2">
             <div className="flex w-full items-center justify-between gap-3">
               <ProgressLabel className="truncate text-xs text-muted-foreground">
                 {item.label}

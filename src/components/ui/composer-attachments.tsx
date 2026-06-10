@@ -3,7 +3,14 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Cancel01Icon, File01Icon, Image01Icon } from "@hugeicons/core-free-icons"
+import {
+  Cancel01Icon,
+  File01Icon,
+  Image01Icon,
+  Alert01Icon,
+  Loading03Icon,
+  Tick01Icon,
+} from "@hugeicons/core-free-icons"
 import type { ComposerFile } from "./composer"
 
 const FILE_ICONS = {
@@ -72,7 +79,7 @@ export function ComposerAttachments({
         <span
           key={file.id}
           className={cn(
-            "group inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-md bg-muted/50 px-2 py-1 text-xs",
+            "group inline-flex max-w-full min-w-0 items-center gap-1.5 rounded-md bg-muted/50 px-2 py-1 text-xs",
             file.status === "rejected" ? "text-destructive" : "text-foreground"
           )}
         >
@@ -82,11 +89,38 @@ export function ComposerAttachments({
             strokeWidth={1.5}
             className="shrink-0 text-muted-foreground"
           />
-          <span className="max-w-[150px] truncate font-medium">{file.name}</span>
+          <span className="max-w-[150px] truncate font-medium">
+            {file.name}
+          </span>
+          {file.status === "uploading" ? (
+            <HugeiconsIcon
+              icon={Loading03Icon}
+              size={11}
+              strokeWidth={1.5}
+              className="shrink-0 animate-spin text-muted-foreground motion-reduce:animate-none"
+              aria-hidden="true"
+            />
+          ) : file.status === "rejected" ? (
+            <HugeiconsIcon
+              icon={Alert01Icon}
+              size={11}
+              strokeWidth={1.5}
+              className="shrink-0"
+              aria-hidden="true"
+            />
+          ) : (
+            <HugeiconsIcon
+              icon={Tick01Icon}
+              size={11}
+              strokeWidth={1.5}
+              className="shrink-0 text-muted-foreground"
+              aria-hidden="true"
+            />
+          )}
           <span className="text-muted-foreground">
             {file.status === "uploading"
               ? `${file.progress}%`
-              : file.message ?? file.size}
+              : (file.message ?? file.size)}
           </span>
           {file.status === "rejected" && onRetry && (
             <button
@@ -94,7 +128,7 @@ export function ComposerAttachments({
               data-compact-touch
               onClick={() => onRetry(file)}
               aria-label={`Retry ${file.name}`}
-              className="rounded-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="rounded-sm font-medium text-foreground underline underline-offset-2 transition-colors hover:text-muted-foreground"
             >
               Retry
             </button>
@@ -107,11 +141,7 @@ export function ComposerAttachments({
               aria-label={`Remove ${file.name}`}
               className="shrink-0 text-muted-foreground/50 transition-colors hover:text-foreground"
             >
-              <HugeiconsIcon
-                icon={Cancel01Icon}
-                size={12}
-                strokeWidth={1.5}
-              />
+              <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={1.5} />
             </button>
           )}
         </span>
