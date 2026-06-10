@@ -10,6 +10,87 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+/* ------------------------------------------------------------------ */
+/*  Constants                                                          */
+/* ------------------------------------------------------------------ */
+
+const COMPOSER_CHECKS = [
+  {
+    check: "The user can see the active scope",
+    reason:
+      "Reply targets and generated state use connected islands above the drafting surface, while files stay inside the composer as message payload.",
+  },
+  {
+    check: "The next commitment is explicit",
+    reason:
+      "The send state, pending tasks, and generated suggestions are visible before the user commits the action.",
+  },
+  {
+    check: "Suggestions remain provisional",
+    reason:
+      "Fast-start prompts fill the composer only after selection, leaving a clear boundary between proposal and message.",
+  },
+  {
+    check: "Every added object is reversible",
+    reason:
+      "Context objects, attachments, and reply targets expose a local dismiss path without changing the primary action.",
+  },
+] as const
+
+const COMPOSER_ANATOMY = [
+  {
+    part: "Context islands",
+    role: "A connected 95%-width stack for plan, reply, and scope above the input surface.",
+  },
+  {
+    part: "Primary input",
+    role: "A quiet writing area that grows with the user instead of forcing a modal.",
+  },
+  {
+    part: "Action chrome",
+    role: "Menu, context budget, and send state stay low-contrast until needed.",
+  },
+  {
+    part: "Suggestion row",
+    role: "Fast-start prompts live outside the input so they never impersonate user text.",
+  },
+] as const
+
+const COMPOSER_VARIANTS = [
+  {
+    name: "Display",
+    text: "Show selected context without requiring edits.",
+  },
+  {
+    name: "Interactive",
+    text: "Let the user dismiss, attach, choose suggestions, and revise.",
+  },
+  {
+    name: "Tool-rendered",
+    text: "Render tool output as a structured island before it enters the message.",
+  },
+  {
+    name: "State-rendered",
+    text: "Keep scope and plan synced as connected islands, with attachments kept inside the draft payload.",
+  },
+] as const
+
+const COMPOSER_GUIDANCE = [
+  {
+    principle: "Separate authored text from proposed context",
+    avoid: "Do not let generated suggestions look like user-authored text.",
+  },
+  {
+    principle: "Expose what will be sent before commitment",
+    avoid:
+      "Do not place generated plans inside the user-authored input surface.",
+  },
+  {
+    principle: "Keep generated affordances reversible",
+    avoid: "Do not make dismiss, edit, or send paths compete visually.",
+  },
+] as const
+
 export function ComposerSection() {
   return (
     <section id="composer" className="page-section">
@@ -33,6 +114,86 @@ export function ComposerSection() {
           </div>
         </div>
         <CompactComposerPlayground />
+      </div>
+
+      <div className="hidden">
+        <div className="grid gap-2 border-b border-border/50 py-3 text-xs md:grid-cols-[180px_minmax(0,1fr)]">
+          <p className="section-label">Inspect for</p>
+          <p className="text-muted-foreground">
+            The checks that make a composer trustworthy before anything is sent.
+          </p>
+        </div>
+        <div className="divide-y divide-border/50">
+          {COMPOSER_CHECKS.map((item) => (
+            <div
+              key={item.check}
+              className="grid gap-2 py-3 text-sm md:grid-cols-[260px_minmax(0,1fr)]"
+            >
+              <p className="font-medium text-foreground">{item.check}</p>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                {item.reason}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="hidden">
+        <div>
+          <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
+            <p className="section-label">Anatomy</p>
+            <span className="text-xs text-muted-foreground">4 regions</span>
+          </div>
+          <div className="divide-y divide-border/50">
+            {COMPOSER_ANATOMY.map((item) => (
+              <div
+                key={item.part}
+                className="grid gap-2 py-3 text-sm sm:grid-cols-[170px_minmax(0,1fr)]"
+              >
+                <p className="font-medium text-foreground">{item.part}</p>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {item.role}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <aside>
+          <p className="section-label border-b border-border pb-3">Depth</p>
+          <div className="divide-y divide-border/50">
+            {COMPOSER_VARIANTS.map((variant) => (
+              <div key={variant.name} className="py-3">
+                <p className="text-sm font-medium text-foreground">
+                  {variant.name}
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  {variant.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </aside>
+      </div>
+
+      <div className="hidden">
+        <div className="grid border-b border-border pb-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <p className="section-label">Rule</p>
+          <p className="section-label hidden md:block">Failure to avoid</p>
+        </div>
+        <div className="divide-y divide-border/50">
+          {COMPOSER_GUIDANCE.map((item) => (
+            <div
+              key={item.principle}
+              className="grid gap-2 py-3 text-sm md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+            >
+              <p className="text-foreground">{item.principle}</p>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                {item.avoid}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Composer spec table */}

@@ -416,6 +416,31 @@ export function MessagesProgressSection() {
           </TableBody>
         </Table>
 
+        {/* Prose preference explanation */}
+        <div className="hidden">
+          <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+            <li>
+              <span className="font-medium text-foreground">
+                Required ownership signals
+              </span>{" "}
+              — alignment, sender role, message surface, citations, and tool
+              state should identify who produced the content.
+            </li>
+            <li>
+              <span className="font-medium text-foreground">
+                Configurable prose style
+              </span>{" "}
+              — let users or workspace admins choose serif, sans, or compact
+              rendering when reading volume varies by product.
+            </li>
+            <li>
+              Do not rely on font family as the only authorship signal:
+              accessibility settings, localization, and brand systems can change
+              typography.
+            </li>
+          </ul>
+        </div>
+
         <div className="mt-10 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           <p>
             User messages are right-aligned to create visual separation of "who

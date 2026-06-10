@@ -21,17 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Textarea } from "@/components/ui/textarea"
-
-const AGENT_PROSE_STYLE = {
-  fontFamily: "'Source Serif 4', serif",
-  fontSize: "16px",
-  lineHeight: "26px",
-  letterSpacing: "-0.4px",
-  fontVariationSettings: '"opsz" 12',
-  WebkitFontSmoothing: "antialiased" as const,
-}
-
-const AGENT_PROSE_COLOR = "var(--foreground)"
+import { AGENT_PROSE_STYLE, AGENT_PROSE_COLOR } from "./data"
 
 export function ThumbsFeedbackSection() {
   const [thumbsState, setThumbsState] = useState<Record<string, boolean>>({

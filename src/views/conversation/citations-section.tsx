@@ -115,14 +115,13 @@ export function CitationsSection() {
     setActiveCitationId(id)
   }
 
-  /* prose style for the citation display */
+  /* prose style for the citation display — matches agentProseBaseStyle +
+     serif defaults (letter-spacing, smoothing, lineHeight, fontVariationSettings) */
   const agentProseStyle: React.CSSProperties = {
-    fontFamily: "'Source Serif 4', serif",
-    fontSize: "16px",
-    lineHeight: "26px",
     letterSpacing: "0px",
-    fontVariationSettings: '"opsz" 12',
     WebkitFontSmoothing: "antialiased",
+    lineHeight: "26px",
+    fontVariationSettings: '"opsz" 12',
   }
 
   return (
