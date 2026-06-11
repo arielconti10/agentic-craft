@@ -11,7 +11,7 @@ import { ApprovalGateSection } from "./actions/approval-gate-section"
 export function ActionsContent() {
   return (
     <article>
-      <header className="mb-20">
+      <header className="mb-12 sm:mb-16">
         <p className="section-label mb-4">Patterns</p>
         <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Agent Actions

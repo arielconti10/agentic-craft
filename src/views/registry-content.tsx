@@ -82,7 +82,7 @@ function RegistryItemTable({ items }: { items: typeof registryItems }) {
 export function RegistryContent() {
   return (
     <article>
-      <header className="mb-12 sm:mb-20">
+      <header className="mb-12 sm:mb-16">
         <p className="section-label mb-3">DISTRIBUTION</p>
         <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Registry

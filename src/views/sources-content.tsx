@@ -83,7 +83,7 @@ const artifactSections = [
 export function SourcesContent() {
   return (
     <article>
-      <header className="mb-12 sm:mb-20">
+      <header className="mb-12 sm:mb-16">
         <p className="section-label mb-3">PROVENANCE</p>
         <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Sources &amp; Artifacts

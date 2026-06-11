@@ -106,7 +106,7 @@ export function DemoContent() {
 
   return (
     <article>
-      <header className="mb-16">
+      <header className="mb-12 sm:mb-16">
         <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Agentic Craft
         </h1>
