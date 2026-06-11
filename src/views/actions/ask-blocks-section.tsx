@@ -243,11 +243,6 @@ export function AskBlocksSection() {
         </TableBody>
       </Table>
 
-      <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Clarifying questions should reduce ambiguity, not create a survey.
-        Prefer choices when the agent can name the likely answers. Use the
-        free-text row only for constraints, missing context, or edge cases.
-      </p>
     </section>
   )
 }

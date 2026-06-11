@@ -248,15 +248,7 @@ export function SubagentsSection() {
               '"N of M unit" — concrete, not percentage-based',
             ],
             ["Completion", '"complete" badge replaces the progress count'],
-            [
-              "Running indicator",
-              "Pulsing dot next to the badge while in-progress",
-            ],
             ["Nesting", "Nested tool calls inherit the same collapsed style"],
-            [
-              "Progress bar",
-              "h-1 (4px) bg-primary indicator with transition-transform duration-200",
-            ],
           ].map(([prop, spec], i, arr) => (
             <TableRow
               key={prop}
@@ -271,11 +263,6 @@ export function SubagentsSection() {
         </TableBody>
       </Table>
 
-      <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Subagent cards let users monitor delegated work without leaving their
-        current context. The progress bar provides glanceable status while
-        nested tools offer drill-down detail.
-      </p>
     </section>
   )
 }

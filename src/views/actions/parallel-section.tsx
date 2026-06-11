@@ -235,26 +235,6 @@ export function ParallelSection() {
         <TableBody>
           {[
             [
-              "Vertical spine",
-              "1px line from parent icon to last child, masked by bg-background behind each icon",
-            ],
-            [
-              "L-connectors",
-              "rounded-bl-lg border-l + border-b connecting spine to each child",
-            ],
-            [
-              "Icon masking",
-              "size-6 bg-background circle behind size-5 icon creates clean spine breaks",
-            ],
-            [
-              "Hover state",
-              "Row label and icon transition to text-foreground; timestamp fades in on right",
-            ],
-            [
-              "Last child",
-              "bg-background mask covers spine below the final L-bend",
-            ],
-            [
               "Sequential fallback",
               "Flat list of bordered rows, no tree connectors",
             ],
@@ -272,12 +252,6 @@ export function ParallelSection() {
         </TableBody>
       </Table>
 
-      <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        The tree view uses Perplexity-style connectors — a vertical spine with
-        L-shaped branch lines, icons that mask the spine for clean breaks, and
-        hover-revealed timestamps. Each child row is lightweight: no borders, no
-        cards, just text and an expand chevron.
-      </p>
     </section>
   )
 }

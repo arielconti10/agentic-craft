@@ -12,14 +12,6 @@ import { PatternControls as Controls } from "@/components/pattern-controls"
 import { ActionPreview } from "@/components/ui/action-preview"
 import { Button } from "@/components/ui/button"
 import { DecisionSurface } from "@/components/ui/decision-surface"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -528,60 +520,8 @@ export function ApprovalGateSection() {
         </div>
       </div>
 
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border">
-            <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-              Property
-            </TableHead>
-            <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
-              Spec
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {[
-            [
-              "Action summary",
-              "Shield icon + plain-language description of what the agent wants to do",
-            ],
-            [
-              "Detail panel",
-              "Muted background container with key-value or diff preview",
-            ],
-            [
-              "Diff format",
-              "Green-ish (+) for additions, red-ish (−) for removals, muted tones",
-            ],
-            [
-              "Approve button",
-              "Primary fill — should feel deliberate, not default",
-            ],
-            ["Deny button", "Ghost/outline — lower visual weight than approve"],
-            [
-              "Result states",
-              "Success (primary border), denied (destructive border), with reset button",
-            ],
-          ].map(([prop, spec], i, arr) => (
-            <TableRow
-              key={prop}
-              className={i < arr.length - 1 ? "border-b border-border/50" : ""}
-            >
-              <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
-              <TableCell className="py-3 text-muted-foreground">
-                {spec}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Approval gates are the most critical trust pattern in the system. They
-        ensure the agent never takes consequential actions without explicit
-        human confirmation — essential for high-trust workflows where mistakes
-        have regulatory consequences.
+      <p className="mt-8 text-sm text-muted-foreground">
+        Approve uses primary fill; deny uses ghost/outline. Outcomes use primary or destructive border with a reset button.
       </p>
     </section>
   )

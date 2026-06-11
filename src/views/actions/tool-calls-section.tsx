@@ -194,8 +194,6 @@ export function ToolCallsSection() {
         </TableHeader>
         <TableBody>
           {[
-            ["Tool title", "14px sans, font-weight 400 (never bold)"],
-            ["Inner detail text", "12px, key in muted, value in foreground"],
             ["Icons", "All monochrome — no colored status indicators"],
             ["Labels", "Human-readable only — no function signatures or code"],
             [
@@ -220,11 +218,6 @@ export function ToolCallsSection() {
         </TableBody>
       </Table>
 
-      <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Tool calls should feel like quiet status updates, not system logs. The
-        user glances at them during execution and digs in only when something
-        looks wrong.
-      </p>
     </section>
   )
 }
