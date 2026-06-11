@@ -2,7 +2,7 @@
 
 import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Brain01Icon, Tick01Icon } from "@hugeicons/core-free-icons"
+import { Robot01Icon, Tick01Icon } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Progress } from "@/components/ui/progress"
 import {
@@ -79,7 +79,7 @@ export function ParallelAgentsSection() {
                 <div className="flex items-start gap-3">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted">
                     <HugeiconsIcon
-                      icon={Brain01Icon}
+                      icon={Robot01Icon}
                       size={14}
                       strokeWidth={1.5}
                       className="text-muted-foreground"

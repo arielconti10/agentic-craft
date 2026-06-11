@@ -4,8 +4,8 @@ import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ArrowRight01Icon,
-  Brain01Icon,
   Message01Icon,
+  Robot01Icon,
   Search01Icon,
   Share01Icon,
 } from "@hugeicons/core-free-icons"
@@ -131,7 +131,7 @@ export function AgentCommunicationSection() {
                   >
                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
                       <HugeiconsIcon
-                        icon={Brain01Icon}
+                        icon={Robot01Icon}
                         size={12}
                         strokeWidth={1.5}
                         className="text-muted-foreground"
@@ -185,7 +185,7 @@ export function AgentCommunicationSection() {
                 >
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
                     <HugeiconsIcon
-                      icon={Brain01Icon}
+                      icon={Robot01Icon}
                       size={12}
                       strokeWidth={1.5}
                       className="text-muted-foreground"

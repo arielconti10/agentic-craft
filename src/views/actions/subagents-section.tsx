@@ -5,7 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Wrench01Icon,
   ArrowDown01Icon,
-  Brain01Icon,
+  Robot01Icon,
 } from "@hugeicons/core-free-icons"
 import {
   ToolCall,
@@ -143,7 +143,7 @@ function SubagentSection() {
           className="flex w-full items-center gap-2.5 py-2.5 text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           <HugeiconsIcon
-            icon={Brain01Icon}
+            icon={Robot01Icon}
             size={14}
             strokeWidth={1.5}
             className="shrink-0 text-muted-foreground"

@@ -2,7 +2,7 @@
 
 import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Activity01Icon, Alert01Icon } from "@hugeicons/core-free-icons"
+import { Alert01Icon, Coins01Icon } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Progress } from "@/components/ui/progress"
 import {
@@ -82,7 +82,7 @@ export function TokenUsageSection() {
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <HugeiconsIcon
-                  icon={Activity01Icon}
+                  icon={Coins01Icon}
                   size={14}
                   strokeWidth={1.5}
                   className="text-muted-foreground"

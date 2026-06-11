@@ -2,9 +2,9 @@
 
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
-  Activity01Icon,
-  Brain01Icon,
   Cancel01Icon,
+  Loading01Icon,
+  Robot01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Button } from "@/components/ui/button"
@@ -62,7 +62,7 @@ export function KillSwitchSection() {
                   <div className="flex items-center gap-3">
                     <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
                       <HugeiconsIcon
-                        icon={Brain01Icon}
+                        icon={Robot01Icon}
                         size={14}
                         strokeWidth={1.5}
                         className="text-muted-foreground"
@@ -93,7 +93,7 @@ export function KillSwitchSection() {
                   <div className="flex items-center gap-3">
                     <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
                       <HugeiconsIcon
-                        icon={Activity01Icon}
+                        icon={Loading01Icon}
                         size={14}
                         strokeWidth={1.5}
                         className="trust-pulse text-muted-foreground"

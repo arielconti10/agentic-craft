@@ -4,8 +4,8 @@ import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Alert01Icon,
-  Brain01Icon,
   RefreshIcon,
+  Robot01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import {
@@ -197,7 +197,7 @@ export function AgentCardsSection() {
                 <div className="flex items-start gap-3">
                   <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted">
                     <HugeiconsIcon
-                      icon={Brain01Icon}
+                      icon={Robot01Icon}
                       size={14}
                       strokeWidth={1.5}
                       className="text-muted-foreground"

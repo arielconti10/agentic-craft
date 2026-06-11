@@ -4,7 +4,7 @@ import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ArrowRight01Icon,
-  Brain01Icon,
+  Robot01Icon,
   Search01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
@@ -126,7 +126,7 @@ export function SessionTimelineSection() {
                   >
                     <HugeiconsIcon
                       icon={
-                        item.role === "user" ? ArrowRight01Icon : Brain01Icon
+                        item.role === "user" ? ArrowRight01Icon : Robot01Icon
                       }
                       size={12}
                       strokeWidth={1.5}
@@ -201,7 +201,7 @@ export function SessionTimelineSection() {
               Node icons
             </TableCell>
             <TableCell className="py-3">
-              Arrow for reviewer, brain for agent — rounded-md 24px containers
+              Arrow for reviewer, robot for agent — rounded-md 24px containers
             </TableCell>
           </TableRow>
           <TableRow className="border-b border-border/50">

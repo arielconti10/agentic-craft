@@ -5,7 +5,7 @@ import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ArrowRight01Icon,
-  Brain01Icon,
+  Robot01Icon,
   Route01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
@@ -124,7 +124,7 @@ export function AgentRoutingSection() {
                     <div className="flex items-center gap-2">
                       <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-muted">
                         <HugeiconsIcon
-                          icon={Brain01Icon}
+                          icon={Robot01Icon}
                           size={12}
                           strokeWidth={1.5}
                           className="text-muted-foreground"

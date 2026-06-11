@@ -2,7 +2,7 @@
 
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
-  Brain01Icon,
+  Robot01Icon,
   Search01Icon,
   Shield01Icon,
   Target01Icon,
@@ -144,7 +144,7 @@ export function ModeTogglesSection() {
                       style={{ animationDelay: `${i * 60}ms` }}
                     >
                       <HugeiconsIcon
-                        icon={Brain01Icon}
+                        icon={Robot01Icon}
                         size={12}
                         strokeWidth={1.5}
                         className="shrink-0 text-muted-foreground"
