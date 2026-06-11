@@ -4,18 +4,10 @@ import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ArrowRight01Icon,
-  Brain01Icon,
+  Robot01Icon,
   Search01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -25,7 +17,7 @@ const SESSION_SINGLE = [
   {
     role: "user" as const,
     content:
-      "Check if the project brief covers all Export workflow requirements for the ACME Customer Portal.",
+      "Check if the project brief covers all Export workflow requirements for the Meridian Customer Portal.",
   },
   {
     role: "agent" as const,
@@ -44,7 +36,7 @@ const SESSION_MULTI = [
   {
     role: "agent" as const,
     content:
-      "Starting the analysis. I'll cross-reference all 23 requirements from Launch checklist against the current project brief.",
+      "Starting the analysis. I’ll cross-reference all 23 requirements from Launch checklist against the current project brief.",
     tool: "Loading requirement catalog",
   },
   {
@@ -102,7 +94,7 @@ export function SessionTimelineSection() {
         />
 
         <div
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
           key={sessionAnim}
         >
           <div className="flex flex-col gap-0">
@@ -126,7 +118,7 @@ export function SessionTimelineSection() {
                   >
                     <HugeiconsIcon
                       icon={
-                        item.role === "user" ? ArrowRight01Icon : Brain01Icon
+                        item.role === "user" ? ArrowRight01Icon : Robot01Icon
                       }
                       size={12}
                       strokeWidth={1.5}
@@ -153,15 +145,8 @@ export function SessionTimelineSection() {
                           </div>
                         )}
                         <p
-                          className="text-sm"
-                          style={{
-                            fontFamily: "'Source Serif 4', serif",
-                            fontSize: "14px",
-                            lineHeight: "22px",
-                            letterSpacing: "0px",
-                            fontVariationSettings: '"opsz" 12',
-                            color: "var(--foreground)",
-                          }}
+                          className="agent-prose text-sm"
+                          style={{ color: "var(--foreground)" }}
                         >
                           {item.content}
                         </p>
@@ -173,62 +158,6 @@ export function SessionTimelineSection() {
             ))}
           </div>
         </div>
-      </div>
-
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border text-left">
-            <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
-              Element
-            </TableHead>
-            <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
-              Details
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Connector
-            </TableCell>
-            <TableCell className="py-3">
-              1px vertical line between nodes, bg-border color
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Node icons
-            </TableCell>
-            <TableCell className="py-3">
-              Arrow for reviewer, brain for agent — rounded-md 24px containers
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Agent prose
-            </TableCell>
-            <TableCell className="py-3">
-              Source Serif 4, 14px/22px, theme-aware foreground color
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Tool annotations
-            </TableCell>
-            <TableCell className="py-3">
-              Shown above agent response as muted text with search icon
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Session timelines provide the conversation-level audit trail that review
-        team reviewers need when reviewing how an agent arrived at its
-        conclusions. Multi-turn sessions show how iterative refinement (e.g.,
-        narrowing scope from all requirements to just the integration and export
-        sections) leads to more targeted analysis.
       </div>
     </section>
   )

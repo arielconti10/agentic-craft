@@ -49,7 +49,7 @@ const FEEDBACK_HISTORY = [
     id: "fb-3",
     timestamp: "2026-03-13 · 16:45",
     message:
-      "I've mapped each requirement to its corresponding test case in the review plan. Coverage is at 91.3%.",
+      "I’ve mapped each requirement to its corresponding test case in the review plan. Coverage is at 91.3%.",
     type: "negative" as const,
     detail:
       "Fallback behavior and Cleanup behavior were missing from the mapping. Coverage was overstated.",
@@ -113,7 +113,7 @@ export function FeedbackHistorySection() {
           onToggle={handleHistoryToggle}
         />
 
-        <div className="rounded-lg border border-border/40 p-6">
+        <div className="rounded-lg border border-border/40 p-4 sm:p-6">
           <div className="flex flex-col gap-0">
             {visibleHistory.map((entry, i) => {
               const isExpanded = expandedRow === entry.id
@@ -130,7 +130,7 @@ export function FeedbackHistorySection() {
                     type="button"
                     aria-label={`Toggle feedback history entry: ${entry.message}`}
                     onClick={() => setExpandedRow(isExpanded ? null : entry.id)}
-                    className="flex w-full items-start gap-3 rounded-md px-2 py-3 text-left transition-colors hover:bg-muted/30"
+                    className="flex w-full items-start gap-3 rounded-md px-2 py-3 text-left transition-colors outline-none hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
                     {/* Type indicator */}
                     <span
@@ -169,7 +169,7 @@ export function FeedbackHistorySection() {
                     {/* Content */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground/60">
+                        <span className="text-xs text-muted-foreground/70">
                           <HugeiconsIcon
                             icon={Clock01Icon}
                             size={10}
@@ -189,7 +189,7 @@ export function FeedbackHistorySection() {
                       icon={isExpanded ? ArrowDown01Icon : ArrowRight01Icon}
                       size={12}
                       strokeWidth={1.5}
-                      className="mt-1.5 shrink-0 text-muted-foreground/40"
+                      className="mt-1.5 shrink-0 text-muted-foreground/70"
                     />
                   </button>
 
@@ -216,7 +216,7 @@ export function FeedbackHistorySection() {
                 onClick={() => handleHistoryToggle("all")}
                 variant="ghost"
                 size="xs"
-                className="w-fit text-muted-foreground/60 hover:text-muted-foreground"
+                className="w-fit text-muted-foreground/70 hover:text-muted-foreground"
               >
                 Show all {FEEDBACK_HISTORY.length} entries
               </Button>
@@ -259,7 +259,7 @@ export function FeedbackHistorySection() {
             ],
             [
               "Detail",
-              "Reviewer's note or correction text",
+              "Reviewer’s note or correction text",
               "Visible only when row is expanded",
             ],
           ].map(([col, content, notes], i) => (
@@ -278,12 +278,6 @@ export function FeedbackHistorySection() {
           ))}
         </TableBody>
       </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        The feedback history doubles as an audit trail — useful for compliance
-        reviews where traceability of reviewer decisions matters. Expandable
-        rows keep the list scannable while preserving full detail on demand.
-      </div>
     </section>
   )
 }

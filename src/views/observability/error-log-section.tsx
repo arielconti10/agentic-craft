@@ -7,19 +7,10 @@ import {
   Alert01Icon,
   ArrowDown01Icon,
   Cancel01Icon,
-  Tick01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -79,22 +70,14 @@ export function ErrorLogSection() {
           onToggle={toggleErr}
         />
 
-        <div className="rounded-lg border border-border/40 p-6" key={errAnim}>
+        <div
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
+          key={errAnim}
+        >
           {activeErr === "empty" ? (
-            <div className="mon-slide-in flex flex-col items-center justify-center py-12 text-center">
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-                <HugeiconsIcon
-                  icon={Tick01Icon}
-                  size={18}
-                  strokeWidth={1.5}
-                  className="text-muted-foreground"
-                />
-              </div>
-              <p className="text-sm font-medium">
-                No errors in current session
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                All agent operations completed successfully since session start.
+            <div className="mon-slide-in py-3">
+              <p className="text-xs text-muted-foreground">
+                No anomalies since session start · 11:32 AM
               </p>
             </div>
           ) : (
@@ -154,61 +137,6 @@ export function ErrorLogSection() {
             </div>
           )}
         </div>
-      </div>
-
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border text-left">
-            <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
-              Element
-            </TableHead>
-            <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
-              Details
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Empty state
-            </TableCell>
-            <TableCell className="py-3">
-              Centered check icon with "No errors" message and subtitle
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Error entries
-            </TableCell>
-            <TableCell className="py-3">
-              Clickable rows with severity badge, timestamp, and expand/collapse
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Severity levels
-            </TableCell>
-            <TableCell className="py-3">
-              Warning and Error — shown as muted chip badges, no colors
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Expanded detail
-            </TableCell>
-            <TableCell className="py-3">
-              Animated expand with full error description and context
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        The error log provides the diagnostic transparency that activity review
-        requires — reviewers can inspect every operational anomaly, understand
-        its context, and verify that the agent's error handling meets the
-        product's claimed readiness level.
       </div>
     </section>
   )

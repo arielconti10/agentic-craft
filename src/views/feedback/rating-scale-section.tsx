@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { AGENT_PROSE_STYLE, AGENT_PROSE_COLOR } from "./data"
+import { AGENT_PROSE_COLOR } from "./data"
 
 export function RatingScaleSection() {
   const [ratingState, setRatingState] = useState<Record<string, boolean>>({
@@ -88,21 +88,21 @@ export function RatingScaleSection() {
           onToggle={handleRatingToggle}
         />
 
-        <div className="rounded-lg border border-border/40 p-6">
+        <div className="rounded-lg border border-border/40 p-4 sm:p-6">
           <div>
             <p
-              className="text-base"
-              style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+              className="agent-prose text-base"
+              style={{ color: AGENT_PROSE_COLOR }}
             >
               Based on the launch policy, the product must implement Export
               workflow for CSV and JSON exports and Retention setting for
-              account retention. Both are covered by the ACME export
-              service&apos;s internal platform approval.
+              account retention. Both are covered by the Meridian export
+              service’s internal platform approval.
             </p>
 
             {/* Rating row */}
             <div className="mt-4 flex items-center gap-3">
-              <span className="text-xs text-muted-foreground/60">
+              <span className="text-xs text-muted-foreground/70">
                 Rate this response
               </span>
               <div className="flex items-center gap-1">
@@ -113,10 +113,10 @@ export function RatingScaleSection() {
                     onClick={() => handleRatingClick(n)}
                     aria-label={`Rate response ${n} out of 5`}
                     aria-pressed={selectedRating === n}
-                    className={`flex h-7 w-7 items-center justify-center rounded-md text-xs transition-colors duration-150 ${ratingPressed === n ? "feedback-press" : ""} ${
+                    className={`flex h-7 w-7 items-center justify-center rounded-md text-xs transition-colors duration-150 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${ratingPressed === n ? "feedback-press" : ""} ${
                       selectedRating === n
                         ? "border border-foreground/20 bg-foreground/[0.06] font-medium text-foreground"
-                        : "border border-transparent text-muted-foreground/50 hover:bg-muted/50 hover:text-muted-foreground"
+                        : "border border-transparent text-muted-foreground/70 hover:bg-muted/50 hover:text-muted-foreground"
                     } `}
                   >
                     {n}
@@ -126,7 +126,7 @@ export function RatingScaleSection() {
               {ratingConfirm && (
                 <span
                   role="status"
-                  className="feedback-fade-in text-xs text-muted-foreground/60"
+                  className="feedback-fade-in text-xs text-muted-foreground/70"
                 >
                   Feedback recorded
                 </span>
@@ -196,13 +196,6 @@ export function RatingScaleSection() {
           ))}
         </TableBody>
       </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Numbered buttons rather than stars — the scale is intentionally
-        utilitarian. Reviewers are accustomed to readiness labels and respond
-        well to explicit ordinal scales. The brief confirmation message
-        auto-dismisses to avoid interrupting workflow.
-      </div>
     </section>
   )
 }

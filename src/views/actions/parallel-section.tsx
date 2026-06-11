@@ -37,6 +37,7 @@ import {
 const PARALLEL_TASKS = [
   {
     label: "Checking current git status in the project",
+    timestamp: "10:44 AM · 0.8s",
     details: [
       { key: "Working dir", value: "/workspace/customer-portal" },
       {
@@ -48,6 +49,7 @@ const PARALLEL_TASKS = [
   },
   {
     label: "Checking remote configuration",
+    timestamp: "10:44 AM · 1.4s",
     details: [
       {
         key: "Remote",
@@ -59,6 +61,7 @@ const PARALLEL_TASKS = [
   },
   {
     label: "Reading requirement coverage definitions",
+    timestamp: "10:44 AM · 2.2s",
     details: [
       { key: "File", value: "requirement-map.json" },
       { key: "Requirements parsed", value: "23 requirements" },
@@ -120,12 +123,15 @@ export function ParallelSection() {
 
         <div
           key={parallelAnim}
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
         >
           {parallelState.parallel ? (
             <div className="actions-slide-in">
               <ToolTree open={treeOpen} onOpenChange={setTreeOpen}>
-                <ToolTreeTrigger icon={GitBranchIcon} timestamp="10:44 AM · 1s">
+                <ToolTreeTrigger
+                  icon={GitBranchIcon}
+                  timestamp="10:44 AM · 2.6s"
+                >
                   Running tasks in parallel
                 </ToolTreeTrigger>
                 <ToolTreeContent>
@@ -134,7 +140,7 @@ export function ParallelSection() {
                       key={task.label}
                       icon={TextIcon}
                       status="completed"
-                      timestamp="10:44 AM · 1s"
+                      timestamp={task.timestamp}
                     >
                       <ToolCallTrigger>
                         <ToolCallLabel>{task.label}</ToolCallLabel>
@@ -193,7 +199,7 @@ export function ParallelSection() {
                         icon={ArrowRight01Icon}
                         size={11}
                         strokeWidth={1.5}
-                        className={`ml-auto shrink-0 text-muted-foreground/50 transition-transform duration-200 ${
+                        className={`ml-auto shrink-0 text-muted-foreground/70 transition-transform duration-200 ${
                           childExpanded[i] ? "rotate-90" : ""
                         }`}
                       />
@@ -235,26 +241,6 @@ export function ParallelSection() {
         <TableBody>
           {[
             [
-              "Vertical spine",
-              "1px line from parent icon to last child, masked by bg-background behind each icon",
-            ],
-            [
-              "L-connectors",
-              "rounded-bl-lg border-l + border-b connecting spine to each child",
-            ],
-            [
-              "Icon masking",
-              "size-6 bg-background circle behind size-5 icon creates clean spine breaks",
-            ],
-            [
-              "Hover state",
-              "Row label and icon transition to text-foreground; timestamp fades in on right",
-            ],
-            [
-              "Last child",
-              "bg-background mask covers spine below the final L-bend",
-            ],
-            [
               "Sequential fallback",
               "Flat list of bordered rows, no tree connectors",
             ],
@@ -271,13 +257,6 @@ export function ParallelSection() {
           ))}
         </TableBody>
       </Table>
-
-      <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        The tree view uses Perplexity-style connectors — a vertical spine with
-        L-shaped branch lines, icons that mask the spine for clean breaks, and
-        hover-revealed timestamps. Each child row is lightweight: no borders, no
-        cards, just text and an expand chevron.
-      </p>
     </section>
   )
 }

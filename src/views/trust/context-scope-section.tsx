@@ -4,14 +4,6 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { File01Icon, Target01Icon } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Separator } from "@/components/ui/separator"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 
 /* ------------------------------------------------------------------ */
@@ -21,7 +13,7 @@ import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 const SCOPE_CONFIGS = {
   portal: {
     label: "Portal Only",
-    scope: "ACME Customer Portal v3.1",
+    scope: "Meridian Customer Portal v3.1",
     documents: [
       { name: "Project brief v3", section: "Full document" },
       { name: "QA Notes 2026-003", section: "Product-specific checks" },
@@ -29,7 +21,7 @@ const SCOPE_CONFIGS = {
   },
   portalPolicy: {
     label: "Portal + Policy",
-    scope: "ACME Customer Portal v3.1 + Launch Policy v2",
+    scope: "Meridian Customer Portal v3.1 + Launch Policy v2",
     documents: [
       { name: "Project brief v3", section: "Full document" },
       { name: "QA Notes 2026-003", section: "All check results" },
@@ -80,7 +72,7 @@ export function ContextScopeSection() {
         Narrower scopes reduce noise; wider scopes enable cross-referencing.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-10">
         <Controls
           options={[
             { key: "portal", label: "Portal Only" },
@@ -92,7 +84,7 @@ export function ContextScopeSection() {
         />
 
         <div
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
           key={scopeAnimKey}
         >
           <div className="trust-slide-in">
@@ -172,62 +164,6 @@ export function ContextScopeSection() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Spec table */}
-      <div className="mt-8">
-        <Table className="w-full text-sm">
-          <TableHeader>
-            <TableRow className="border-b border-border">
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Scope
-              </TableHead>
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Documents
-              </TableHead>
-              <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
-                Use case
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="text-muted-foreground">
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                Portal Only
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">2 documents</TableCell>
-              <TableCell className="py-2.5">
-                Focused work on a single product
-              </TableCell>
-            </TableRow>
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                Portal + Policy
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">4 documents</TableCell>
-              <TableCell className="py-2.5">
-                Evaluating policy alignment claims
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                Global
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">6 documents</TableCell>
-              <TableCell className="py-2.5">
-                Cross-referencing across full project workspace
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Callout */}
-      <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Context scope directly affects response quality and cost. A narrower
-        scope produces faster, cheaper answers but may miss cross-document
-        dependencies. For OR preparation, always use Global scope to ensure
-        nothing is overlooked.
       </div>
     </section>
   )

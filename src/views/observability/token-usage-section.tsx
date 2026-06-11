@@ -2,7 +2,7 @@
 
 import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Activity01Icon, Alert01Icon } from "@hugeicons/core-free-icons"
+import { Alert01Icon, Coins01Icon } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Progress } from "@/components/ui/progress"
 import {
@@ -20,25 +20,25 @@ import {
 
 const TOKEN_CONFIGS = {
   low: {
-    used: 12400,
-    budget: 100000,
+    used: 11750,
+    budget: 92500,
     label: "Well within budget",
     sessions: 3,
-    costEstimate: "$0.86",
+    costEstimate: "$0.82",
   },
   medium: {
-    used: 68000,
-    budget: 100000,
+    used: 63800,
+    budget: 92500,
     label: "Approaching limit",
     sessions: 14,
-    costEstimate: "$4.72",
+    costEstimate: "$4.43",
   },
   high: {
-    used: 97200,
-    budget: 100000,
+    used: 88700,
+    budget: 92500,
     label: "Near budget limit",
     sessions: 28,
-    costEstimate: "$6.74",
+    costEstimate: "$6.16",
   },
 }
 
@@ -76,13 +76,16 @@ export function TokenUsageSection() {
           onToggle={toggleToken}
         />
 
-        <div className="rounded-lg border border-border/40 p-6" key={tokenAnim}>
+        <div
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
+          key={tokenAnim}
+        >
           <div className="mon-slide-in">
             {/* Usage header */}
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <HugeiconsIcon
-                  icon={Activity01Icon}
+                  icon={Coins01Icon}
                   size={14}
                   strokeWidth={1.5}
                   className="text-muted-foreground"
@@ -174,14 +177,6 @@ export function TokenUsageSection() {
         <TableBody>
           <TableRow className="border-b border-border/50">
             <TableCell className="py-3 pr-6 text-muted-foreground">
-              Usage bar
-            </TableCell>
-            <TableCell className="py-3">
-              Height 12px, rounded-md, darkens above 80% threshold
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
               Warning state
             </TableCell>
             <TableCell className="py-3">
@@ -197,23 +192,8 @@ export function TokenUsageSection() {
               non-technical users
             </TableCell>
           </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Stats grid
-            </TableCell>
-            <TableCell className="py-3">
-              3-column layout: sessions, average per session, remaining tokens
-            </TableCell>
-          </TableRow>
         </TableBody>
       </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Token meters translate raw API consumption into a budget metaphor that
-        product teams understand. The 80% warning threshold provides time to
-        prioritize remaining review tasks before throttling begins —
-        particularly important during time-bounded review team session sessions.
-      </div>
     </section>
   )
 }

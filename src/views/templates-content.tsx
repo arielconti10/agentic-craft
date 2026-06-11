@@ -1,9 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Brain01Icon } from "@hugeicons/core-free-icons"
+import {
+  Brain01Icon,
+  Tick01Icon,
+  RefreshIcon,
+} from "@hugeicons/core-free-icons"
 
 import {
   AgentStatusTable,
@@ -253,9 +257,26 @@ export function TemplatesContent() {
   })
   const activeClarifyingQuestion = clarifyingQuestions[clarifyingIndex]
 
+  // Approval workflow demo state
+  const [approvalOpen, setApprovalOpen] = useState(false)
+  const [approvalDone, setApprovalDone] = useState<"approved" | null>(null)
+  const approvalOutcomeRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (approvalDone) approvalOutcomeRef.current?.focus()
+  }, [approvalDone])
+
+  // Memory Review demo state
+  const [memoryStatus, setMemoryStatus] = useState<
+    "pending" | "saved" | "dismissed"
+  >("pending")
+  const memoryOutcomeRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (memoryStatus !== "pending") memoryOutcomeRef.current?.focus()
+  }, [memoryStatus])
+
   return (
     <article>
-      <header className="mb-12 sm:mb-20">
+      <header className="mb-12 sm:mb-16">
         <p className="section-label mb-3">WORKFLOW TEMPLATES</p>
         <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Templates
@@ -273,7 +294,7 @@ export function TemplatesContent() {
           <h2 className="text-xl font-semibold tracking-tight">
             Review to delivery
           </h2>
-          <p className="mt-2 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
             Templates should describe the whole job, not a single widget. This
             map is the reusable backbone across review, approval, clarification,
             memory, and monitoring flows.
@@ -286,25 +307,24 @@ export function TemplatesContent() {
         <p className="section-label mb-3">Template index</p>
         <div className="grid gap-3 md:grid-cols-2">
           {templateIndex.map((template) => (
-            <Link
-              key={template.id}
-              href={`/templates/${template.id}`}
-              className="block"
-            >
-              <ReferenceItem.Root>
-                <ReferenceItem.Content>
-                  {/* text-clip drops the inherited truncate: titles wrap
-                      instead of ellipsizing mid-word in the 2-col grid */}
-                  <ReferenceItem.Title className="text-clip whitespace-normal">
+            <ReferenceItem.Root key={template.id} className="group">
+              <ReferenceItem.Content>
+                {/* text-clip drops the inherited truncate: titles wrap
+                    instead of ellipsizing mid-word in the 2-col grid */}
+                <ReferenceItem.Title className="text-clip whitespace-normal">
+                  <Link
+                    href={`/templates/${template.id}`}
+                    className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
                     {template.title}
-                  </ReferenceItem.Title>
-                  <ReferenceItem.Description>
-                    {template.description}
-                  </ReferenceItem.Description>
-                  <ReferenceItem.Meta>{template.primitives}</ReferenceItem.Meta>
-                </ReferenceItem.Content>
-              </ReferenceItem.Root>
-            </Link>
+                  </Link>
+                </ReferenceItem.Title>
+                <ReferenceItem.Description>
+                  {template.description}
+                </ReferenceItem.Description>
+                <ReferenceItem.Meta>{template.primitives}</ReferenceItem.Meta>
+              </ReferenceItem.Content>
+            </ReferenceItem.Root>
           ))}
         </div>
       </section>
@@ -314,7 +334,7 @@ export function TemplatesContent() {
         <h2 className="text-xl font-semibold tracking-tight">
           Review Workflow
         </h2>
-        <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Use this when the agent reviews source material and produces a result
           that a person must trust, cite, or approve.
         </p>
@@ -363,44 +383,90 @@ export function TemplatesContent() {
         <h2 className="text-xl font-semibold tracking-tight">
           Approval Workflow
         </h2>
-        <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Use this when the agent is about to change external state, spend
           budget, notify people, or publish an output.
         </p>
-        <div className="mt-8">
-          <DecisionSurface.Root>
-            <DecisionSurface.Trigger render={<Button variant="outline" />}>
-              Review proposed action
-            </DecisionSurface.Trigger>
-            <DecisionSurface.Content>
-              <DecisionSurface.Header>
-                <DecisionSurface.Title>
-                  Send the review summary?
-                </DecisionSurface.Title>
-                <DecisionSurface.Description>
-                  The agent will send a generated summary to the selected
-                  project channel and attach the current evidence list.
-                </DecisionSurface.Description>
-              </DecisionSurface.Header>
-              <DecisionSurface.Body>
-                <DecisionSurface.ImpactList>
-                  <DecisionSurface.ImpactItem label="Audience">
-                    Project reviewers
-                  </DecisionSurface.ImpactItem>
-                  <DecisionSurface.ImpactItem label="Cost">
-                    $0.09 estimated
-                  </DecisionSurface.ImpactItem>
-                  <DecisionSurface.ImpactItem label="Rollback">
-                    Follow-up correction can be posted
-                  </DecisionSurface.ImpactItem>
-                </DecisionSurface.ImpactList>
-              </DecisionSurface.Body>
-              <DecisionSurface.Footer>
-                <DecisionSurface.Cancel />
-                <DecisionSurface.Confirm>Approve</DecisionSurface.Confirm>
-              </DecisionSurface.Footer>
-            </DecisionSurface.Content>
-          </DecisionSurface.Root>
+        <div className="mt-8 flex flex-col gap-4">
+          {approvalDone === null ? (
+            <DecisionSurface.Root
+              open={approvalOpen}
+              onOpenChange={setApprovalOpen}
+            >
+              <DecisionSurface.Trigger render={<Button variant="outline" />}>
+                Review proposed action
+              </DecisionSurface.Trigger>
+              <DecisionSurface.Content>
+                <DecisionSurface.Header>
+                  <DecisionSurface.Title>
+                    Send the review summary?
+                  </DecisionSurface.Title>
+                  <DecisionSurface.Description>
+                    The agent will send a generated summary to the selected
+                    project channel and attach the current evidence list.
+                  </DecisionSurface.Description>
+                </DecisionSurface.Header>
+                <DecisionSurface.Body>
+                  <DecisionSurface.ImpactList>
+                    <DecisionSurface.ImpactItem label="Audience">
+                      Project reviewers
+                    </DecisionSurface.ImpactItem>
+                    <DecisionSurface.ImpactItem label="Cost">
+                      $0.09 estimated
+                    </DecisionSurface.ImpactItem>
+                    <DecisionSurface.ImpactItem label="Rollback">
+                      Follow-up correction can be posted
+                    </DecisionSurface.ImpactItem>
+                  </DecisionSurface.ImpactList>
+                </DecisionSurface.Body>
+                <DecisionSurface.Footer>
+                  <DecisionSurface.Cancel />
+                  <DecisionSurface.Confirm
+                    onClick={() => {
+                      setApprovalOpen(false)
+                      setApprovalDone("approved")
+                    }}
+                  >
+                    Approve
+                  </DecisionSurface.Confirm>
+                </DecisionSurface.Footer>
+              </DecisionSurface.Content>
+            </DecisionSurface.Root>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <div
+                ref={approvalOutcomeRef}
+                tabIndex={-1}
+                role="status"
+                className="border-l border-primary bg-primary/5 py-2 pl-3"
+              >
+                <div className="flex items-center gap-2">
+                  <HugeiconsIcon
+                    icon={Tick01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="shrink-0 text-muted-foreground"
+                  />
+                  <span className="text-sm">
+                    Approved — sending review summary to project channel
+                  </span>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="xs"
+                onClick={() => setApprovalDone(null)}
+              >
+                <HugeiconsIcon
+                  icon={RefreshIcon}
+                  strokeWidth={1.5}
+                  data-icon="inline-start"
+                />
+                Reset
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
@@ -409,7 +475,7 @@ export function TemplatesContent() {
         <h2 className="text-xl font-semibold tracking-tight">
           Clarifying Workflow
         </h2>
-        <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Ask for missing product decisions in a structured way, with defaults
           visible and no conversational guesswork.
         </p>
@@ -451,7 +517,7 @@ export function TemplatesContent() {
         <h2 className="text-xl font-semibold tracking-tight">
           Source-Backed Artifact
         </h2>
-        <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Turn an agent answer into a cited document that users can inspect
           after the conversation ends.
         </p>
@@ -474,38 +540,88 @@ export function TemplatesContent() {
       <section id="memory-review" className="page-section">
         <p className="section-label mb-3">MEMORY</p>
         <h2 className="text-xl font-semibold tracking-tight">Memory Review</h2>
-        <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Show proposed memory before it becomes durable product context.
         </p>
         <div className="mt-8 flex flex-col gap-3">
-          <ReferenceItem.Root>
-            <ReferenceItem.Media>
-              <HugeiconsIcon icon={Brain01Icon} strokeWidth={1.5} />
-            </ReferenceItem.Media>
-            <ReferenceItem.Content>
-              <ReferenceItem.Header>
-                <ReferenceItem.Title>
-                  Preferred review format
-                </ReferenceItem.Title>
-                <StatusIndicator status="pending" label="Proposed" />
-              </ReferenceItem.Header>
-              <ReferenceItem.Description>
-                Use concise source-backed summaries for future review tasks.
-              </ReferenceItem.Description>
-              <ReferenceItem.Meta>
-                Source: current session / Scope: this workspace / Expiry: 90
-                days
-              </ReferenceItem.Meta>
-            </ReferenceItem.Content>
-            <ReferenceItem.Actions>
-              <Button size="sm" variant="outline">
-                Save
+          {memoryStatus === "pending" ? (
+            <ReferenceItem.Root>
+              <ReferenceItem.Media>
+                <HugeiconsIcon icon={Brain01Icon} strokeWidth={1.5} />
+              </ReferenceItem.Media>
+              <ReferenceItem.Content>
+                <ReferenceItem.Header>
+                  <ReferenceItem.Title>
+                    Preferred review format
+                  </ReferenceItem.Title>
+                  <StatusIndicator status="pending" label="Proposed" />
+                </ReferenceItem.Header>
+                <ReferenceItem.Description>
+                  Use concise source-backed summaries for future review tasks.
+                </ReferenceItem.Description>
+                <ReferenceItem.Meta>
+                  Source: current session / Scope: this workspace / Expiry: 90
+                  days
+                </ReferenceItem.Meta>
+              </ReferenceItem.Content>
+              <ReferenceItem.Actions>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setMemoryStatus("saved")}
+                >
+                  Save
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setMemoryStatus("dismissed")}
+                >
+                  Dismiss
+                </Button>
+              </ReferenceItem.Actions>
+            </ReferenceItem.Root>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <div
+                ref={memoryOutcomeRef}
+                tabIndex={-1}
+                role="status"
+                className={
+                  memoryStatus === "saved"
+                    ? "border-l border-primary bg-primary/5 py-2 pl-3"
+                    : "border-l border-muted-foreground/30 bg-muted/30 py-2 pl-3"
+                }
+              >
+                <div className="flex items-center gap-2">
+                  <HugeiconsIcon
+                    icon={Tick01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="shrink-0 text-muted-foreground"
+                  />
+                  <span className="text-sm">
+                    {memoryStatus === "saved"
+                      ? "Saved — preferred review format added to workspace memory"
+                      : "Dismissed — memory proposal will not be stored"}
+                  </span>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="xs"
+                onClick={() => setMemoryStatus("pending")}
+              >
+                <HugeiconsIcon
+                  icon={RefreshIcon}
+                  strokeWidth={1.5}
+                  data-icon="inline-start"
+                />
+                Reset
               </Button>
-              <Button size="sm" variant="ghost">
-                Dismiss
-              </Button>
-            </ReferenceItem.Actions>
-          </ReferenceItem.Root>
+            </div>
+          )}
         </div>
       </section>
 
@@ -514,7 +630,7 @@ export function TemplatesContent() {
         <h2 className="text-xl font-semibold tracking-tight">
           Background Run Monitor
         </h2>
-        <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Use this template when agent work continues after the user leaves the
           composer.
         </p>
@@ -528,7 +644,7 @@ export function TemplatesContent() {
         <h2 className="text-xl font-semibold tracking-tight">
           Multi-Agent Handoff
         </h2>
-        <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Make ownership transfer explicit so users can see who has the task and
           what context moved with it.
         </p>
@@ -559,7 +675,7 @@ export function TemplatesContent() {
       <section id="agent-settings" className="page-section">
         <p className="section-label mb-3">SETTINGS</p>
         <h2 className="text-xl font-semibold tracking-tight">Agent Settings</h2>
-        <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Agentic products need durable controls, not only per-action prompts.
         </p>
         <FieldGroup className="mt-8 border-y border-border/70 py-4">
@@ -600,14 +716,6 @@ export function TemplatesContent() {
             </Field>
           </FieldSet>
         </FieldGroup>
-      </section>
-
-      <section className="page-section">
-        <p className="border-l-2 border-muted-foreground/15 pl-4 text-sm leading-relaxed text-muted-foreground italic">
-          Templates are intentionally site-level guidance. The registry exports
-          the smaller primitives underneath them so teams can adapt the workflow
-          to their own product surface.
-        </p>
       </section>
     </article>
   )

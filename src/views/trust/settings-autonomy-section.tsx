@@ -202,12 +202,12 @@ export function SettingsAutonomySection() {
         <h2 className="text-xl font-semibold tracking-tight">
           Settings Templates
         </h2>
-        <p className="mt-2 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Reusable control groups for product teams that need durable agent
           boundaries across sessions, not one-off prompt instructions.
         </p>
 
-        <FieldGroup className="mt-8 rounded-lg border border-border/40 p-6">
+        <FieldGroup className="mt-10 rounded-lg border border-border/40 p-4 sm:p-6">
           <FieldSet>
             <FieldLegend>Reusable Settings Groups</FieldLegend>
             {SETTINGS_TEMPLATES.map((template) => (
@@ -229,12 +229,6 @@ export function SettingsAutonomySection() {
         </FieldGroup>
 
         <EffectivePolicyPreview className="mt-4" policies={effectivePolicies} />
-
-        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm leading-relaxed text-muted-foreground italic">
-          Settings templates should use confirmation or undo for risky changes
-          such as disabling approval gates, lowering escalation thresholds, or
-          expanding memory scope.
-        </p>
       </section>
 
       {/* ============================================================ */}
@@ -249,7 +243,7 @@ export function SettingsAutonomySection() {
           foundations.
         </p>
 
-        <div className="mt-8">
+        <div className="mt-10">
           <Controls
             options={[
               { key: "level2", label: "Level 2" },
@@ -261,7 +255,7 @@ export function SettingsAutonomySection() {
           />
 
           <div
-            className="rounded-lg border border-border/40 p-6"
+            className="rounded-lg border border-border/40 p-4 sm:p-6"
             key={autoAnimKey}
           >
             <div className="trust-slide-in">
@@ -384,7 +378,7 @@ export function SettingsAutonomySection() {
                   From Human-Augmented to Human-Out-of-the-Loop
                 </TableCell>
               </TableRow>
-              <TableRow className="border-b border-border/50">
+              <TableRow>
                 <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                   Default
                 </TableCell>
@@ -393,25 +387,8 @@ export function SettingsAutonomySection() {
                   Start conservative, unlock higher levels over time
                 </TableCell>
               </TableRow>
-              <TableRow>
-                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                  Indicator
-                </TableCell>
-                <TableCell className="py-2.5 pr-4">Stepped bar</TableCell>
-                <TableCell className="py-2.5">
-                  Discrete steps, not a continuous slider
-                </TableCell>
-              </TableRow>
             </TableBody>
           </Table>
-        </div>
-
-        {/* Callout */}
-        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-          Autonomy levels should be progressive — start at Level 2 for new
-          workflows and unlock higher levels only after the agent has
-          demonstrated reliability. Never default to full autonomy for review
-          tasks that affect approval outcomes.
         </div>
       </section>
     </>

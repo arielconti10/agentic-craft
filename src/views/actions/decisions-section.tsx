@@ -87,7 +87,7 @@ export function DecisionsSection() {
           onToggle={toggleDecisionControl}
         />
 
-        <div className="flex flex-col gap-3 rounded-lg border border-border/40 p-6">
+        <div className="flex flex-col gap-3 rounded-lg border border-border/40 p-4 sm:p-6">
           <div className="flex items-start gap-2">
             <HugeiconsIcon
               icon={Alert01Icon}
@@ -197,22 +197,6 @@ export function DecisionsSection() {
         <TableBody>
           {[
             [
-              "Pending state",
-              "All options clickable with hover effect and consequence preview",
-            ],
-            [
-              "Resolved state",
-              "Selected option highlighted, others hidden, confirmation shown",
-            ],
-            [
-              "Selected card",
-              "Primary border + subtle primary background tint",
-            ],
-            [
-              "Consequence previews",
-              "Border-left callout with arrow indicator inside each option",
-            ],
-            [
               "Auto-selection",
               "Never auto-select — always wait for explicit user choice",
             ],
@@ -229,12 +213,6 @@ export function DecisionsSection() {
           ))}
         </TableBody>
       </Table>
-
-      <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Decisions are the highest-trust pattern in the system — they grant the
-        user explicit control over how the agent proceeds. Never bypass them
-        with auto-selection or hidden defaults.
-      </p>
     </section>
   )
 }

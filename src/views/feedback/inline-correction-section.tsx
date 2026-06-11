@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { AGENT_PROSE_STYLE, AGENT_PROSE_COLOR } from "./data"
+import { AGENT_PROSE_COLOR } from "./data"
 
 export function InlineCorrectionSection() {
   const [corrState, setCorrState] = useState<Record<string, boolean>>({
@@ -55,12 +55,12 @@ export function InlineCorrectionSection() {
           onToggle={handleCorrToggle}
         />
 
-        <div className="rounded-lg border border-border/40 p-6">
+        <div className="rounded-lg border border-border/40 p-4 sm:p-6">
           <div>
             {corrState.original ? (
               <p
-                className="text-base"
-                style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+                className="agent-prose text-base"
+                style={{ color: AGENT_PROSE_COLOR }}
               >
                 The launch readiness plan requires{" "}
                 <span className="relative inline-flex items-baseline gap-1.5">
@@ -88,8 +88,8 @@ export function InlineCorrectionSection() {
             ) : (
               <div className="feedback-fade-in">
                 <p
-                  className="text-base"
-                  style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+                  className="agent-prose text-base"
+                  style={{ color: AGENT_PROSE_COLOR }}
                 >
                   The launch readiness plan requires{" "}
                   <span className="feedback-highlight-in rounded-md px-1">
@@ -108,7 +108,7 @@ export function InlineCorrectionSection() {
                     />
                     Applied
                   </Badge>
-                  <span className="text-xs text-muted-foreground/60">
+                  <span className="text-xs text-muted-foreground/70">
                     dedicated support plan → standard support plan
                   </span>
                 </div>
@@ -161,13 +161,6 @@ export function InlineCorrectionSection() {
           ))}
         </TableBody>
       </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Inline corrections are scoped to specific factual errors — typically
-        launch plan misreferences or incorrect readiness level claims. The
-        correction is applied in-place so the reviewer sees the fix in context
-        rather than receiving a full regeneration.
-      </div>
     </section>
   )
 }

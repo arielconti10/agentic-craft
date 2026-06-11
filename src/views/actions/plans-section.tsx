@@ -84,7 +84,7 @@ function PlanStep({
           onClick={onRemove}
           variant="ghost"
           size="icon-xs"
-          className="shrink-0 text-muted-foreground/40 hover:text-foreground"
+          className="shrink-0 text-muted-foreground/60 hover:text-foreground"
         >
           <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.5} />
         </Button>
@@ -138,7 +138,7 @@ export function PlansSection() {
       <p className="section-label mb-3">Planning</p>
       <h2 className="text-xl font-semibold tracking-tight">Plan Cards</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        Step-progress cards that show the agent's execution plan. Completed
+        Step-progress cards that show the agent’s execution plan. Completed
         steps are muted with line-through; the current step pulses subtly;
         pending steps are dimmed.
       </p>
@@ -153,7 +153,7 @@ export function PlansSection() {
           onToggle={togglePlanControl}
         />
 
-        <div className="rounded-lg border border-border/40 p-6">
+        <div className="rounded-lg border border-border/40 p-4 sm:p-6">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <HugeiconsIcon
@@ -264,9 +264,6 @@ export function PlansSection() {
               "Step indicator",
               "6px square dot, rounded-sm — not a checkbox or number",
             ],
-            ["Done state", "Muted foreground + line-through"],
-            ["Active state", "Foreground + pulse animation"],
-            ["Pending state", "Muted foreground at 60% opacity"],
             ["Editable mode", "Drag handle + remove button on hover per step"],
             [
               "Progress badge",
@@ -285,12 +282,6 @@ export function PlansSection() {
           ))}
         </TableBody>
       </Table>
-
-      <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Plan cards give users a sense of progress and predictability. The
-        editable mode allows corrections before the agent commits to an approach
-        — a key trust-building pattern.
-      </p>
     </section>
   )
 }

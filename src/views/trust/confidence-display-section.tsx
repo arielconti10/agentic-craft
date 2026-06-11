@@ -16,19 +16,6 @@ import {
 import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 
 /* ------------------------------------------------------------------ */
-/*  Agent prose helper                                                 */
-/* ------------------------------------------------------------------ */
-
-const PROSE_STYLE: React.CSSProperties = {
-  fontFamily: "'Source Serif 4', serif",
-  fontSize: "16px",
-  lineHeight: "26px",
-  letterSpacing: "0",
-  fontVariationSettings: '"opsz" 12',
-  color: "var(--foreground)",
-}
-
-/* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
@@ -59,7 +46,7 @@ export function ConfidenceDisplaySection() {
         cues, and actionable follow-ups.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-10">
         <Controls
           options={[
             { key: "high", label: "High" },
@@ -71,7 +58,7 @@ export function ConfidenceDisplaySection() {
         />
 
         <div
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
           key={confAnimKey}
         >
           <div className="trust-slide-in">
@@ -81,13 +68,16 @@ export function ConfidenceDisplaySection() {
                 <div className="mb-3 flex items-center justify-end gap-1.5">
                   <span
                     aria-hidden="true"
-                    className="size-2 rounded-full bg-[oklch(0.62_0.14_155)]"
+                    className="size-2 rounded-full bg-[var(--status-ok)]"
                   />
                   <span className="text-xs text-muted-foreground">
                     High confidence
                   </span>
                 </div>
-                <div style={PROSE_STYLE}>
+                <div
+                  className="agent-prose"
+                  style={{ color: "var(--foreground)" }}
+                >
                   Export workflow requires CSV and JSON export encryption for
                   all data-at-rest operations. The product implements this
                   through the approved export service referenced by the
@@ -113,13 +103,16 @@ export function ConfidenceDisplaySection() {
                 <div className="mb-3 flex items-center justify-end gap-1.5">
                   <span
                     aria-hidden="true"
-                    className="size-2 rounded-full bg-[oklch(0.75_0.13_85)]"
+                    className="size-2 rounded-full bg-[var(--status-warn)]"
                   />
                   <span className="text-xs text-muted-foreground">
                     Medium confidence
                   </span>
                 </div>
-                <div style={PROSE_STYLE}>
+                <div
+                  className="agent-prose"
+                  style={{ color: "var(--foreground)" }}
+                >
                   Based on the available documentation, Timestamp handling
                   appears to rely on NTP synchronization for timestamp
                   generation — however, the project brief does not explicitly
@@ -147,14 +140,17 @@ export function ConfidenceDisplaySection() {
                 <div className="mb-3 flex items-center justify-end gap-1.5">
                   <span
                     aria-hidden="true"
-                    className="size-2 rounded-full bg-[oklch(0.6_0.19_25)]"
+                    className="size-2 rounded-full bg-[var(--destructive)]"
                   />
                   <span className="text-xs text-muted-foreground">
                     Low confidence
                   </span>
                 </div>
-                <div style={PROSE_STYLE}>
-                  I'm unable to determine whether the current risk review was
+                <div
+                  className="agent-prose"
+                  style={{ color: "var(--foreground)" }}
+                >
+                  I’m unable to determine whether the current risk review was
                   performed against the latest product version. The referenced
                   report predates the latest configuration update, and I could
                   not locate an updated risk analysis.
@@ -198,9 +194,6 @@ export function ConfidenceDisplaySection() {
               <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
                 Level
               </TableHead>
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Indicator
-              </TableHead>
               <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
                 Language pattern
               </TableHead>
@@ -211,7 +204,6 @@ export function ConfidenceDisplaySection() {
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 High
               </TableCell>
-              <TableCell className="py-2.5 pr-4">Green dot</TableCell>
               <TableCell className="py-2.5">
                 Direct assertions with citations
               </TableCell>
@@ -220,7 +212,6 @@ export function ConfidenceDisplaySection() {
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 Medium
               </TableCell>
-              <TableCell className="py-2.5 pr-4">Amber dot</TableCell>
               <TableCell className="py-2.5">
                 Hedged language: "appears to," "based on"
               </TableCell>
@@ -229,21 +220,12 @@ export function ConfidenceDisplaySection() {
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 Low
               </TableCell>
-              <TableCell className="py-2.5 pr-4">Red dot</TableCell>
               <TableCell className="py-2.5">
                 Explicit uncertainty + verify action
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
-      </div>
-
-      {/* Callout */}
-      <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Confidence indicators should never be hidden from the user. Even when
-        the agent is highly confident, showing the source builds trust over
-        time. Low-confidence responses must always offer a path to human
-        verification.
       </div>
     </section>
   )

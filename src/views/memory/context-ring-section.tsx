@@ -9,14 +9,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -79,7 +71,7 @@ export function ContextRingSection() {
         />
 
         <div
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
           key={ringAnimKey}
         >
           <div className="flex items-center gap-8">
@@ -154,7 +146,7 @@ export function ContextRingSection() {
                   <div className="flex flex-col gap-1.5">
                     {MEMORY_ENTRIES_PREVIEW.slice(0, 4).map((e) => (
                       <div key={e.id} className="flex items-baseline gap-2">
-                        <span className="shrink-0 text-[10px] text-muted-foreground/50">
+                        <span className="shrink-0 text-[10px] text-muted-foreground/70">
                           {e.key}
                         </span>
                         <span className="truncate text-[10px] text-muted-foreground">
@@ -162,7 +154,7 @@ export function ContextRingSection() {
                         </span>
                       </div>
                     ))}
-                    <p className="text-[10px] text-muted-foreground/40">
+                    <p className="text-[10px] text-muted-foreground/70">
                       +{MEMORY_ENTRIES_PREVIEW.length - 4} more
                     </p>
                   </div>
@@ -183,56 +175,6 @@ export function ContextRingSection() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border">
-            <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-              State
-            </TableHead>
-            <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-              Ring Visual
-            </TableHead>
-            <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
-              Tooltip
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {[
-            [
-              "No Context",
-              "Empty ring with muted icon",
-              "No tooltip — nothing to show",
-            ],
-            [
-              "With Context",
-              "Partially filled ring, animated on load",
-              "Lists loaded memories with key-value pairs on hover or focus",
-            ],
-          ].map(([state, ring, tooltip], i) => (
-            <TableRow
-              key={state}
-              className={i < 1 ? "border-b border-border/50" : ""}
-            >
-              <TableCell className="py-2.5 pr-6 font-medium">{state}</TableCell>
-              <TableCell className="py-2.5 pr-6 text-muted-foreground">
-                {ring}
-              </TableCell>
-              <TableCell className="py-2.5 text-muted-foreground">
-                {tooltip}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        No number inside the ring — the icon signals presence, and the tooltip
-        provides detail on demand. This avoids cognitive load for reviewers who
-        don&apos;t need to know the exact count at a glance.
       </div>
     </section>
   )

@@ -5,18 +5,10 @@ import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ArrowRight01Icon,
-  Brain01Icon,
+  Robot01Icon,
   Route01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -124,7 +116,7 @@ export function AgentRoutingSection() {
                     <div className="flex items-center gap-2">
                       <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-muted">
                         <HugeiconsIcon
-                          icon={Brain01Icon}
+                          icon={Robot01Icon}
                           size={12}
                           strokeWidth={1.5}
                           className="text-muted-foreground"
@@ -155,63 +147,6 @@ export function AgentRoutingSection() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border text-left">
-            <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
-              Element
-            </TableHead>
-            <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
-              Details
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Task card
-            </TableCell>
-            <TableCell className="py-3">
-              Shows incoming task with detected type classification
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Auto routing
-            </TableCell>
-            <TableCell className="py-3">
-              Best-match agent highlighted, others dimmed at 40% opacity
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Manual routing
-            </TableCell>
-            <TableCell className="py-3">
-              All agents interactive, click to select destination
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Selection indicator
-            </TableCell>
-            <TableCell className="py-3">
-              Arrow icon with context label ("Best match" or "Selected")
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Routing decisions in regulated workflows must be transparent and
-        auditable. Auto-routing uses task type classification to match
-        requirement-related tasks to the Requirements Mapper, source tasks to
-        the Source Collector, and policy tasks to the Policy Analyst. Manual
-        override ensures the reviewer retains final authority over agent
-        assignments.
       </div>
     </section>
   )

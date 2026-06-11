@@ -4,7 +4,7 @@ import * as React from "react"
 import {
   Alert01Icon,
   ArrowRight01Icon,
-  Brain01Icon,
+  Robot01Icon,
   Tick01Icon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -123,7 +123,7 @@ function HandoffPacket({
         <div className="flex min-w-0 items-center gap-2 px-3 py-2 sm:px-4">
           <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-muted/50 text-muted-foreground">
             <HugeiconsIcon
-              icon={Brain01Icon}
+              icon={Robot01Icon}
               size={14}
               strokeWidth={1.5}
               aria-hidden="true"

@@ -50,7 +50,7 @@ const ACTIVITY_LIVE = [
   },
   {
     time: "1m ago",
-    action: "Started requirement gap analysis for ACME Customer Portal",
+    action: "Started requirement gap analysis for Meridian Customer Portal",
     type: "message" as const,
     icon: Activity01Icon,
   },
@@ -245,7 +245,10 @@ export function ActivityTimelineSection() {
           onToggle={toggleAct}
         />
 
-        <div className="rounded-lg border border-border/40 p-6" key={actAnim}>
+        <div
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
+          key={actAnim}
+        >
           {/* Header */}
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -333,14 +336,6 @@ export function ActivityTimelineSection() {
           </TableRow>
           <TableRow className="border-b border-border/50">
             <TableCell className="py-3 pr-6 text-muted-foreground">
-              Live indicator
-            </TableCell>
-            <TableCell className="py-3">
-              Pulsing dot with "Streaming" label when in live mode
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
               Action types
             </TableCell>
             <TableCell className="py-3">
@@ -358,14 +353,6 @@ export function ActivityTimelineSection() {
           </TableRow>
         </TableBody>
       </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        The activity timeline is the audit surface for agent activity — every
-        agent action is recorded with a timestamp, type classification, and
-        human-readable description. Live mode streams entries as they occur;
-        History and Filtered modes enable retrospective analysis during review
-        team sessions.
-      </div>
     </section>
   )
 }

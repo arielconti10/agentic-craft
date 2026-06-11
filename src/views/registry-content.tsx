@@ -82,7 +82,7 @@ function RegistryItemTable({ items }: { items: typeof registryItems }) {
 export function RegistryContent() {
   return (
     <article>
-      <header className="mb-12 sm:mb-20">
+      <header className="mb-12 sm:mb-16">
         <p className="section-label mb-3">DISTRIBUTION</p>
         <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Registry
@@ -131,7 +131,7 @@ export function RegistryContent() {
       <section id="primitives" className="page-section">
         <p className="section-label mb-3">registry:ui</p>
         <h2 className="text-xl font-semibold tracking-tight">Primitives</h2>
-        <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Primitives are small, composable surfaces: composer, source preview,
           observable work, decision surface, artifact document, memory rows, and
           usage meters.
@@ -147,9 +147,9 @@ export function RegistryContent() {
         <h2 className="text-xl font-semibold tracking-tight">
           Workflow Blocks
         </h2>
-        <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Blocks compose primitives into product-ready workflow specimens. They
-          are the registry equivalent of the guide's Templates section.
+          are the registry equivalent of the guide’s Templates section.
         </p>
         <div className="mt-8">
           <RegistryItemTable items={blockItems} />

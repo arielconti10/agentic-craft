@@ -8,15 +8,7 @@ import {
   MessageIcon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { AGENT_PROSE_STYLE, AGENT_PROSE_COLOR } from "./data"
+import { AGENT_PROSE_COLOR } from "./data"
 
 export function BehavioralConsequenceSection() {
   const [behaviorState, setBehaviorState] = useState<Record<string, boolean>>({
@@ -39,9 +31,11 @@ export function BehavioralConsequenceSection() {
         Behavioral Consequence
       </h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        How the agent&apos;s behavior visibly changes after receiving feedback.
+        How the agent’s behavior visibly changes after receiving feedback.
         Demonstrates the feedback loop closing — the reviewer sees the before
-        and after side by side.
+        and after side by side. The After state includes an annotation card that
+        links back to the original feedback entry so the change is fully
+        traceable.
       </p>
 
       <div className="mt-10">
@@ -54,12 +48,12 @@ export function BehavioralConsequenceSection() {
           onToggle={handleBehaviorToggle}
         />
 
-        <div className="rounded-lg border border-border/40 p-6">
+        <div className="rounded-lg border border-border/40 p-4 sm:p-6">
           {behaviorState.before ? (
             <div>
               <p
-                className="text-base"
-                style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+                className="agent-prose text-base"
+                style={{ color: AGENT_PROSE_COLOR }}
               >
                 The launch readiness plan requires dedicated support plan for
                 issue triage procedures. This pattern ensures that the team has
@@ -87,8 +81,8 @@ export function BehavioralConsequenceSection() {
             <div className="feedback-fade-in flex flex-col gap-3">
               <div>
                 <p
-                  className="text-base"
-                  style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+                  className="agent-prose text-base"
+                  style={{ color: AGENT_PROSE_COLOR }}
                 >
                   The launch readiness plan requires{" "}
                   <span className="feedback-highlight-in rounded-md px-1">
@@ -141,56 +135,6 @@ export function BehavioralConsequenceSection() {
             </div>
           )}
         </div>
-      </div>
-
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border">
-            <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-              State
-            </TableHead>
-            <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-              Content
-            </TableHead>
-            <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
-              Purpose
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {[
-            [
-              "Before",
-              "Original agent response with error",
-              "Establishes baseline for comparison",
-            ],
-            [
-              "After",
-              "Corrected response with annotation",
-              "Shows the loop closing — feedback produces visible change",
-            ],
-          ].map(([state, content, purpose], i) => (
-            <TableRow
-              key={state}
-              className={i < 1 ? "border-b border-border/50" : ""}
-            >
-              <TableCell className="py-2.5 pr-6 font-medium">{state}</TableCell>
-              <TableCell className="py-2.5 pr-6 text-muted-foreground">
-                {content}
-              </TableCell>
-              <TableCell className="py-2.5 text-muted-foreground">
-                {purpose}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Closing the feedback loop visibly builds trust. The annotation card
-        links back to the original feedback entry so the reviewer can trace
-        exactly which correction produced the behavioral change.
       </div>
     </section>
   )

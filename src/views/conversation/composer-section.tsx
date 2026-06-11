@@ -116,7 +116,7 @@ export function ComposerSection() {
         <CompactComposerPlayground />
       </div>
 
-      <div className="hidden">
+      <div className="mt-8">
         <div className="grid gap-2 border-b border-border/50 py-3 text-xs md:grid-cols-[180px_minmax(0,1fr)]">
           <p className="section-label">Inspect for</p>
           <p className="text-muted-foreground">
@@ -138,7 +138,7 @@ export function ComposerSection() {
         </div>
       </div>
 
-      <div className="hidden">
+      <div className="mt-8">
         <div>
           <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
             <p className="section-label">Anatomy</p>
@@ -176,7 +176,7 @@ export function ComposerSection() {
         </aside>
       </div>
 
-      <div className="hidden">
+      <div className="mt-8">
         <div className="grid border-b border-border pb-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <p className="section-label">Rule</p>
           <p className="section-label hidden md:block">Failure to avoid</p>
@@ -211,15 +211,6 @@ export function ComposerSection() {
         <TableBody className="text-sm text-muted-foreground">
           <TableRow className="border-b border-border/50">
             <TableCell className="py-3 pr-6 font-medium text-foreground">
-              Container
-            </TableCell>
-            <TableCell className="py-3">
-              max-w-[720px], rounded-xl on mobile, rounded-2xl on desktop,
-              border border-border
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 font-medium text-foreground">
               Textarea
             </TableCell>
             <TableCell className="py-3">
@@ -233,14 +224,6 @@ export function ComposerSection() {
             <TableCell className="py-3">
               32×32px hit area, 24px inner icon button, foreground when active,
               muted when empty, spring press animation
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 font-medium text-foreground">
-              Focus state
-            </TableCell>
-            <TableCell className="py-3">
-              Border transitions to foreground/20, subtle outer shadow
             </TableCell>
           </TableRow>
           <TableRow className="border-b border-border/50">

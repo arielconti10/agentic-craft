@@ -2,9 +2,9 @@
 
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
-  Activity01Icon,
-  Brain01Icon,
   Cancel01Icon,
+  Loading01Icon,
+  Robot01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Button } from "@/components/ui/button"
@@ -36,10 +36,10 @@ export function KillSwitchSection() {
       <h2 className="text-xl font-semibold tracking-tight">Kill Switch</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         Always-available mechanism to immediately halt agent execution. The stop
-        control adapts its prominence to the agent's current state.
+        control adapts its prominence to the agent’s current state.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-10">
         <Controls
           options={[
             { key: "idle", label: "Idle" },
@@ -51,7 +51,7 @@ export function KillSwitchSection() {
         />
 
         <div
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
           key={killAnimKey}
         >
           <div className="trust-slide-in">
@@ -62,7 +62,7 @@ export function KillSwitchSection() {
                   <div className="flex items-center gap-3">
                     <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
                       <HugeiconsIcon
-                        icon={Brain01Icon}
+                        icon={Robot01Icon}
                         size={14}
                         strokeWidth={1.5}
                         className="text-muted-foreground"
@@ -93,7 +93,7 @@ export function KillSwitchSection() {
                   <div className="flex items-center gap-3">
                     <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
                       <HugeiconsIcon
-                        icon={Activity01Icon}
+                        icon={Loading01Icon}
                         size={14}
                         strokeWidth={1.5}
                         className="trust-pulse text-muted-foreground"
@@ -172,9 +172,6 @@ export function KillSwitchSection() {
               <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
                 State
               </TableHead>
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Button style
-              </TableHead>
               <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
                 Behavior
               </TableHead>
@@ -185,7 +182,6 @@ export function KillSwitchSection() {
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 Idle
               </TableCell>
-              <TableCell className="py-2.5 pr-4">Subtle border</TableCell>
               <TableCell className="py-2.5">
                 Present but low prominence
               </TableCell>
@@ -194,9 +190,6 @@ export function KillSwitchSection() {
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 Running
               </TableCell>
-              <TableCell className="py-2.5 pr-4">
-                Red-tinted background
-              </TableCell>
               <TableCell className="py-2.5">
                 Prominent, immediately accessible
               </TableCell>
@@ -204,9 +197,6 @@ export function KillSwitchSection() {
             <TableRow>
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 Stopped
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">
-                Resume + Discard options
               </TableCell>
               <TableCell className="py-2.5">
                 Partial results preserved, user chooses next step

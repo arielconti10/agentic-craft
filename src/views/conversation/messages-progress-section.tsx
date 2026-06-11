@@ -27,7 +27,6 @@ type ProsePreferenceDetail = {
   className: string
   lineHeight: string
   fontVariationSettings?: string
-  spec: string
   description: string
 }
 
@@ -51,10 +50,8 @@ const PROSE_PREFERENCE_DETAILS: Record<ProsePreference, ProsePreferenceDetail> =
   {
     serif: {
       label: "Serif Prose",
-      className: "font-serif text-base",
+      className: "agent-prose font-serif text-base",
       lineHeight: "26px",
-      fontVariationSettings: '"opsz" 12',
-      spec: "Source Serif 4, 16px/26px",
       description:
         "A comfortable default for long analysis, explanations, and review-style answers.",
     },
@@ -62,7 +59,6 @@ const PROSE_PREFERENCE_DETAILS: Record<ProsePreference, ProsePreferenceDetail> =
       label: "Sans Prose",
       className: "font-sans text-base",
       lineHeight: "24px",
-      spec: "Albert Sans, 16px/24px",
       description:
         "Better when the agent output needs to feel native to dense product chrome.",
     },
@@ -70,14 +66,13 @@ const PROSE_PREFERENCE_DETAILS: Record<ProsePreference, ProsePreferenceDetail> =
       label: "Compact",
       className: "font-sans text-sm",
       lineHeight: "22px",
-      spec: "Albert Sans, 14px/22px",
       description:
         "Useful for operational tools where users scan many short agent updates.",
     },
   }
 
 const agentProseBaseStyle: React.CSSProperties = {
-  letterSpacing: "0px",
+  letterSpacing: "-0.4px",
   WebkitFontSmoothing: "antialiased",
 }
 
@@ -222,13 +217,13 @@ export function MessagesProgressSection() {
                   style={agentProseStyle}
                 >
                   <p>
-                    I've reviewed the project brief against the roadmap and
+                    I’ve reviewed the project brief against the roadmap and
                     launch checklist. The document covers the main launch goals,
                     but I found three areas that need attention.
                   </p>
                   <p className="mt-4">
                     The rollout assumptions in Section 2 reference Launch Policy
-                    v2, but the appendix doesn't map all requirements back to a
+                    v2, but the appendix doesn’t map all requirements back to a
                     source. The export workflow also references an outdated
                     behavior — this will need updating before the review team
                     session.
@@ -253,7 +248,7 @@ export function MessagesProgressSection() {
                   style={agentProseStyle}
                 >
                   <p>
-                    Two of the brief's 23 requirements are not mapped back to a
+                    Two of the brief’s 23 requirements are not mapped back to a
                     source in the appendix:
                   </p>
                   <ul className="mt-3 ml-5 flex list-disc flex-col gap-1">
@@ -299,59 +294,6 @@ export function MessagesProgressSection() {
           </div>
         </div>
 
-        {/* Message spec table */}
-        <Table className="mt-10 w-full text-sm">
-          <TableHeader>
-            <TableRow className="border-b border-border">
-              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-                Type
-              </TableHead>
-              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-                Style
-              </TableHead>
-              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
-                Details
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="text-sm text-muted-foreground">
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-3 pr-6 font-medium text-foreground">
-                User
-              </TableCell>
-              <TableCell className="py-3 pr-6">
-                bg-primary, text-primary-foreground
-              </TableCell>
-              <TableCell className="py-3">
-                max-width 75%, rounded-lg, right-aligned, app body font, 14px
-              </TableCell>
-            </TableRow>
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-3 pr-6 font-medium text-foreground">
-                Agent
-              </TableCell>
-              <TableCell className="py-3 pr-6">
-                border border-border bg-muted
-              </TableCell>
-              <TableCell className="py-3">
-                max-width 75%, rounded-lg, left-aligned, user-configurable prose
-                style
-              </TableCell>
-            </TableRow>
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-3 pr-6 font-medium text-foreground">
-                System
-              </TableCell>
-              <TableCell className="py-3 pr-6">
-                bg-muted, text-muted-foreground
-              </TableCell>
-              <TableCell className="py-3">
-                centered, text-xs, rounded-md
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-
         {/* Prose typography spec table */}
         <Table className="mt-10 w-full text-sm">
           <TableHeader>
@@ -369,12 +311,6 @@ export function MessagesProgressSection() {
               <TableCell className="py-3 pr-6">Font preference</TableCell>
               <TableCell className="py-3 font-medium text-foreground">
                 User or workspace setting; current {prosePreferenceDetail.label}
-              </TableCell>
-            </TableRow>
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-3 pr-6">Active specimen</TableCell>
-              <TableCell className="py-3 font-medium text-foreground">
-                {prosePreferenceDetail.spec}
               </TableCell>
             </TableRow>
             <TableRow className="border-b border-border/50">
@@ -417,7 +353,7 @@ export function MessagesProgressSection() {
         </Table>
 
         {/* Prose preference explanation */}
-        <div className="hidden">
+        <div className="mt-8">
           <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
             <li>
               <span className="font-medium text-foreground">
@@ -439,18 +375,6 @@ export function MessagesProgressSection() {
               typography.
             </li>
           </ul>
-        </div>
-
-        <div className="mt-10 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-          <p>
-            User messages are right-aligned to create visual separation of "who
-            said what". Agent messages use a distinct surface and optional prose
-            preference instead of depending on a fixed font. System messages are
-            unobtrusive — they provide context without demanding attention.
-            Max-width 75% prevents messages from spanning the full content
-            width, improving readability. The streaming cursor stays static and
-            auto-hides after a few seconds.
-          </p>
         </div>
       </section>
 
@@ -524,7 +448,7 @@ export function MessagesProgressSection() {
           {workMode === "completed" && (
             <div className="conv-slide-in">
               <div className="px-1 py-2">
-                <span className="text-xs text-muted-foreground/60">
+                <span className="text-xs text-muted-foreground/70">
                   Completed 4 source checks in 4.2s
                 </span>
               </div>
@@ -545,7 +469,7 @@ export function MessagesProgressSection() {
           )}
         </div>
 
-        {/* Do / Don't table */}
+        {/* Do / Don’t table */}
         <Table className="mt-10 w-full text-sm">
           <TableHeader>
             <TableRow className="border-b border-border">
@@ -553,7 +477,7 @@ export function MessagesProgressSection() {
                 Do
               </TableHead>
               <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
-                Don't
+                Don’t
               </TableHead>
             </TableRow>
           </TableHeader>

@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Textarea } from "@/components/ui/textarea"
-import { AGENT_PROSE_STYLE, AGENT_PROSE_COLOR } from "./data"
+import { AGENT_PROSE_COLOR } from "./data"
 
 export function ThumbsFeedbackSection() {
   const [thumbsState, setThumbsState] = useState<Record<string, boolean>>({
@@ -147,25 +147,28 @@ export function ThumbsFeedbackSection() {
           onToggle={handleThumbsToggle}
         />
 
-        <div className="rounded-lg border border-border/40 p-6" ref={thumbsRef}>
+        <div
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
+          ref={thumbsRef}
+        >
           {/* Agent message */}
           <div
-            className={`transition-colors duration-300 ${
+            className={`transition-colors duration-150 ${
               thumbsFlash ? "feedback-flash-green" : ""
             }`}
           >
             <p
-              className="text-base"
-              style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+              className="agent-prose text-base"
+              style={{ color: AGENT_PROSE_COLOR }}
             >
               The project brief defines 23 requirements across 5 classes.
               implementation notes summarize the workflow behavior and open
-              dependencies. I&apos;ve mapped each requirement to its
-              corresponding test case in the review plan.
+              dependencies. I’ve mapped each requirement to its corresponding
+              test case in the review plan.
             </p>
 
             {/* Thumbs buttons */}
-            <div className="mt-3 flex items-center gap-1">
+            <div className="mt-3 flex items-center gap-1 [@media(pointer:coarse)]:gap-3">
               <Button
                 type="button"
                 onClick={() => handleThumbClick("up")}
@@ -174,7 +177,7 @@ export function ThumbsFeedbackSection() {
                 variant="ghost"
                 size="icon-sm"
                 className={cn(
-                  "text-muted-foreground/50 hover:text-muted-foreground",
+                  "text-muted-foreground/70 hover:text-muted-foreground",
                   thumbsSelection === "up" &&
                     "feedback-press bg-foreground/[0.06] text-foreground"
                 )}
@@ -189,7 +192,7 @@ export function ThumbsFeedbackSection() {
                 variant="ghost"
                 size="icon-sm"
                 className={cn(
-                  "text-muted-foreground/50 hover:text-muted-foreground",
+                  "text-muted-foreground/70 hover:text-muted-foreground",
                   thumbsSelection === "down" &&
                     "feedback-press bg-foreground/[0.06] text-foreground"
                 )}
@@ -294,7 +297,7 @@ export function ThumbsFeedbackSection() {
             [
               "Neutral",
               "Default",
-              "Thumbs visible at half opacity, no selection",
+              "Thumbs visible at opacity /70, no selection",
             ],
             [
               "Positive",
@@ -327,13 +330,6 @@ export function ThumbsFeedbackSection() {
           ))}
         </TableBody>
       </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Thumbs appear at reduced opacity until hover, keeping the reading
-        experience clean. A thumbs-down always opens the correction flow —
-        negative signal without context is less useful than a directed
-        correction.
-      </div>
     </section>
   )
 }

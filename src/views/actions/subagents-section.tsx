@@ -5,7 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Wrench01Icon,
   ArrowDown01Icon,
-  Brain01Icon,
+  Robot01Icon,
 } from "@hugeicons/core-free-icons"
 import {
   ToolCall,
@@ -135,15 +135,15 @@ function SubagentSection() {
         onToggle={toggleSubagentControl}
       />
 
-      <div className="rounded-lg border border-border/40 p-6">
+      <div className="rounded-lg border border-border/40 p-4 sm:p-6">
         <button
           type="button"
           aria-label="Toggle Source Collector details"
           onClick={() => setSubagentOpen(!subagentOpen)}
-          className="flex w-full items-center gap-2.5 py-2.5 text-left"
+          className="flex w-full items-center gap-2.5 py-2.5 text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           <HugeiconsIcon
-            icon={Brain01Icon}
+            icon={Robot01Icon}
             size={14}
             strokeWidth={1.5}
             className="shrink-0 text-muted-foreground"
@@ -248,15 +248,7 @@ export function SubagentsSection() {
               '"N of M unit" — concrete, not percentage-based',
             ],
             ["Completion", '"complete" badge replaces the progress count'],
-            [
-              "Running indicator",
-              "Pulsing dot next to the badge while in-progress",
-            ],
             ["Nesting", "Nested tool calls inherit the same collapsed style"],
-            [
-              "Progress bar",
-              "1px foreground/40 bar with transition-transform duration-500",
-            ],
           ].map(([prop, spec], i, arr) => (
             <TableRow
               key={prop}
@@ -270,12 +262,6 @@ export function SubagentsSection() {
           ))}
         </TableBody>
       </Table>
-
-      <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Subagent cards let users monitor delegated work without leaving their
-        current context. The progress bar provides glanceable status while
-        nested tools offer drill-down detail.
-      </p>
     </section>
   )
 }

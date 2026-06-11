@@ -104,7 +104,7 @@ function ToolTreeTrigger({
         aria-expanded={open}
         aria-label={open ? "Collapse tool group" : "Expand tool group"}
         className={cn(
-          "flex min-h-8 w-fit max-w-full min-w-0 cursor-pointer items-center gap-2 py-1",
+          "flex min-h-8 w-fit max-w-full min-w-0 cursor-pointer items-center gap-2 py-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
           className
         )}
         {...props}
@@ -134,7 +134,7 @@ function ToolTreeTrigger({
         />
       </button>
       {timestamp && (
-        <span className="ml-auto shrink-0 truncate text-xs opacity-100 select-none sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-focus-within/tool-wrapper:opacity-100 sm:group-hover/tool-wrapper:opacity-100">
+        <span className="ml-auto shrink-0 truncate text-xs opacity-100 select-none sm:opacity-0 sm:transition-opacity sm:duration-150 sm:group-focus-within/tool-wrapper:opacity-100 sm:group-hover/tool-wrapper:opacity-100">
           {timestamp}
         </span>
       )}

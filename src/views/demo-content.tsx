@@ -106,7 +106,7 @@ export function DemoContent() {
 
   return (
     <article>
-      <header className="mb-16">
+      <header className="mb-12 sm:mb-16">
         <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Agentic Craft
         </h1>
@@ -156,14 +156,14 @@ export function DemoContent() {
                   >
                     {OBSERVABLE_WORK_TEXT}
                   </p>
-                  <p className="mt-2 text-xs text-muted-foreground/60">
+                  <p className="mt-2 text-xs text-muted-foreground/70">
                     Click to collapse
                   </p>
                 </div>
               )}
 
               {workState === "completed" && (
-                <span className="text-xs text-muted-foreground/60">
+                <span className="text-xs text-muted-foreground/70">
                   Source review completed in 3.2s
                 </span>
               )}
@@ -175,16 +175,9 @@ export function DemoContent() {
         {/*  Message 3: Agent response with citations                 */}
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
-          <div
-            className="max-w-[85%] font-serif text-base"
-            style={{
-              lineHeight: "26px",
-              letterSpacing: "-0.4px",
-              fontVariationSettings: '"opsz" 12',
-            }}
-          >
+          <div className="agent-prose max-w-[85%] font-serif text-base">
             <p className="text-foreground">
-              I've completed the initial review. The brief covers the main
+              I’ve completed the initial review. The brief covers the main
               launch goals
               <SourcePreviewCitation sources={CITATIONS} sourceIndex={0} />
               , but I found three areas that need attention before the release
@@ -236,14 +229,7 @@ export function DemoContent() {
         {/*  Message 5: Agent response with findings                  */}
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
-          <div
-            className="max-w-[85%] font-serif text-base text-foreground"
-            style={{
-              lineHeight: "26px",
-              letterSpacing: "-0.4px",
-              fontVariationSettings: '"opsz" 12',
-            }}
-          >
+          <div className="agent-prose max-w-[85%] font-serif text-base text-foreground">
             <p>Based on the analysis, here are the findings:</p>
             <ul className="mt-3 flex flex-col gap-2">
               {FINDINGS.map((f) => (
@@ -270,21 +256,14 @@ export function DemoContent() {
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
           <div className="w-full max-w-[85%]">
-            <div
-              className="font-serif text-base text-foreground"
-              style={{
-                lineHeight: "26px",
-                letterSpacing: "-0.4px",
-                fontVariationSettings: '"opsz" 12',
-              }}
-            >
+            <div className="agent-prose font-serif text-base text-foreground">
               <p>
-                I'd like to generate a findings summary and send it to the
+                I’d like to generate a findings summary and send it to the
                 project team.
               </p>
             </div>
 
-            <div className="mt-3 rounded-lg border border-border/40 p-4">
+            <div className="mt-3 rounded-lg border border-border/40 p-4 sm:p-6">
               {approvalState === "pending" && (
                 <>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -295,7 +274,7 @@ export function DemoContent() {
                     />
                     <span>
                       Generate findings summary and email to
-                      project-team@acme.internal
+                      project-team@meridian.internal
                     </span>
                   </div>
                   <div className="mt-3 flex items-center gap-2">
@@ -332,13 +311,13 @@ export function DemoContent() {
                       size={14}
                       strokeWidth={1.5}
                     />
-                    <span>Summary sent to project-team@acme.internal</span>
+                    <span>Summary sent to project-team@meridian.internal</span>
                   </div>
                   <button
                     type="button"
                     aria-label="Reset approved action"
                     onClick={() => setApprovalState("pending")}
-                    className="text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
+                    className="text-xs text-muted-foreground/70 transition-colors hover:text-muted-foreground"
                   >
                     Reset
                   </button>
@@ -364,7 +343,7 @@ export function DemoContent() {
                     type="button"
                     aria-label="Reset denied action"
                     onClick={() => setApprovalState("pending")}
-                    className="text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
+                    className="text-xs text-muted-foreground/70 transition-colors hover:text-muted-foreground"
                   >
                     Reset
                   </button>

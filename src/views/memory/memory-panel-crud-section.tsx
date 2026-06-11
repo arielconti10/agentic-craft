@@ -191,7 +191,7 @@ export function MemoryPanelCrudSection() {
         <p className="section-label mb-3">Persistence</p>
         <h2 className="text-xl font-semibold tracking-tight">Memory Panel</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          The reviewer&apos;s stored preferences and facts — key-value pairs the
+          The reviewer’s stored preferences and facts — key-value pairs the
           agent uses to personalize responses across sessions.
         </p>
 
@@ -331,64 +331,6 @@ export function MemoryPanelCrudSection() {
             )}
           </div>
         </div>
-
-        {/* Spec table */}
-        <Table className="mt-10 w-full text-sm">
-          <TableHeader>
-            <TableRow className="border-b border-border">
-              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-                State
-              </TableHead>
-              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-                Content
-              </TableHead>
-              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
-                Behavior
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {[
-              [
-                "Empty",
-                "Placeholder with guidance text",
-                "Shown when the agent has no stored memories",
-              ],
-              [
-                "Populated",
-                "Key-value list with hover actions",
-                "Edit and delete icons appear on hover per row",
-              ],
-              [
-                "Search",
-                "Filtered list with search input",
-                "Real-time filtering by key or value",
-              ],
-            ].map(([state, content, behavior], i) => (
-              <TableRow
-                key={state}
-                className={i < 2 ? "border-b border-border/50" : ""}
-              >
-                <TableCell className="py-2.5 pr-6 font-medium">
-                  {state}
-                </TableCell>
-                <TableCell className="py-2.5 pr-6 text-muted-foreground">
-                  {content}
-                </TableCell>
-                <TableCell className="py-2.5 text-muted-foreground">
-                  {behavior}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-          Memory entries are key-value pairs rather than free text — this makes
-          them scannable and editable without requiring the reviewer to parse
-          unstructured prose. Actions appear only on hover to keep the list
-          clean.
-        </div>
       </section>
 
       {/* ============================================================ */}
@@ -416,7 +358,7 @@ export function MemoryPanelCrudSection() {
           />
 
           <div
-            className="rounded-lg border border-border/40 p-6"
+            className="rounded-lg border border-border/40 p-4 sm:p-6"
             key={crudAnimKey}
           >
             <div className="memory-slide-in">
@@ -424,7 +366,7 @@ export function MemoryPanelCrudSection() {
               {crudState.view && (
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-xs text-muted-foreground/60">
+                    <span className="text-xs text-muted-foreground/70">
                       Preferred release tier
                     </span>
                     <p className="text-sm text-foreground/85">{savedValue}</p>
@@ -460,7 +402,7 @@ export function MemoryPanelCrudSection() {
                   <Field>
                     <FieldLabel
                       htmlFor="memory-edit-value"
-                      className="text-xs text-muted-foreground/60"
+                      className="text-xs text-muted-foreground/70"
                     >
                       Preferred release tier
                     </FieldLabel>
@@ -506,7 +448,7 @@ export function MemoryPanelCrudSection() {
               {crudState.delete && (
                 <div className="flex flex-col gap-3">
                   <div>
-                    <span className="text-xs text-muted-foreground/60">
+                    <span className="text-xs text-muted-foreground/70">
                       Preferred release tier
                     </span>
                     <p className="text-sm text-foreground/85">{savedValue}</p>
@@ -607,12 +549,6 @@ export function MemoryPanelCrudSection() {
             ))}
           </TableBody>
         </Table>
-
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-          All CRUD operations happen inline — no modals. The delete confirmation
-          is intentionally low-drama: a text warning, not a blocking dialog.
-          This matches the lightweight feel of key-value memory management.
-        </div>
       </section>
     </>
   )

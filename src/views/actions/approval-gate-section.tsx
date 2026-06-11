@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useRef, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Shield01Icon,
@@ -12,21 +12,13 @@ import { PatternControls as Controls } from "@/components/pattern-controls"
 import { ActionPreview } from "@/components/ui/action-preview"
 import { Button } from "@/components/ui/button"
 import { DecisionSurface } from "@/components/ui/decision-surface"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
 
 const APPROVAL_EMAIL = {
-  recipient: "project-team@acme.internal",
+  recipient: "project-team@meridian.internal",
   subject: "Launch Review — customer portal v3.1 (enterprise release)",
   body: "Please find attached the Launch Review Summary for the customer portal v3.1 project brief. This submission covers all review checklist items for enterprise release with standard support coverage. The review was conducted using the current internal launch checklist.",
 }
@@ -65,6 +57,15 @@ export function ApprovalGateSection() {
     "pending" | "approved" | "denied"
   >("pending")
 
+  const outcomeRef = useRef<HTMLDivElement>(null)
+
+  // Focus the outcome element whenever it mounts (approved or denied)
+  useEffect(() => {
+    if (approvalStatus !== "pending") {
+      outcomeRef.current?.focus()
+    }
+  }, [approvalStatus])
+
   const toggleApprovalControl = useCallback((key: string) => {
     setApprovalCtrl(() => {
       if (key === "email") return { email: true, changes: false }
@@ -96,7 +97,7 @@ export function ApprovalGateSection() {
 
         <div
           key={approvalAnim}
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
         >
           {approvalCtrl.email ? (
             /* Email approval variant */
@@ -109,7 +110,7 @@ export function ApprovalGateSection() {
                   className="mt-0.5 shrink-0 text-muted-foreground"
                 />
                 <p className="text-sm">
-                  I'd like to send the launch summary submission email. Please
+                  I’d like to send the launch summary submission email. Please
                   review and approve.
                 </p>
               </div>
@@ -221,6 +222,8 @@ export function ApprovalGateSection() {
               {approvalStatus === "approved" && (
                 <div className="actions-fade-in flex flex-col gap-3">
                   <div
+                    ref={outcomeRef}
+                    tabIndex={-1}
                     role="status"
                     className="border-l border-primary bg-primary/5 py-2 pl-3"
                   >
@@ -254,7 +257,12 @@ export function ApprovalGateSection() {
 
               {approvalStatus === "denied" && (
                 <div className="actions-fade-in flex flex-col gap-3">
-                  <div className="border-l border-destructive/50 bg-destructive/5 py-2 pl-3">
+                  <div
+                    ref={outcomeRef}
+                    tabIndex={-1}
+                    role="status"
+                    className="border-l border-destructive/50 bg-destructive/5 py-2 pl-3"
+                  >
                     <div className="flex items-center gap-2">
                       <HugeiconsIcon
                         icon={Cancel01Icon}
@@ -294,7 +302,7 @@ export function ApprovalGateSection() {
                   className="mt-0.5 shrink-0 text-muted-foreground"
                 />
                 <p className="text-sm">
-                  I'd like to apply these changes to the project brief. Please
+                  I’d like to apply these changes to the project brief. Please
                   review.
                 </p>
               </div>
@@ -428,7 +436,12 @@ export function ApprovalGateSection() {
 
               {approvalStatus === "approved" && (
                 <div className="actions-fade-in flex flex-col gap-3">
-                  <div className="border-l border-primary bg-primary/5 py-2 pl-3">
+                  <div
+                    ref={outcomeRef}
+                    tabIndex={-1}
+                    role="status"
+                    className="border-l border-primary bg-primary/5 py-2 pl-3"
+                  >
                     <div className="flex items-center gap-2">
                       <HugeiconsIcon
                         icon={Tick01Icon}
@@ -469,7 +482,12 @@ export function ApprovalGateSection() {
 
               {approvalStatus === "denied" && (
                 <div className="actions-fade-in flex flex-col gap-3">
-                  <div className="border-l border-destructive/50 bg-destructive/5 py-2 pl-3">
+                  <div
+                    ref={outcomeRef}
+                    tabIndex={-1}
+                    role="status"
+                    className="border-l border-destructive/50 bg-destructive/5 py-2 pl-3"
+                  >
                     <div className="flex items-center gap-2">
                       <HugeiconsIcon
                         icon={Cancel01Icon}
@@ -502,60 +520,9 @@ export function ApprovalGateSection() {
         </div>
       </div>
 
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border">
-            <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-              Property
-            </TableHead>
-            <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
-              Spec
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {[
-            [
-              "Action summary",
-              "Shield icon + plain-language description of what the agent wants to do",
-            ],
-            [
-              "Detail panel",
-              "Muted background container with key-value or diff preview",
-            ],
-            [
-              "Diff format",
-              "Green-ish (+) for additions, red-ish (−) for removals, muted tones",
-            ],
-            [
-              "Approve button",
-              "Primary fill — should feel deliberate, not default",
-            ],
-            ["Deny button", "Ghost/outline — lower visual weight than approve"],
-            [
-              "Result states",
-              "Success (primary border), denied (destructive border), with reset button",
-            ],
-          ].map(([prop, spec], i, arr) => (
-            <TableRow
-              key={prop}
-              className={i < arr.length - 1 ? "border-b border-border/50" : ""}
-            >
-              <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
-              <TableCell className="py-3 text-muted-foreground">
-                {spec}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Approval gates are the most critical trust pattern in the system. They
-        ensure the agent never takes consequential actions without explicit
-        human confirmation — essential for high-trust workflows where mistakes
-        have regulatory consequences.
+      <p className="mt-8 text-sm text-muted-foreground">
+        Approve uses primary fill; deny uses ghost/outline. Outcomes use primary
+        or destructive border with a reset button.
       </p>
     </section>
   )

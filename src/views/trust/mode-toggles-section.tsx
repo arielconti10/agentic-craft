@@ -2,20 +2,12 @@
 
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
-  Brain01Icon,
+  Robot01Icon,
   Search01Icon,
   Shield01Icon,
   Target01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 
 /* ------------------------------------------------------------------ */
@@ -31,7 +23,6 @@ const MODE_CONFIGS = {
       "Source completeness checker",
       "Requirement coverage matrix generator",
       "Policy alignment validator",
-      "Lifecycle document scanner",
     ],
   },
   research: {
@@ -43,6 +34,7 @@ const MODE_CONFIGS = {
       "Export behavior verifier",
       "Technical document analyzer",
       "Platform capability lookup",
+      "Dependency graph explorer",
     ],
   },
   review: {
@@ -80,11 +72,11 @@ export function ModeTogglesSection() {
       <p className="section-label mb-3">Governance</p>
       <h2 className="text-xl font-semibold tracking-tight">Mode Toggles</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        Switch the agent's operational mode to focus on different aspects of the
+        Switch the agent’s operational mode to focus on different aspects of the
         review workflow. Each mode changes available tools and priorities.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-10">
         <Controls
           options={[
             { key: "requirements", label: "Requirements" },
@@ -96,7 +88,7 @@ export function ModeTogglesSection() {
         />
 
         <div
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
           key={modeAnimKey}
         >
           <div className="trust-slide-in">
@@ -144,7 +136,7 @@ export function ModeTogglesSection() {
                       style={{ animationDelay: `${i * 60}ms` }}
                     >
                       <HugeiconsIcon
-                        icon={Brain01Icon}
+                        icon={Robot01Icon}
                         size={12}
                         strokeWidth={1.5}
                         className="shrink-0 text-muted-foreground"
@@ -157,65 +149,6 @@ export function ModeTogglesSection() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Spec table */}
-      <div className="mt-8">
-        <Table className="w-full text-sm">
-          <TableHeader>
-            <TableRow className="border-b border-border">
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Mode
-              </TableHead>
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Focus
-              </TableHead>
-              <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
-                Tools
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="text-muted-foreground">
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                Requirements
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">
-                Source material and policy alignment
-              </TableCell>
-              <TableCell className="py-2.5">
-                4 requirements-specific tools
-              </TableCell>
-            </TableRow>
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                Research
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">
-                Technical investigation
-              </TableCell>
-              <TableCell className="py-2.5">
-                4 research-specific tools
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                Review
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">
-                Deliverable review and audit prep
-              </TableCell>
-              <TableCell className="py-2.5">4 review-specific tools</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Callout */}
-      <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Mode switching should be instant — no confirmation dialog needed since
-        it only changes tool availability and focus, not data access. Reviewers
-        typically switch modes multiple times during a single review session.
       </div>
     </section>
   )

@@ -4,21 +4,13 @@ import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ArrowRight01Icon,
-  Brain01Icon,
   Message01Icon,
+  Robot01Icon,
   Search01Icon,
   Share01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Badge } from "@/components/ui/badge"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -106,7 +98,10 @@ export function AgentCommunicationSection() {
           onToggle={toggleComm}
         />
 
-        <div className="rounded-lg border border-border/40 p-6" key={commAnim}>
+        <div
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
+          key={commAnim}
+        >
           {activeComm === "direct" ? (
             <div className="ma-slide-in flex flex-col gap-3">
               <div className="mb-4 flex items-center gap-2">
@@ -131,7 +126,7 @@ export function AgentCommunicationSection() {
                   >
                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
                       <HugeiconsIcon
-                        icon={Brain01Icon}
+                        icon={Robot01Icon}
                         size={12}
                         strokeWidth={1.5}
                         className="text-muted-foreground"
@@ -185,7 +180,7 @@ export function AgentCommunicationSection() {
                 >
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
                     <HugeiconsIcon
-                      icon={Brain01Icon}
+                      icon={Robot01Icon}
                       size={12}
                       strokeWidth={1.5}
                       className="text-muted-foreground"
@@ -211,65 +206,6 @@ export function AgentCommunicationSection() {
             </div>
           )}
         </div>
-      </div>
-
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border text-left">
-            <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
-              Element
-            </TableHead>
-            <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
-              Details
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Direct messages
-            </TableCell>
-            <TableCell className="py-3">
-              Chat-style thread between two agents with sender/receiver labels
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Message alignment
-            </TableCell>
-            <TableCell className="py-3">
-              Alternating left/right layout based on sender, subtle background
-              tint
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Shared context
-            </TableCell>
-            <TableCell className="py-3">
-              List of contributed items with agent attribution, type badge, and
-              timestamp
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Context types
-            </TableCell>
-            <TableCell className="py-3">
-              Artifact, Finding, Draft, Analysis, Assessment — shown as muted
-              badges
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Agent communication patterns support the traceability requirements of
-        complex review workflows. Direct messaging creates point-to-point audit
-        trails (e.g., when the Requirements Mapper flags an requirement gap for
-        the Document Drafter), while shared context provides a workspace where
-        all agents can contribute findings visible to the project team.
       </div>
     </section>
   )

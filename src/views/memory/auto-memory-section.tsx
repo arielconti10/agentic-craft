@@ -56,24 +56,16 @@ export function AutoMemorySection() {
         />
 
         <div
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
           key={autoAnimKey}
         >
           {/* Agent message context */}
           <div className="mb-3">
             <p
-              className="text-base"
-              style={{
-                fontFamily: "'Source Serif 4', serif",
-                fontSize: "16px",
-                lineHeight: "26px",
-                letterSpacing: "-0.4px",
-                fontVariationSettings: '"opsz" 12',
-                WebkitFontSmoothing: "antialiased",
-                color: "var(--foreground)",
-              }}
+              className="agent-prose text-base"
+              style={{ color: "var(--foreground)" }}
             >
-              I see you&apos;ve been consistently requesting enterprise release
+              I see you’ve been consistently requesting enterprise release
               reviews across the last three sessions. The reference document
               Launch Policy v2 appears to be your default reference.
             </p>
@@ -139,7 +131,7 @@ export function AutoMemorySection() {
           {/* Dismissed — banner gone, just the message */}
           {autoState.dismissed && (
             <div className="memory-fade-in flex items-center gap-2 rounded-md px-4 py-2">
-              <p className="text-xs text-muted-foreground/50 italic">
+              <p className="text-xs text-muted-foreground/70 italic">
                 Suggestion dismissed — the agent will not ask about this
                 preference again.
               </p>

@@ -31,7 +31,7 @@ const CITATION_REFERENCES = [
     id: 1,
     title: "Launch Checklist: Support Readiness",
     source: "docs.internal/launch/support-readiness",
-    location: "Page 14",
+    location: "Section 4.2",
     icon: File01Icon,
     excerpt:
       "The standard support plan requires the product team to establish issue triage procedures, named owners, and response timelines before enterprise release.",
@@ -49,7 +49,7 @@ const CITATION_REFERENCES = [
     id: 3,
     title: "Launch Guidance: Source Scope",
     source: "docs.internal/launch-guidance/source-scope",
-    location: "Page 21",
+    location: "Section 2.1",
     icon: Globe02Icon,
     excerpt:
       "All source documents that support a launch decision must be linked from the final review summary, including any modules excluded from the initial boundary.",
@@ -61,15 +61,6 @@ const CITATION_REFERENCES = [
 /* ------------------------------------------------------------------ */
 
 export function CitationsSection() {
-  /* prose style for the citation display — matches agentProseBaseStyle +
-     serif defaults (letter-spacing, smoothing, lineHeight, fontVariationSettings) */
-  const agentProseStyle: React.CSSProperties = {
-    letterSpacing: "0px",
-    WebkitFontSmoothing: "antialiased",
-    lineHeight: "26px",
-    fontVariationSettings: '"opsz" 12',
-  }
-
   return (
     <section id="citations" className="page-section">
       <p className="section-label mb-3">Sourcing</p>
@@ -84,7 +75,7 @@ export function CitationsSection() {
       <div className="mt-7 border-y border-border/50 py-3">
         <div className="mx-auto max-w-[720px]">
           <div className="bg-muted/20 px-3 py-4 sm:px-4 sm:py-5">
-            <div className="font-serif text-base" style={agentProseStyle}>
+            <div className="agent-prose font-serif text-base">
               <p>
                 The launch readiness plan has been set to enterprise release,
                 which requires independent risk analysis by the review team
@@ -192,15 +183,6 @@ export function CitationsSection() {
           ))}
         </TableBody>
       </Table>
-
-      <div className="mt-10 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        <p>
-          The citation preview should answer "why should I trust this sentence?"
-          without forcing the user away from the current answer. Keep the quote
-          short, show the exact source location, and make the full document one
-          click away.
-        </p>
-      </div>
     </section>
   )
 }

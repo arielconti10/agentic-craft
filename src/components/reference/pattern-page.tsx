@@ -16,8 +16,8 @@ function PatternPage({
   children: React.ReactNode
 }) {
   return (
-    <article className={cn("pb-24", className)}>
-      <header className="mb-16">
+    <article className={cn(className)}>
+      <header className="mb-12 sm:mb-16">
         {eyebrow && <p className="section-label mb-3">{eyebrow}</p>}
         <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight text-balance">
           {title}
