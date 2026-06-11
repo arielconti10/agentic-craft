@@ -202,7 +202,7 @@ export function SettingsAutonomySection() {
         <h2 className="text-xl font-semibold tracking-tight">
           Settings Templates
         </h2>
-        <p className="mt-2 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Reusable control groups for product teams that need durable agent
           boundaries across sessions, not one-off prompt instructions.
         </p>

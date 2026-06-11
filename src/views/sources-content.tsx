@@ -100,7 +100,7 @@ export function SourcesContent() {
         <h2 className="text-xl font-semibold tracking-tight">
           Inline Marker to Source Preview
         </h2>
-        <p className="mt-3 max-w-[660px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Hovering or focusing a citation marker opens the source preview
           anchored at the marker itself, so verification never leaves the
           sentence. On touch, tapping the marker opens the same card; Escape or
@@ -185,7 +185,7 @@ export function SourcesContent() {
         <h2 className="text-xl font-semibold tracking-tight">
           Document as the Output Surface
         </h2>
-        <p className="mt-3 max-w-[660px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           An agent output can be more than a message. A document surface shows
           which sections are cited, which are draft-only, and what still needs
           human input.
