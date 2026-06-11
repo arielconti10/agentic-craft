@@ -68,7 +68,7 @@ export function AuditTrailSection() {
         full context and source links.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-10">
         <Controls
           options={[
             { key: "summary", label: "Summary" },

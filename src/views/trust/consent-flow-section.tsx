@@ -52,7 +52,7 @@ export function ConsentFlowSection() {
         actions. Users can accept, decline, or learn more before deciding.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-10">
         <Controls
           options={[
             { key: "prompt", label: "Prompt" },

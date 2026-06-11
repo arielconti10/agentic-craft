@@ -207,7 +207,7 @@ export function SettingsAutonomySection() {
           boundaries across sessions, not one-off prompt instructions.
         </p>
 
-        <FieldGroup className="mt-8 rounded-lg border border-border/40 p-6">
+        <FieldGroup className="mt-10 rounded-lg border border-border/40 p-6">
           <FieldSet>
             <FieldLegend>Reusable Settings Groups</FieldLegend>
             {SETTINGS_TEMPLATES.map((template) => (
@@ -249,7 +249,7 @@ export function SettingsAutonomySection() {
           foundations.
         </p>
 
-        <div className="mt-8">
+        <div className="mt-10">
           <Controls
             options={[
               { key: "level2", label: "Level 2" },

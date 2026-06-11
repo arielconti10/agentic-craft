@@ -84,7 +84,7 @@ export function DataProvenanceSection() {
         conclusion.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-10">
         <Controls
           options={[
             { key: "sources", label: "Sources" },

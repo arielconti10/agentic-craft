@@ -46,7 +46,7 @@ export function ConfidenceDisplaySection() {
         cues, and actionable follow-ups.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-10">
         <Controls
           options={[
             { key: "high", label: "High" },

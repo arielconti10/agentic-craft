@@ -84,7 +84,7 @@ export function ModeTogglesSection() {
         review workflow. Each mode changes available tools and priorities.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-10">
         <Controls
           options={[
             { key: "requirements", label: "Requirements" },

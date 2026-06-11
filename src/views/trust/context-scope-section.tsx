@@ -80,7 +80,7 @@ export function ContextScopeSection() {
         Narrower scopes reduce noise; wider scopes enable cross-referencing.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-10">
         <Controls
           options={[
             { key: "portal", label: "Portal Only" },

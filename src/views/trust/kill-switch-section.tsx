@@ -39,7 +39,7 @@ export function KillSwitchSection() {
         control adapts its prominence to the agent's current state.
       </p>
 
-      <div className="mt-8">
+      <div className="mt-10">
         <Controls
           options={[
             { key: "idle", label: "Idle" },
