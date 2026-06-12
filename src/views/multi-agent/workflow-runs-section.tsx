@@ -25,7 +25,7 @@ const SPEC_ROWS = [
   },
   {
     contract: "Agent detail disclosure",
-    rule: "A fleet row expands inline only when the agent has detail to show — chevron + aria-expanded on the agent cell, nothing on rows without detail; inside: model · tokens · tool calls · elapsed and the result as the agent returned it — schema-validated data in mono, plain text in the serif voice. Runtime semantics (journal, replay, re-runs) speak as the system, in a muted sans annotation — never as the agent. Detail adds what the row can’t show; it never repeats the row",
+    rule: "A fleet row expands inline only when the agent has detail to show — chevron + aria-expanded on the agent cell, nothing on rows without detail; inside: the full task line, model · tokens · tool calls · elapsed, and the result as the agent returned it — schema-validated data in mono, plain text in the serif voice. Runtime semantics (journal, replay, re-runs) speak as the system, in a muted sans annotation — never as the agent. Detail finishes what the row truncates and adds what it can’t show",
   },
   {
     contract: "Roll-up math",
@@ -45,7 +45,7 @@ const SPEC_ROWS = [
   },
   {
     contract: "Ambient motion",
-    rule: "Active phase pulse is the page’s only ambient loop; pausing the run freezes it; prefers-reduced-motion disables it; all other state transitions run 150–200 ms",
+    rule: "Ambient motion is reserved for live state — the active phase pulse and the Working row spinners; pausing the run freezes the pulse; prefers-reduced-motion disables all of it; every other transition runs 150–200 ms",
   },
 ]
 
@@ -94,7 +94,7 @@ export function WorkflowRunsSection() {
                 <td className="py-2 pr-6 align-top text-xs font-medium whitespace-nowrap">
                   {row.contract}
                 </td>
-                <td className="py-2 align-top text-xs text-muted-foreground">
+                <td className="max-w-[70ch] py-2 align-top text-xs text-muted-foreground">
                   {row.rule}
                 </td>
               </tr>

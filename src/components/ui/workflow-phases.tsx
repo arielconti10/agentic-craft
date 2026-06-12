@@ -89,8 +89,10 @@ function PhaseDots({ dots }: { dots: WorkflowAgentDot[] }) {
           key={i}
           className={cn(
             "size-1.5 rounded-full",
-            dot === "done" && "bg-foreground/75",
-            dot === "running" && "bg-foreground/35",
+            // Shape carries the distinction tone can't at this size:
+            // solid = done, ringed half-tone = running, hollow = queued
+            dot === "done" && "bg-foreground/80",
+            dot === "running" && "border border-foreground/70 bg-foreground/25",
             dot === "failed" && "bg-destructive",
             dot === "queued" && "border border-muted-foreground/50"
           )}

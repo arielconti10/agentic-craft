@@ -65,6 +65,9 @@ describe("AgentStatusTable detail disclosure", () => {
       )
     ).toBeInTheDocument()
     expect(table.getByText(/1,872 tokens · 13 tools/)).toBeInTheDocument()
+    // The panel finishes the truncated Task cell with the full task line
+    const detailRow = container.querySelector("[data-slot='agent-detail-row']")!
+    expect(detailRow.textContent).toContain("Verified 14 of 29 requirements")
 
     await userEvent.click(toggle)
     expect(toggle.getAttribute("aria-expanded")).toBe("false")
@@ -147,6 +150,12 @@ describe("AgentStatusTable detail disclosure", () => {
     const idleRow = rows[1]
     expect(idleRow.querySelector("button")).toBeNull()
     expect(idleRow.textContent).toContain("Risk Assessor")
+  })
+
+  it("status announces once — the glyph is decorative beside the visible word", () => {
+    const { container } = render(<AgentStatusTable agents={AGENTS} />)
+    const indicator = container.querySelector("[data-slot='status-indicator']")!
+    expect(indicator.closest("[aria-hidden='true']")).not.toBeNull()
   })
 
   it("has no Confidence column — cost and progress carry the instrumentation", () => {

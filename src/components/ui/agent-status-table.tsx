@@ -96,11 +96,24 @@ function getDetailMeta(detail: AgentDetail): string[] {
   ].filter((part): part is string => part !== null)
 }
 
-/** The expanded panel's content — shared by the table and card views */
-function AgentDetailBody({ detail }: { detail: AgentDetail }) {
+/** The expanded panel's content — shared by the table and card views.
+    The table passes the row's task so the truncated cell has somewhere to
+    finish its sentence; the card view shows the full task in place. */
+function AgentDetailBody({
+  detail,
+  task,
+}: {
+  detail: AgentDetail
+  task?: string
+}) {
   const meta = getDetailMeta(detail)
   return (
     <>
+      {task && (
+        <p className="agent-detail-reveal text-sm text-muted-foreground motion-reduce:animate-none">
+          {task}
+        </p>
+      )}
       {meta.length > 0 && (
         <p className="agent-detail-reveal text-xs text-muted-foreground tabular-nums motion-reduce:animate-none">
           {meta.join(" · ")}
@@ -255,10 +268,11 @@ function AgentStatusTable({
                     <TableCell>
                       <AgentStatusCell status={agent.status} />
                     </TableCell>
-                    {/* One line per task keeps the row rhythm even — the full
-                      text lives in the title attribute */}
+                    {/* One line per task keeps the row rhythm even — the
+                      full text opens the detail panel (and survives in the
+                      title attribute for rows without one) */}
                     <TableCell
-                      className="max-w-44 min-w-36 truncate text-muted-foreground"
+                      className="max-w-64 min-w-36 truncate text-muted-foreground"
                       title={agent.task}
                     >
                       {agent.task ?? "No active task"}
@@ -299,7 +313,10 @@ function AgentStatusTable({
                         {/* Sticky + container-width cap keep the panel readable
                           while the table scrolls sideways */}
                         <div className="sticky left-2 flex max-w-[calc(100cqw-1rem)] min-w-44 flex-col gap-1.5 pl-5">
-                          <AgentDetailBody detail={agent.detail} />
+                          <AgentDetailBody
+                            detail={agent.detail}
+                            task={agent.task}
+                          />
                         </div>
                       </TableCell>
                     </TableRow>
@@ -420,10 +437,14 @@ function AgentStatusCell({
 }) {
   return (
     <span className={cn("flex items-center gap-1.5", className)}>
-      <StatusIndicator
-        status={indicatorStatus[status]}
-        label={statusCopy[status]}
-      />
+      {/* The visible word is the accessible status — the glyph is decor
+          here, so its sr-only label is hidden to avoid a double announce */}
+      <span aria-hidden="true">
+        <StatusIndicator
+          status={indicatorStatus[status]}
+          label={statusCopy[status]}
+        />
+      </span>
       <span className="text-muted-foreground">{statusCopy[status]}</span>
     </span>
   )

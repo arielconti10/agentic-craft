@@ -69,8 +69,7 @@ export const patternEntries: PatternEntry[] = [
     id: "agent-status-table",
     title: "Agent Status Table",
     category: "Multi-Agent",
-    summary:
-      "Track agents by status, current task, cost, and progress.",
+    summary: "Track agents by status, current task, cost, and progress.",
     userAnxiety:
       "The user cannot scan who owns work or where a run is blocked.",
     shadcnPrimitives: ["Table", "Badge", "Progress"],
