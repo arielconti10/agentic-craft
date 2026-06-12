@@ -24,25 +24,18 @@ type RunState = "running" | "paused" | "completed" | "failed"
 /* ──────────────────────────────────────────────────────────────────────── */
 
 const PLAN_LINES = [
-  { code: `const run = workflow('launch-readiness-audit');`, phaseId: null },
+  { code: `const run = workflow('launch-audit');`, phaseId: null },
   { code: ``, phaseId: null },
   { code: `await phase('Scan sources', async () => {`, phaseId: "scan" },
-  { code: `  const findings = await parallel(sourceAgents);`, phaseId: "scan" },
-  { code: `  return findings.filter(f => f.severity > 0);`, phaseId: "scan" },
+  { code: `  return await parallel(scanners);`, phaseId: "scan" },
   { code: `});`, phaseId: "scan" },
   { code: ``, phaseId: null },
-  {
-    code: `const verified = await phase('Verify findings', async () => {`,
-    phaseId: "verify",
-  },
-  {
-    code: `  return await parallel(verifyAgents, { input: findings });`,
-    phaseId: "verify",
-  },
+  { code: `await phase('Verify findings', async () => {`, phaseId: "verify" },
+  { code: `  return await parallel(verifiers);`, phaseId: "verify" },
   { code: `});`, phaseId: "verify" },
   { code: ``, phaseId: null },
   { code: `await phase('Draft report', async () => {`, phaseId: "draft" },
-  { code: `  return await drafter.run({ verified });`, phaseId: "draft" },
+  { code: `  return await drafter.run(verified);`, phaseId: "draft" },
   { code: `});`, phaseId: "draft" },
 ]
 
@@ -617,7 +610,7 @@ function PlanCode({ activePhaseId }: { activePhaseId: string | null }) {
             key={i}
             className={
               line.phaseId !== null && line.phaseId === activePhaseId
-                ? "-mx-3 bg-muted px-0 px-3"
+                ? "-mx-3 bg-muted px-3"
                 : undefined
             }
           >
@@ -854,11 +847,9 @@ function WorkflowRunMonitorBlock() {
         </p>
 
         {agentsToShow.length === 0 ? (
-          <div className="rounded-lg border border-border/40 px-4 py-6 text-center text-sm text-muted-foreground">
-            {activePhaseId === "draft" && runState !== "completed"
-              ? "Draft phase not yet started — queued behind Verify findings"
-              : "No agents for this phase"}
-          </div>
+          <p className="py-3 text-sm text-muted-foreground">
+            Queued — agents start when this phase begins
+          </p>
         ) : (
           <div className="overflow-x-auto rounded-lg border border-border/40">
             <AgentStatusTable agents={visibleAgents} />

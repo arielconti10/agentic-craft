@@ -551,7 +551,6 @@
         "button",
         "bitcomplete/agentic-craft/workflow-phases",
         "bitcomplete/agentic-craft/agent-status-table",
-        "bitcomplete/agentic-craft/tool-tree",
         "bitcomplete/agentic-craft/usage-meter"
       ],
       "files": [

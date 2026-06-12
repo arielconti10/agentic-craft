@@ -109,7 +109,7 @@ function PhaseButton({
           )}
           <span
             className={cn(
-              "min-w-0 truncate text-sm leading-snug font-medium",
+              "min-w-0 text-sm leading-snug font-medium [text-wrap:balance]",
               phase.status === "queued" && "text-muted-foreground",
               isFailed && "text-destructive"
             )}
