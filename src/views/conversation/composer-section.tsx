@@ -214,7 +214,7 @@ export function ComposerSection() {
               Textarea
             </TableCell>
             <TableCell className="py-3">
-              Auto-expanding, min 36px, max 160px, 14px Albert Sans
+              Auto-expanding, min 36px, max 160px, 14px PP Neue Montreal
             </TableCell>
           </TableRow>
           <TableRow className="border-b border-border/50">

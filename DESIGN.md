@@ -15,30 +15,30 @@ colors:
   signal-red: "oklch(0.577 0.245 27.325)"
 typography:
   display:
-    fontFamily: "Source Serif 4, serif"
+    fontFamily: "Signifier, serif"
     fontSize: "2.25rem"
     fontWeight: 300
     lineHeight: 1.15
     letterSpacing: "-0.025em"
   headline:
-    fontFamily: "Albert Sans, sans-serif"
+    fontFamily: "PP Neue Montreal, sans-serif"
     fontSize: "1.25rem"
     fontWeight: 600
     letterSpacing: "-0.025em"
   body:
-    fontFamily: "Albert Sans, sans-serif"
+    fontFamily: "PP Neue Montreal, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.43
   agent-prose:
-    fontFamily: "Source Serif 4, serif"
+    fontFamily: "Signifier, serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: "26px"
     letterSpacing: "-0.4px"
     fontVariation: '"opsz" 12'
   label:
-    fontFamily: "Albert Sans, sans-serif"
+    fontFamily: "PP Neue Montreal, sans-serif"
     fontSize: "11px"
     fontWeight: 500
     letterSpacing: "0.08em"
@@ -87,8 +87,8 @@ A publication at final proofing: monochrome ink on white, every claim checked,
 every numeral tabular, the author's voice set in serif against the apparatus
 of sans-serif instrumentation. The interface is the proofing table — quiet,
 flat, ruled with hairlines and dashed section breaks — and the agent's words
-are the manuscript on it. Two voices, one page: the product speaks Albert
-Sans; the agent speaks Source Serif 4. Nothing glows, nothing bounces,
+are the manuscript on it. Two voices, one page: the product speaks PP Neue
+Montreal; the agent speaks Signifier. Nothing glows, nothing bounces,
 nothing pretends.
 
 This system explicitly rejects **AI-demo chrome** — glowing gradients,
@@ -157,12 +157,12 @@ work.
 
 ## 3. Typography
 
-**Display Font:** Source Serif 4 (serif fallback)
-**Body Font:** Albert Sans (sans-serif fallback)
+**Display Font:** Signifier (serif fallback)
+**Body Font:** PP Neue Montreal (sans-serif fallback)
 
 **Character:** A working pairing, not a decorative one — the serif is a
-voice, not a garnish. Albert Sans carries every part of the apparatus
-(navigation, controls, labels, tables, data); Source Serif 4 appears in
+voice, not a garnish. PP Neue Montreal carries every part of the apparatus
+(navigation, controls, labels, tables, data); Signifier appears in
 exactly two roles: page-title display and the agent's own prose.
 
 ### Hierarchy

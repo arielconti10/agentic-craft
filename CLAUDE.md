@@ -11,7 +11,7 @@ Agentic Craft is a reference site for agentic UI patterns: it documents interact
 | Styling          | Tailwind CSS 4 (`tailwindcss: ^4.1.17`)                             |
 | Component system | `@base-ui/react ^1.3.0` (NOT Radix)                                 |
 | Icons            | `@hugeicons/react` + `@hugeicons/core-free-icons`; always monochrome, `strokeWidth={1.5}` |
-| Fonts            | Albert Sans (sans), Source Serif 4 (serif)                          |
+| Fonts            | PP Neue Montreal (sans), Signifier (serif) — local cuts in `app/fonts/`    |
 | Animations       | Pure CSS keyframes — in `src/index.css` or registry item `css` blocks; **never injected `<style>` tags** |
 | Motion library   | None                                                                 |
 | Language         | TypeScript strict; path alias `@/*` → `./src/*`                     |

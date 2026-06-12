@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { Albert_Sans, Source_Serif_4 } from "next/font/google"
+import localFont from "next/font/local"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { ThemeProvider } from "@/components/theme-provider"
 import {
@@ -10,14 +10,64 @@ import {
 import { AppSidebar } from "@/components/app-sidebar"
 import "@/index.css"
 
-const albertSans = Albert_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
+/* The PP Neue Montreal free cut ships no Medium (500), and font-medium is
+   the site's dominant emphasis tier. The scale shifts down one face: Text
+   Book (350) takes body duty at 400, Regular steps up to 500, Semibold
+   holds 600 — keeping normal/medium/semibold visually distinct. */
+const neueMontreal = localFont({
+  src: [
+    {
+      path: "./fonts/pp-neue-montreal-light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./fonts/pp-neue-montreal-text-book.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/pp-neue-montreal-text-book-italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "./fonts/pp-neue-montreal-regular.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/pp-neue-montreal-italic.woff2",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "./fonts/pp-neue-montreal-semibold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+  ],
+  adjustFontFallback: "Arial",
+  variable: "--font-neue-montreal",
 })
 
-const sourceSerif4 = Source_Serif_4({
-  subsets: ["latin"],
-  variable: "--font-serif",
+/* Klim test cut of Signifier — limited character set; missing glyphs fall
+   back to the metric-adjusted Times fallback next/font generates. */
+const signifier = localFont({
+  src: [
+    {
+      path: "./fonts/test-signifier-vf-roman.woff2",
+      weight: "100 900",
+      style: "normal",
+    },
+    {
+      path: "./fonts/test-signifier-vf-italic.woff2",
+      weight: "100 900",
+      style: "italic",
+    },
+  ],
+  adjustFontFallback: "Times New Roman",
+  variable: "--font-signifier",
 })
 
 export const metadata: Metadata = {
@@ -86,7 +136,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${albertSans.variable} ${sourceSerif4.variable}`}
+      className={`${neueMontreal.variable} ${signifier.variable}`}
     >
       <body>
         {/* Plain inline script (not next/script): it must run synchronously
