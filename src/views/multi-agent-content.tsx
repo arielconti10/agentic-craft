@@ -5,6 +5,7 @@ import { HandoffFlowSection } from "./multi-agent/handoff-flow-section"
 import { ParallelAgentsSection } from "./multi-agent/parallel-agents-section"
 import { AgentRoutingSection } from "./multi-agent/agent-routing-section"
 import { AgentCommunicationSection } from "./multi-agent/agent-communication-section"
+import { WorkflowRunsSection } from "./multi-agent/workflow-runs-section"
 
 export function MultiAgentContent() {
   return (
@@ -26,6 +27,7 @@ export function MultiAgentContent() {
       <ParallelAgentsSection />
       <AgentRoutingSection />
       <AgentCommunicationSection />
+      <WorkflowRunsSection />
     </article>
   )
 }

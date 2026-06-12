@@ -124,6 +124,7 @@ export const sections: NavigationSection[] = [
       { title: "Parallel Agents", id: "parallel-agents" },
       { title: "Agent Routing", id: "agent-routing" },
       { title: "Agent Communication", id: "agent-communication" },
+      { title: "Workflow Runs", id: "workflow-runs" },
     ],
   },
   {
