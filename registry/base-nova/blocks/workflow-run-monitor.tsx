@@ -224,7 +224,7 @@ const SCAN_AGENTS: AgentStatusRow[] = [
       tools: 21,
       elapsed: "1:12",
       output:
-        "Parsed 29 launch requirements from 6 policy documents. Export controls appear twice with conflicting thresholds — flagged for the verify phase.",
+        "Export controls appear twice with conflicting thresholds — flagged for the verify phase.",
     },
   },
   {
@@ -279,7 +279,7 @@ const SCAN_AGENTS: AgentStatusRow[] = [
       tools: 17,
       elapsed: "1:03",
       output:
-        "Reviewed 847 incidents. No critical blockers; one recurring timeout cluster in the incident archive noted as a risk to later phases.",
+        "One recurring timeout cluster in the incident archive, noted as a risk to later phases.",
     },
   },
   {
@@ -360,7 +360,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
           tools: 16,
           elapsed: "1:08",
           output:
-            "Correlating 12 open deltas: 7 map cleanly, 3 wait on the conflicting export thresholds Policy Reader flagged.",
+            "7 of 12 map cleanly; 3 wait on the conflicting export thresholds Policy Reader flagged.",
         },
       },
       {
@@ -379,7 +379,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
           tools: 9,
           elapsed: "1:02",
           output:
-            "11 of 29 requirements matched to the internal control library; export workflow mapping in progress.",
+            "11 of 29 requirements matched so far; both export threshold variants present in the library.",
         },
       },
       {
@@ -523,7 +523,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
           tools: 19,
           elapsed: "1:21",
           output:
-            "All 12 deltas correlated. Four unresolved changes escalated for human review; the rest reconcile against the requirements list.",
+            "The four unresolved changes all touch the export pipeline; the rest reconcile cleanly.",
         },
       },
       {
@@ -542,7 +542,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
           tools: 15,
           elapsed: "1:14",
           output:
-            "All 29 requirements mapped to the internal control library. Export workflow coverage confirmed, including both threshold variants.",
+            "Both export threshold variants reconcile in the control library.",
         },
       },
       {
@@ -579,7 +579,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
           tools: 5,
           elapsed: "0:38",
           output:
-            "Phase summary ready: 3 gaps, 0 blockers. Recommends a conditional go with the logging gap closed before launch.",
+            "Recommends a conditional go, with the export logging gap closed before launch.",
         },
       },
     ]
@@ -622,7 +622,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
           tools: 4,
           elapsed: "0:19",
           output:
-            "Re-running from the start — a failed agent keeps nothing. Correlating the 12 deltas again against the recovered archive.",
+            "A failed agent keeps nothing — this run starts from the original prompt.",
         },
       },
       {
@@ -694,7 +694,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         tools: 16,
         elapsed: "1:08",
         output:
-          "Incident archive timed out after 30 seconds, three times. An agent re-runs whole or not at all — Retry phase starts this one over.",
+          "An agent re-runs whole or not at all — Retry phase starts this one over.",
       },
     },
     {
@@ -712,7 +712,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         tools: 9,
         elapsed: "1:02",
         output:
-          "Mapping needs delta results that never arrived. This agent re-runs in full when the phase is retried.",
+          "Re-runs in full when the phase is retried — a failed agent keeps nothing.",
       },
     },
     {
@@ -756,7 +756,7 @@ const DRAFT_AGENTS_COMPLETE: AgentStatusRow[] = [
       tools: 12,
       elapsed: "0:47",
       output:
-        "Launch readiness report drafted: 7 sections, 3 annexes. Recommends a conditional go — close the export logging gap before launch, owner assigned.",
+        "Recommends a conditional go — close the export logging gap before launch; owner assigned in annex 2.",
     },
   },
 ]

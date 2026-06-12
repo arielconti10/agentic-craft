@@ -242,27 +242,22 @@ function AgentStatusTable({
               {agent.detail && isExpanded && (
                 <TableRow
                   data-slot="agent-detail-row"
-                  className="hover:bg-transparent"
+                  className="bg-muted/50 hover:bg-muted/50"
                 >
                   <TableCell colSpan={7} id={detailId} className="pt-0 pb-3">
-                    <div className="agent-detail-reveal flex min-w-44 flex-col gap-1.5 pl-5 motion-reduce:animate-none">
+                    <div className="flex min-w-44 flex-col gap-1.5 pl-5">
                       {detailMeta.length > 0 && (
-                        <p className="text-xs text-muted-foreground tabular-nums">
+                        <p className="agent-detail-reveal text-xs text-muted-foreground tabular-nums motion-reduce:animate-none">
                           {detailMeta.join(" · ")}
                         </p>
                       )}
-                      {agent.task && (
-                        <p className="max-w-[65ch] text-xs text-muted-foreground">
-                          {agent.task}
-                        </p>
-                      )}
                       {agent.detail.returned && (
-                        <p className="font-mono text-xs text-foreground">
+                        <p className="agent-detail-reveal font-mono text-xs text-foreground [animation-delay:60ms] [animation-fill-mode:both] motion-reduce:animate-none">
                           {agent.detail.returned}
                         </p>
                       )}
                       {agent.detail.output && (
-                        <p className="agent-prose max-w-[65ch] text-sm">
+                        <p className="agent-detail-reveal agent-prose max-w-[65ch] text-sm [animation-delay:60ms] [animation-fill-mode:both] motion-reduce:animate-none">
                           {agent.detail.output}
                         </p>
                       )}
