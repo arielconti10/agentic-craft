@@ -25,7 +25,7 @@ const SPEC_ROWS = [
   },
   {
     contract: "Agent detail disclosure",
-    rule: "A fleet row expands inline only when the agent has detail to show — chevron + aria-expanded on the agent cell, nothing on rows without detail; the result renders as the agent returned it: schema-validated data in mono, plain text in the serif voice",
+    rule: "A fleet row expands inline only when the agent has detail to show — chevron + aria-expanded on the agent cell, nothing on rows without detail; inside: model · tokens · tool calls · elapsed, the full task (rows truncate to one line), and the result as the agent returned it — schema-validated data in mono, plain text in the serif voice",
   },
   {
     contract: "Roll-up math",

@@ -21,6 +21,7 @@ const AGENTS: AgentStatusRow[] = [
     detail: {
       model: "sonnet",
       tokens: "1,872",
+      tools: 13,
       elapsed: "0:52",
       output: "Verified 14 of 29 requirements against source artifacts.",
     },
@@ -60,7 +61,7 @@ describe("AgentStatusTable detail disclosure", () => {
     expect(
       root.getByText(/verified 14 of 29 requirements against source artifacts/i)
     ).toBeInTheDocument()
-    expect(root.getByText(/1,872 tokens/)).toBeInTheDocument()
+    expect(root.getByText(/1,872 tokens · 13 tools/)).toBeInTheDocument()
 
     await userEvent.click(toggle)
     expect(toggle.getAttribute("aria-expanded")).toBe("false")

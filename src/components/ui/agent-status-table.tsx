@@ -33,6 +33,8 @@ type AgentDetail = {
   model?: string
   /** Formatted token count for this agent, e.g. "2,841" */
   tokens?: string
+  /** Number of tool calls the agent has made, e.g. 17 */
+  tools?: number
   /** Formatted elapsed duration, e.g. "1:42" */
   elapsed?: string
   /** Schema-validated return value — rendered as data, in mono */
@@ -74,7 +76,7 @@ const indicatorStatus: Record<AgentStatus, StatusIndicatorStatus> = {
 }
 
 function formatPercent(value?: number) {
-  if (typeof value !== "number") return "n/a"
+  if (typeof value !== "number") return "—"
   return new Intl.NumberFormat("en-US", {
     style: "percent",
     maximumFractionDigits: 0,
@@ -117,9 +119,9 @@ function AgentStatusTable({
           <TableHead>Status</TableHead>
           <TableHead>Task</TableHead>
           <TableHead>Progress</TableHead>
-          <TableHead>Confidence</TableHead>
-          <TableHead>Cost</TableHead>
-          <TableHead>Updated</TableHead>
+          <TableHead className="text-right">Confidence</TableHead>
+          <TableHead className="text-right">Cost</TableHead>
+          <TableHead className="text-right">Updated</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -130,6 +132,9 @@ function AgentStatusTable({
             ? [
                 agent.detail.model ?? null,
                 agent.detail.tokens ? `${agent.detail.tokens} tokens` : null,
+                agent.detail.tools !== undefined
+                  ? `${agent.detail.tools} tool${agent.detail.tools === 1 ? "" : "s"}`
+                  : null,
                 agent.detail.elapsed ?? null,
               ].filter(Boolean)
             : []
@@ -200,15 +205,20 @@ function AgentStatusTable({
                     </span>
                   </span>
                 </TableCell>
-                <TableCell className="max-w-64 min-w-40 whitespace-normal text-muted-foreground">
+                {/* One line per task keeps the row rhythm even — the full
+                    text lives in the detail panel and the title attribute */}
+                <TableCell
+                  className="max-w-48 min-w-36 truncate text-muted-foreground"
+                  title={agent.task}
+                >
                   {agent.task ?? "No active task"}
                 </TableCell>
-                <TableCell className="min-w-32">
+                <TableCell className="min-w-24">
                   {typeof agent.progress === "number" ? (
                     <div className="flex items-center gap-2">
                       <Progress
                         value={agent.progress}
-                        className="min-w-20"
+                        className="min-w-12"
                         aria-label={`${agent.name} progress`}
                       />
                       <span className="text-xs text-muted-foreground tabular-nums">
@@ -216,17 +226,17 @@ function AgentStatusTable({
                       </span>
                     </div>
                   ) : (
-                    <span className="text-muted-foreground">n/a</span>
+                    <span className="text-muted-foreground">—</span>
                   )}
                 </TableCell>
-                <TableCell className="text-muted-foreground tabular-nums">
+                <TableCell className="text-right text-muted-foreground tabular-nums">
                   {formatPercent(agent.confidence)}
                 </TableCell>
-                <TableCell className="text-muted-foreground tabular-nums">
-                  {agent.cost ?? "n/a"}
+                <TableCell className="text-right text-muted-foreground tabular-nums">
+                  {agent.cost ?? "—"}
                 </TableCell>
-                <TableCell className="text-muted-foreground">
-                  {agent.updated ?? "n/a"}
+                <TableCell className="text-right whitespace-nowrap text-muted-foreground">
+                  {agent.updated ?? "—"}
                 </TableCell>
               </TableRow>
               {agent.detail && isExpanded && (
@@ -239,6 +249,11 @@ function AgentStatusTable({
                       {detailMeta.length > 0 && (
                         <p className="text-xs text-muted-foreground tabular-nums">
                           {detailMeta.join(" · ")}
+                        </p>
+                      )}
+                      {agent.task && (
+                        <p className="max-w-[65ch] text-xs text-muted-foreground">
+                          {agent.task}
                         </p>
                       )}
                       {agent.detail.returned && (

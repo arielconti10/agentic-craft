@@ -203,6 +203,7 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     detail: {
       model: "haiku",
       tokens: "1,742",
+      tools: 14,
       elapsed: "0:41",
       returned: "{ deps: 143, advisories: 9, critical: 0 }",
     },
@@ -220,6 +221,7 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     detail: {
       model: "sonnet",
       tokens: "2,201",
+      tools: 21,
       elapsed: "1:12",
       output:
         "Parsed 29 launch requirements from 6 policy documents. Export controls appear twice with conflicting thresholds — flagged for the verify phase.",
@@ -238,6 +240,7 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     detail: {
       model: "haiku",
       tokens: "1,408",
+      tools: 12,
       elapsed: "0:58",
       returned: "{ artifacts: 18, refetched: 2 }",
     },
@@ -255,6 +258,7 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     detail: {
       model: "haiku",
       tokens: "1,217",
+      tools: 9,
       elapsed: "0:47",
       returned: "{ commits: 47, exportTouching: 12 }",
     },
@@ -272,6 +276,7 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     detail: {
       model: "sonnet",
       tokens: "1,962",
+      tools: 17,
       elapsed: "1:03",
       output:
         "Reviewed 847 incidents. No critical blockers; one recurring timeout cluster in the incident archive noted as a risk to later phases.",
@@ -287,7 +292,7 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     confidence: 96,
     cost: "$0.02",
     updated: "4m ago",
-    detail: { model: "haiku", tokens: "1,384", elapsed: "0:36" },
+    detail: { model: "haiku", tokens: "1,384", tools: 8, elapsed: "0:36" },
   },
   {
     id: "config-differ",
@@ -299,7 +304,7 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     confidence: 90,
     cost: "$0.01",
     updated: "3m ago",
-    detail: { model: "haiku", tokens: "1,096", elapsed: "0:29" },
+    detail: { model: "haiku", tokens: "1,096", tools: 6, elapsed: "0:29" },
   },
   {
     id: "api-surface-mapper",
@@ -311,7 +316,7 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     confidence: 93,
     cost: "$0.02",
     updated: "4m ago",
-    detail: { model: "haiku", tokens: "1,440", elapsed: "0:33" },
+    detail: { model: "haiku", tokens: "1,440", tools: 11, elapsed: "0:33" },
   },
 ]
 
@@ -334,6 +339,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "sonnet",
           tokens: "1,872",
+          tools: 13,
           elapsed: "0:52",
           returned: "{ verified: 14, of: 29 }",
         },
@@ -351,6 +357,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "sonnet",
           tokens: "1,204",
+          tools: 16,
           elapsed: "1:08",
           output:
             "Correlating 12 open deltas: 7 map cleanly, 3 wait on the conflicting export thresholds Policy Reader flagged.",
@@ -369,6 +376,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "sonnet",
           tokens: "1,137",
+          tools: 9,
           elapsed: "1:02",
           output:
             "11 of 29 requirements matched to the internal control library; export workflow mapping in progress.",
@@ -414,6 +422,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "sonnet",
           tokens: "1,872",
+          tools: 13,
           elapsed: "0:52",
           returned: "{ verified: 14, of: 29 }",
         },
@@ -430,6 +439,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "sonnet",
           tokens: "1,204",
+          tools: 16,
           elapsed: "1:08",
           output:
             "Partial progress isn't journaled — only completed agents are cached. On resume this agent re-runs its full prompt.",
@@ -447,6 +457,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "sonnet",
           tokens: "1,137",
+          tools: 9,
           elapsed: "1:02",
           output:
             "Partial progress isn't journaled — only completed agents are cached. On resume this agent re-runs its full prompt.",
@@ -491,6 +502,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "sonnet",
           tokens: "1,872",
+          tools: 13,
           elapsed: "0:52",
           returned: "{ verified: 29, gaps: 3, blockers: 0 }",
         },
@@ -508,6 +520,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "sonnet",
           tokens: "2,318",
+          tools: 19,
           elapsed: "1:21",
           output:
             "All 12 deltas correlated. Four unresolved changes escalated for human review; the rest reconcile against the requirements list.",
@@ -526,6 +539,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "sonnet",
           tokens: "2,094",
+          tools: 15,
           elapsed: "1:14",
           output:
             "All 29 requirements mapped to the internal control library. Export workflow coverage confirmed, including both threshold variants.",
@@ -544,6 +558,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "haiku",
           tokens: "1,517",
+          tools: 7,
           elapsed: "0:46",
           returned: "{ medium: 2, low: 1, critical: 0 }",
         },
@@ -561,6 +576,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "haiku",
           tokens: "1,106",
+          tools: 5,
           elapsed: "0:38",
           output:
             "Phase summary ready: 3 gaps, 0 blockers. Recommends a conditional go with the logging gap closed before launch.",
@@ -585,6 +601,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "sonnet",
           tokens: "1,872",
+          tools: 13,
           elapsed: "0:52",
           output:
             "Returned instantly from the run journal — completed agents are never re-run on retry.",
@@ -602,6 +619,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         detail: {
           model: "sonnet",
           tokens: "486",
+          tools: 4,
           elapsed: "0:19",
           output:
             "Re-running from the start — a failed agent keeps nothing. Correlating the 12 deltas again against the recovered archive.",
@@ -656,6 +674,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
       detail: {
         model: "sonnet",
         tokens: "1,872",
+        tools: 13,
         elapsed: "0:52",
         returned: "{ verified: 14, of: 29 }",
       },
@@ -672,6 +691,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
       detail: {
         model: "sonnet",
         tokens: "1,204",
+        tools: 16,
         elapsed: "1:08",
         output:
           "Incident archive timed out after 30 seconds, three times. An agent re-runs whole or not at all — Retry phase starts this one over.",
@@ -689,6 +709,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
       detail: {
         model: "sonnet",
         tokens: "1,137",
+        tools: 9,
         elapsed: "1:02",
         output:
           "Mapping needs delta results that never arrived. This agent re-runs in full when the phase is retried.",
@@ -732,6 +753,7 @@ const DRAFT_AGENTS_COMPLETE: AgentStatusRow[] = [
     detail: {
       model: "sonnet",
       tokens: "3,129",
+      tools: 12,
       elapsed: "0:47",
       output:
         "Launch readiness report drafted: 7 sections, 3 annexes. Recommends a conditional go — close the export logging gap before launch, owner assigned.",
