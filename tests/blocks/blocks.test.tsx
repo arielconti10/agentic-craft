@@ -273,4 +273,34 @@ describe("workflow-run-monitor block", () => {
     // Scan should now be pressed
     expect(scanBtn.getAttribute("aria-pressed")).toBe("true")
   })
+
+  it("deselecting the active phase shows every phase's agents", async () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const root = within(container)
+    // Verify is selected by default — clicking it again clears the filter
+    const phaseBtns = container.querySelectorAll(
+      "[data-slot='workflow-phase-button']"
+    )
+    await userEvent.click(phaseBtns[1] as HTMLButtonElement)
+    expect(root.getByText(/^all agents$/i)).toBeInTheDocument()
+    // Scan agents now join the verify fleet in one list
+    expect(root.getAllByText(/dependency scanner/i).length).toBeGreaterThan(0)
+    // 13 started agents → 5 visible + 8 collapsed into the roll-up
+    expect(root.getByText(/\+8 more:/)).toBeInTheDocument()
+  })
+
+  it("skip and continue keeps the failed phase's record", async () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const root = within(container)
+    await userEvent.click(root.getByRole("button", { name: /failed/i }))
+    await userEvent.click(
+      root.getByRole("button", { name: /skip and continue/i })
+    )
+    // The run completes, but nothing pretends verify finished
+    expect(root.getByText(/completed with verify skipped/i)).toBeInTheDocument()
+    expect(root.getByText(/10 \/ 14/)).toBeInTheDocument()
+    expect(
+      root.getByText(/report drafted from partial verification/i)
+    ).toBeInTheDocument()
+  })
 })

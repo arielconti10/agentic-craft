@@ -41,7 +41,7 @@ const SPEC_ROWS = [
   },
   {
     contract: "Failed phase recovery",
-    rule: "Agents self-retry up to 3× before a phase fails; the run never returns empty — completed agents stay cached, the failed phase shows what finished, and Retry re-runs only the agents that didn't",
+    rule: "Agents self-retry up to 3× before a phase fails; the run never returns empty — completed agents stay cached, the failed phase shows what finished, and Retry re-runs only the agents that didn't. Skip moves on without rewriting the record: the phase stays failed and the report carries the gap",
   },
   {
     contract: "Ambient motion",

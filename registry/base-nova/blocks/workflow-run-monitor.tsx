@@ -50,7 +50,8 @@ const LOG_LINES: Record<RunState, string> = {
 // Phase data per run state
 function getPhasesForState(
   state: RunState,
-  retried?: boolean
+  retried?: boolean,
+  skipped?: boolean
 ): WorkflowPhase[] {
   // A retried phase is live again: cached agents replayed, failed ones re-run
   if (state === "failed" && retried) {
@@ -131,6 +132,8 @@ function getPhasesForState(
         },
       ]
     case "completed":
+      // A skipped phase stays failed in the record — completion doesn't
+      // rewrite what happened to it
       return [
         {
           id: "scan",
@@ -140,14 +143,23 @@ function getPhasesForState(
           tokens: "12,450",
           elapsed: "3:24",
         },
-        {
-          id: "verify",
-          title: "Verify findings",
-          status: "done",
-          agentCount: 5,
-          tokens: "8,907",
-          elapsed: "2:51",
-        },
+        skipped
+          ? {
+              id: "verify",
+              title: "Verify findings",
+              status: "failed",
+              agentCount: 5,
+              tokens: "4,213",
+              elapsed: "1:08",
+            }
+          : {
+              id: "verify",
+              title: "Verify findings",
+              status: "done",
+              agentCount: 5,
+              tokens: "8,907",
+              elapsed: "2:51",
+            },
         {
           id: "draft",
           title: "Draft report",
@@ -321,7 +333,11 @@ const SCAN_AGENTS: AgentStatusRow[] = [
 ]
 
 // Agents for phase 2 (verify) — varies by state
-function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
+function getVerifyAgents(
+  state: RunState,
+  retried?: boolean,
+  skipped?: boolean
+): AgentStatusRow[] {
   // Working and complete agents carry detail; idle agents have nothing to
   // reveal yet, so their rows render no disclosure. Tokens sum to 4,213.
   if (state === "running") {
@@ -482,6 +498,83 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         progress: 0,
         cost: "$0.00",
         updated: "paused",
+      },
+    ]
+  }
+
+  // Completed after a skip: the verify fleet is frozen exactly where the
+  // failure left it — skipping moves the run on, it doesn't rewrite history.
+  if (state === "completed" && skipped) {
+    return [
+      {
+        id: "coverage-verifier",
+        name: "Coverage Verifier",
+        role: "Cross-checks requirement coverage",
+        status: "complete",
+        task: "Verified 14 of 29 requirements — journaled",
+        progress: 100,
+        confidence: 91,
+        cost: "$0.06",
+        updated: "cached",
+        detail: {
+          model: "sonnet",
+          tokens: "1,872",
+          tools: 13,
+          elapsed: "0:52",
+          returned: "{ verified: 14, of: 29 }",
+        },
+      },
+      {
+        id: "delta-auditor",
+        name: "Delta Auditor",
+        role: "Flags unresolved changes",
+        status: "error",
+        task: "Failed — phase skipped before any retry",
+        progress: 61,
+        cost: "$0.07",
+        updated: "skipped",
+        detail: {
+          model: "sonnet",
+          tokens: "1,204",
+          tools: 16,
+          elapsed: "1:08",
+        },
+      },
+      {
+        id: "requirements-mapper",
+        name: "Requirements Mapper",
+        role: "Map requirements to controls",
+        status: "error",
+        task: "Failed — phase skipped before any retry",
+        progress: 48,
+        cost: "$0.05",
+        updated: "skipped",
+        detail: {
+          model: "sonnet",
+          tokens: "1,137",
+          tools: 9,
+          elapsed: "1:02",
+        },
+      },
+      {
+        id: "risk-assessor",
+        name: "Risk Assessor",
+        role: "Rates unverified items",
+        status: "idle",
+        task: "Skipped with the phase — never started, no tokens spent",
+        progress: 0,
+        cost: "$0.00",
+        updated: "skipped",
+      },
+      {
+        id: "findings-summariser",
+        name: "Findings Summariser",
+        role: "Prepares phase summary",
+        status: "idle",
+        task: "Skipped with the phase — never started, no tokens spent",
+        progress: 0,
+        cost: "$0.00",
+        updated: "skipped",
       },
     ]
   }
@@ -761,8 +854,31 @@ const DRAFT_AGENTS_COMPLETE: AgentStatusRow[] = [
   },
 ]
 
+// Draft phase after a skipped verify — the report is honest about the gap
+const DRAFT_AGENTS_SKIPPED: AgentStatusRow[] = [
+  {
+    id: "document-drafter",
+    name: "Document Drafter",
+    role: "Prepares final summary",
+    status: "complete",
+    task: "Report drafted from partial verification — gap annex added",
+    progress: 100,
+    confidence: 74,
+    cost: "$0.11",
+    updated: "1m ago",
+    detail: {
+      model: "sonnet",
+      tokens: "3,129",
+      tools: 12,
+      elapsed: "0:47",
+      output:
+        "Recommends holding launch until the 15 unverified requirements are checked — the gap annex lists each one with an owner.",
+    },
+  },
+]
+
 // Usage meter data by state
-function getUsageItems(state: RunState, retried?: boolean) {
+function getUsageItems(state: RunState, retried?: boolean, skipped?: boolean) {
   if (state === "failed" && retried) {
     return [
       {
@@ -782,8 +898,8 @@ function getUsageItems(state: RunState, retried?: boolean) {
       {
         id: "agents",
         label: "Agents complete",
-        value: 69,
-        valueLabel: "9 / 13",
+        value: 64,
+        valueLabel: "9 / 14",
         limitLabel: "1 cached replay · 1 re-running",
       },
     ]
@@ -807,9 +923,9 @@ function getUsageItems(state: RunState, retried?: boolean) {
       {
         id: "agents",
         label: "Agents complete",
-        value: 69,
-        valueLabel: "9 / 13",
-        limitLabel: "2 running · 2 queued",
+        value: 64,
+        valueLabel: "9 / 14",
+        limitLabel: "2 running · 3 queued",
       },
     ]
   }
@@ -832,13 +948,40 @@ function getUsageItems(state: RunState, retried?: boolean) {
       {
         id: "agents",
         label: "Agents complete",
-        value: 69,
-        valueLabel: "9 / 13",
+        value: 64,
+        valueLabel: "9 / 14",
         limitLabel: "2 in-flight re-run on resume",
       },
     ]
   }
   if (state === "completed") {
+    // Skipped completion costs less and finishes fewer agents — the meter
+    // carries the same record the phase rail does
+    if (skipped) {
+      return [
+        {
+          id: "tokens",
+          label: "Tokens used",
+          value: 64,
+          valueLabel: "19,792",
+          limitLabel: "31k run budget",
+        },
+        {
+          id: "cost",
+          label: "Cost",
+          value: 38,
+          valueLabel: "$0.46",
+          limitLabel: "$1.20 run cap",
+        },
+        {
+          id: "agents",
+          label: "Agents complete",
+          value: 71,
+          valueLabel: "10 / 14",
+          limitLabel: "2 failed · 2 skipped with the phase",
+        },
+      ]
+    }
     return [
       {
         id: "tokens",
@@ -882,8 +1025,8 @@ function getUsageItems(state: RunState, retried?: boolean) {
     {
       id: "agents",
       label: "Agents complete",
-      value: 69,
-      valueLabel: "9 / 13",
+      value: 64,
+      valueLabel: "9 / 14",
       limitLabel: "2 failed — recovery available",
     },
   ]
@@ -898,12 +1041,16 @@ function getUsageItems(state: RunState, retried?: boolean) {
 function getPhaseAgentStatuses(
   phaseId: string,
   state: RunState,
-  retried: boolean
+  retried: boolean,
+  skipped: boolean
 ): AgentStatusRow["status"][] {
   if (phaseId === "scan") return SCAN_AGENTS.map((a) => a.status)
   if (phaseId === "verify")
-    return getVerifyAgents(state, retried).map((a) => a.status)
-  if (state === "completed") return DRAFT_AGENTS_COMPLETE.map((a) => a.status)
+    return getVerifyAgents(state, retried, skipped).map((a) => a.status)
+  if (state === "completed")
+    return (skipped ? DRAFT_AGENTS_SKIPPED : DRAFT_AGENTS_COMPLETE).map(
+      (a) => a.status
+    )
   return ["idle"]
 }
 
@@ -989,16 +1136,19 @@ function CollapsedAgentSummary({
   done,
   queued,
   running,
+  failed,
   tokens,
 }: {
   done: number
   queued: number
   running: number
+  failed: number
   tokens?: string
 }) {
   const parts: string[] = []
   if (done > 0) parts.push(`${done} done`)
   if (running > 0) parts.push(`${running} running`)
+  if (failed > 0) parts.push(`${failed} failed`)
   if (queued > 0) parts.push(`${queued} queued`)
   if (tokens) parts.push(`${tokens} tokens`)
   return (
@@ -1007,7 +1157,7 @@ function CollapsedAgentSummary({
         colSpan={7}
         className="px-3 py-2 text-sm text-muted-foreground tabular-nums"
       >
-        +{done + queued + running} more: {parts.join(" · ")}
+        +{done + queued + running + failed} more: {parts.join(" · ")}
       </td>
     </tr>
   )
@@ -1023,6 +1173,7 @@ function WorkflowRunMonitorBlock() {
     "verify"
   )
   const [retried, setRetried] = React.useState(false)
+  const [skipped, setSkipped] = React.useState(false)
   const [planOpen, setPlanOpen] = React.useState(false)
   const statusRef = React.useRef<HTMLParagraphElement>(null)
   // Outcomes receive focus when the triggering control unmounts
@@ -1030,31 +1181,35 @@ function WorkflowRunMonitorBlock() {
   const resumeRef = React.useRef<HTMLButtonElement>(null)
   const completedChipRef = React.useRef<HTMLButtonElement>(null)
 
-  const phases = getPhasesForState(runState, retried)
+  const phases = getPhasesForState(runState, retried, skipped)
   // Fleet-dot minimaps, derived from the same agent lists the table renders
   const phasesWithDots = phases.map((phase) => ({
     ...phase,
-    agentDots: getPhaseAgentStatuses(phase.id, runState, retried).map(
+    agentDots: getPhaseAgentStatuses(phase.id, runState, retried, skipped).map(
       (status) => AGENT_DOT[status]
     ),
   }))
 
-  // Determine which agents to show based on selected phase filter
+  // Determine which agents to show based on selected phase filter.
+  // No selection means all of them — the heading says "All agents" and the
+  // table has to honor it, errored rows included.
   const agentsToShow: AgentStatusRow[] = React.useMemo(() => {
-    const phaseId = activePhaseId
-    if (!phaseId || phaseId === "scan") return SCAN_AGENTS
-    if (phaseId === "verify") return getVerifyAgents(runState, retried)
-    if (phaseId === "draft") {
-      if (runState === "completed") return DRAFT_AGENTS_COMPLETE
-      return []
-    }
-    // No filter — show active phase agents
-    if (runState === "running" || runState === "paused") {
-      return getVerifyAgents(runState, retried)
-    }
-    if (runState === "completed") return DRAFT_AGENTS_COMPLETE
-    return getVerifyAgents(runState, retried)
-  }, [activePhaseId, runState, retried])
+    const draftAgents =
+      runState === "completed"
+        ? skipped
+          ? DRAFT_AGENTS_SKIPPED
+          : DRAFT_AGENTS_COMPLETE
+        : []
+    if (activePhaseId === "scan") return SCAN_AGENTS
+    if (activePhaseId === "verify")
+      return getVerifyAgents(runState, retried, skipped)
+    if (activePhaseId === "draft") return draftAgents
+    return [
+      ...SCAN_AGENTS,
+      ...getVerifyAgents(runState, retried, skipped),
+      ...draftAgents,
+    ]
+  }, [activePhaseId, runState, retried, skipped])
 
   // For density rule: cap at DENSITY_THRESHOLD visible rows. The summary row
   // carries its own roll-up so collapsed work still counts.
@@ -1066,6 +1221,7 @@ function WorkflowRunMonitorBlock() {
   const hiddenRunning = hiddenAgents.filter(
     (a) => a.status === "working"
   ).length
+  const hiddenFailed = hiddenAgents.filter((a) => a.status === "error").length
   const hiddenTokenSum = hiddenAgents.reduce(
     (sum, a) =>
       sum +
@@ -1084,6 +1240,7 @@ function WorkflowRunMonitorBlock() {
   function handleStateChange(state: RunState) {
     setRunState(state)
     setRetried(false)
+    setSkipped(false)
     // Set sensible default phase selection per state
     if (state === "running" || state === "paused") {
       setActivePhaseId("verify")
@@ -1114,8 +1271,11 @@ function WorkflowRunMonitorBlock() {
 
   function handleSkipAndContinue() {
     setRunState("completed")
+    setSkipped(true)
     setActivePhaseId("draft")
-    announce("Skipped failed phase — continuing to draft report")
+    announce(
+      "Skipped failed phase — report drafted from the 14 verified requirements"
+    )
     setTimeout(() => completedChipRef.current?.focus(), 0)
   }
 
@@ -1135,7 +1295,9 @@ function WorkflowRunMonitorBlock() {
   const logLine =
     runState === "failed" && retried
       ? "retrying verify — cached agents replayed instantly, 1 re-running"
-      : LOG_LINES[runState]
+      : runState === "completed" && skipped
+        ? "completed with verify skipped — report flags 15 unverified requirements"
+        : LOG_LINES[runState]
 
   // The plan strip tracks where the script is: the active phase, or — when a
   // run fails — the phase it stopped in
@@ -1162,7 +1324,9 @@ function WorkflowRunMonitorBlock() {
 
       {/* Demo controls */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <span className="section-label">State</span>
+        {/* "Scenario", not "State" — the chips pick which run to demo; live
+            status belongs to the phases, the log line, and the meter */}
+        <span className="section-label">Scenario</span>
         <div className="flex flex-wrap gap-1">
           {(["running", "paused", "completed", "failed"] as RunState[]).map(
             (s) => (
@@ -1313,6 +1477,7 @@ function WorkflowRunMonitorBlock() {
                     done={hiddenDone}
                     queued={hiddenQueued}
                     running={hiddenRunning}
+                    failed={hiddenFailed}
                     tokens={hiddenTokens}
                   />
                 </tbody>
@@ -1329,12 +1494,14 @@ function WorkflowRunMonitorBlock() {
           runState === "paused"
             ? "Cost frozen while paused — resume continues from cached state"
             : runState === "completed"
-              ? "Final run cost — all phases complete"
+              ? skipped
+                ? "Final run cost — verify skipped, the report carries the gap"
+                : "Final run cost — all phases complete"
               : runState === "failed"
                 ? "Partial cost — recovery will add to this total"
                 : "Live — updating as agents complete"
         }
-        items={getUsageItems(runState, retried)}
+        items={getUsageItems(runState, retried, skipped)}
       />
 
       {/* Accessibility live region */}
