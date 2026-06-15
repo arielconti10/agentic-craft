@@ -22,6 +22,9 @@ high-trust agent experiences.
 - Workflow templates that show how patterns combine into end-to-end product
   flows such as review, approval, clarification, memory review, run monitoring,
   multi-agent handoff, and agent settings.
+- A canonical research artifact at
+  [`docs/research/agentic-ux-patterns.md`](./docs/research/agentic-ux-patterns.md)
+  — the opinionated position document and field map backing every registry item.
 
 ## Reference Areas
 

@@ -52,11 +52,11 @@ of InteractiveComposer.tsx. Here's what that means:
 - Page structure: `<article>` with `<header>` + `<section className="page-section">`
 - Section labels: `<p className="section-label mb-3">CATEGORY</p>`
 - Headings: `<h2 className="text-xl font-semibold tracking-tight">Title</h2>`
-- Demo containers: `<div className="border border-border/40 rounded-lg p-6">`
+- Demo containers: `<div className="border border-border/40 rounded-lg p-4 sm:p-6">` (matches DESIGN.md §5 — 16px base, 24px at `sm:`)
 - Page title: `<h1 className="font-serif text-4xl font-light tracking-tight leading-[1.15]">`
 - Description: `<p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">`
 - Font for agent prose: apply the `.agent-prose` CSS class (defined in
-  `src/index.css`). It sets Source Serif 4, 16px/26px, letter-spacing -0.4px,
+  `src/index.css`). It sets Signifier, 16px/26px, letter-spacing -0.4px,
   `font-variation-settings: "opsz" 12`, and antialiasing. Color is NOT part of
   the class — set it per-context (e.g. `style={{ color: "var(--foreground)" }}`).
   Combine with `font-serif text-base` for Tailwind font-stack/size utilities.
@@ -94,5 +94,5 @@ Example content should stay generic and portable:
 - Tool labels: font-weight 400 (never bold)
 - No success/failure icons on tool calls
 - No pill shapes — use rounded-md consistently
-- Sans font: Albert Sans. Serif font: Source Serif 4
+- Sans font: PP Neue Montreal. Serif font: Signifier (canonical — see DESIGN.md §3 and `app/fonts/`)
 - Agent prose color in light mode: oklch(0.2642 0.013 93.9)
