@@ -28,10 +28,24 @@ type ThreadStreamChunk =
       replace?: boolean
     }
 
+type ThreadStreamSource =
+  | AsyncIterable<ThreadStreamChunk>
+  | (() => AsyncIterable<ThreadStreamChunk>)
+
+type ThreadStreamRenderState = {
+  role: ThreadMessageRole
+  label?: string
+  streaming: boolean
+}
+
 type ThreadRootProps = React.ComponentProps<"section"> & {
-  stream?: AsyncIterable<ThreadStreamChunk> | null
+  stream?: ThreadStreamSource | null
   streamRole?: ThreadMessageRole
   streamLabel?: string
+  renderStream?: (
+    content: string,
+    state: ThreadStreamRenderState
+  ) => React.ReactNode
   onStreamComplete?: (content: string) => void
   onStreamError?: (error: unknown) => void
 }
@@ -75,6 +89,10 @@ function streamChunkReplaces(chunk: ThreadStreamChunk) {
   return typeof chunk === "string" ? false : chunk.replace === true
 }
 
+function resolveStreamSource(stream: ThreadStreamSource) {
+  return typeof stream === "function" ? stream() : stream
+}
+
 function useControllableOpen({
   open,
   defaultOpen,
@@ -104,7 +122,8 @@ function useControllableOpen({
 function ThreadRoot({
   stream,
   streamRole = "assistant",
-  streamLabel = "Agent",
+  streamLabel,
+  renderStream,
   onStreamComplete,
   onStreamError,
   className,
@@ -113,6 +132,10 @@ function ThreadRoot({
 }: ThreadRootProps) {
   const viewportRef = React.useRef<HTMLDivElement>(null)
   const sentinelRef = React.useRef<HTMLDivElement>(null)
+  const stickToBottomRef = React.useRef(true)
+  const programmaticScrollRef = React.useRef(false)
+  const programmaticScrollFrameRef = React.useRef<number | null>(null)
+  const programmaticScrollTimerRef = React.useRef<number | null>(null)
   const [anchored, setAnchored] = React.useState(true)
   const [streamText, setStreamText] = React.useState("")
   const [streaming, setStreaming] = React.useState(false)
@@ -120,7 +143,58 @@ function ThreadRoot({
   const onStreamErrorRef = React.useRef(onStreamError)
 
   const scrollToBottom = React.useCallback((behavior: ScrollBehavior) => {
-    sentinelRef.current?.scrollIntoView?.({ block: "end", behavior })
+    const viewport = viewportRef.current
+
+    if (!viewport) {
+      return
+    }
+
+    programmaticScrollRef.current = true
+
+    if (programmaticScrollFrameRef.current) {
+      window.cancelAnimationFrame(programmaticScrollFrameRef.current)
+      programmaticScrollFrameRef.current = null
+    }
+
+    if (programmaticScrollTimerRef.current) {
+      window.clearTimeout(programmaticScrollTimerRef.current)
+      programmaticScrollTimerRef.current = null
+    }
+
+    function performScroll() {
+      const currentViewport = viewportRef.current
+
+      if (!currentViewport) {
+        programmaticScrollRef.current = false
+        return
+      }
+
+      if (typeof currentViewport.scrollTo === "function") {
+        currentViewport.scrollTo({
+          top: currentViewport.scrollHeight,
+          behavior,
+        })
+      } else {
+        currentViewport.scrollTop = currentViewport.scrollHeight
+      }
+
+      programmaticScrollTimerRef.current = window.setTimeout(
+        () => {
+          programmaticScrollRef.current = false
+          programmaticScrollTimerRef.current = null
+        },
+        behavior === "smooth" ? 360 : 120
+      )
+    }
+
+    if (behavior === "auto") {
+      programmaticScrollFrameRef.current = window.requestAnimationFrame(() => {
+        programmaticScrollFrameRef.current = null
+        performScroll()
+      })
+    } else {
+      performScroll()
+    }
   }, [])
 
   React.useEffect(() => {
@@ -141,7 +215,13 @@ function ThreadRoot({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setAnchored(entry?.isIntersecting ?? true)
+        const nextAnchored = entry?.isIntersecting ?? true
+
+        setAnchored(nextAnchored)
+
+        if (nextAnchored) {
+          stickToBottomRef.current = true
+        }
       },
       {
         root: viewport,
@@ -157,12 +237,54 @@ function ThreadRoot({
   }, [])
 
   React.useEffect(() => {
-    if (!anchored) {
+    const viewport = viewportRef.current
+
+    if (!viewport) {
+      return
+    }
+
+    const currentViewport = viewport
+
+    function handleScroll() {
+      const distanceFromBottom =
+        currentViewport.scrollHeight -
+        currentViewport.scrollTop -
+        currentViewport.clientHeight
+      const nextAnchored = distanceFromBottom <= 8
+
+      setAnchored(nextAnchored)
+
+      if (!programmaticScrollRef.current) {
+        stickToBottomRef.current = nextAnchored
+      }
+    }
+
+    currentViewport.addEventListener("scroll", handleScroll, { passive: true })
+
+    return () => {
+      currentViewport.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
+
+  React.useEffect(() => {
+    if (!stickToBottomRef.current) {
       return
     }
 
     scrollToBottom("auto")
-  }, [anchored, children, scrollToBottom, streamText])
+  }, [scrollToBottom, streaming, streamText])
+
+  React.useEffect(() => {
+    return () => {
+      if (programmaticScrollFrameRef.current) {
+        window.cancelAnimationFrame(programmaticScrollFrameRef.current)
+      }
+
+      if (programmaticScrollTimerRef.current) {
+        window.clearTimeout(programmaticScrollTimerRef.current)
+      }
+    }
+  }, [])
 
   React.useEffect(() => {
     if (!stream) {
@@ -173,7 +295,7 @@ function ThreadRoot({
 
     let cancelled = false
     let nextText = ""
-    const currentStream = stream
+    const currentStream = resolveStreamSource(stream)
 
     setStreaming(true)
     setStreamText("")
@@ -216,7 +338,7 @@ function ThreadRoot({
     <section
       data-slot="thread"
       className={cn(
-        "relative isolate flex min-h-[420px] flex-col overflow-hidden rounded-lg border border-border bg-background text-foreground",
+        "relative isolate flex min-h-[420px] flex-col overflow-hidden rounded-lg border border-border bg-background text-foreground shadow-sm",
         className
       )}
       {...props}
@@ -224,33 +346,52 @@ function ThreadRoot({
       <div
         ref={viewportRef}
         data-slot="thread-viewport"
-        className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 py-3 sm:px-4"
+        tabIndex={0}
+        aria-label="Thread messages"
+        className="min-h-0 flex-1 overflow-y-auto px-3 pb-4 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 sm:px-4"
       >
-        {children}
-        {streamText ? (
-          <ThreadMessage
-            role={streamRole}
-            name={streamLabel}
-            streaming={streaming}
-          >
-            {streamText}
-          </ThreadMessage>
-        ) : null}
         <div
-          ref={sentinelRef}
-          data-slot="thread-bottom-sentinel"
-          aria-hidden="true"
-          className="h-px"
-        />
+          data-slot="thread-content"
+          className="flex min-h-full flex-col gap-4"
+        >
+          {children}
+          {streamText ? (
+            renderStream ? (
+              renderStream(streamText, {
+                role: streamRole,
+                label: streamLabel,
+                streaming,
+              })
+            ) : (
+              <ThreadMessage
+                role={streamRole}
+                name={streamLabel}
+                streaming={streaming}
+              >
+                {streamText}
+              </ThreadMessage>
+            )
+          ) : null}
+          <div
+            ref={sentinelRef}
+            data-slot="thread-bottom-sentinel"
+            aria-hidden="true"
+            className="h-px"
+          />
+        </div>
       </div>
       {!anchored ? (
         <button
           type="button"
           data-slot="thread-scroll-bottom"
-          className="absolute right-3 bottom-3 z-10 inline-flex min-h-9 items-center rounded-full border border-border bg-background px-3 text-xs font-medium text-foreground shadow-sm transition-[background-color,box-shadow,transform] outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:bg-muted"
-          onClick={() => scrollToBottom(isReducedMotion() ? "auto" : "smooth")}
+          aria-label="Scroll to bottom"
+          className="absolute bottom-3 left-1/2 z-10 grid size-9 -translate-x-1/2 place-items-center rounded-full border border-border bg-background text-muted-foreground shadow-sm transition-[background-color,color,box-shadow,transform] outline-none after:absolute after:-inset-1 after:content-[''] focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-muted [@media(hover:hover)_and_(pointer:fine)]:hover:text-foreground"
+          onClick={() => {
+            stickToBottomRef.current = true
+            scrollToBottom(isReducedMotion() ? "auto" : "smooth")
+          }}
         >
-          Scroll to bottom
+          <ArrowDownIcon />
         </button>
       ) : null}
     </section>
@@ -266,13 +407,14 @@ function ThreadMessage({
   children,
   ...props
 }: ThreadMessageProps) {
-  const resolvedName =
-    name ?? (role === "user" ? "You" : role === "system" ? "System" : "Agent")
+  const hasMeta = Boolean(name || timestamp || streaming)
 
   return (
     <article
       data-slot="thread-message"
       data-role={role}
+      aria-live={streaming ? "polite" : undefined}
+      aria-atomic={streaming ? "false" : undefined}
       className={cn(
         "flex min-w-0 gap-3",
         role === "user" && "justify-end",
@@ -281,43 +423,43 @@ function ThreadMessage({
       {...props}
     >
       <div
-        aria-hidden="true"
         className={cn(
-          "mt-6 hidden size-7 shrink-0 rounded-md border border-border bg-muted sm:block",
-          role === "user" && "order-2 bg-primary"
-        )}
-      />
-      <div
-        className={cn(
-          "max-w-[min(100%,42rem)] min-w-0",
+          "max-w-[min(100%,40rem)] min-w-0",
           role === "user" && "text-right"
         )}
       >
-        <div
-          data-slot="thread-message-meta"
-          className={cn(
-            "mb-1.5 flex items-center gap-2 text-xs text-muted-foreground",
-            role === "user" && "justify-end"
-          )}
-        >
-          <span className="font-medium text-foreground">{resolvedName}</span>
-          {streaming ? (
-            <span aria-label="Streaming" className="text-muted-foreground">
-              streaming
-            </span>
-          ) : null}
-          {timestamp ? (
-            <span className="text-muted-foreground tabular-nums">
-              {timestamp}
-            </span>
-          ) : null}
-        </div>
+        {hasMeta ? (
+          <div
+            data-slot="thread-message-meta"
+            className={cn(
+              "mb-1.5 flex items-center gap-2 text-xs text-muted-foreground",
+              role === "user" && "justify-end"
+            )}
+          >
+            {name ? (
+              <span className="font-medium text-foreground">{name}</span>
+            ) : null}
+            {streaming ? (
+              <span
+                aria-label="Streaming"
+                className="rounded-full bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground"
+              >
+                streaming
+              </span>
+            ) : null}
+            {timestamp ? (
+              <span className="text-muted-foreground tabular-nums">
+                {timestamp}
+              </span>
+            ) : null}
+          </div>
+        ) : null}
         <div
           data-slot="thread-message-content"
           className={cn(
-            "text-sm leading-6 text-foreground",
+            "text-sm leading-6 [overflow-wrap:anywhere] break-words text-foreground",
             role === "user" &&
-              "rounded-lg bg-primary px-3 py-2 text-left text-primary-foreground",
+              "rounded-md bg-muted px-3 py-2 text-left text-foreground",
             role === "system" &&
               "rounded-md border border-dashed border-border bg-muted/30 px-3 py-2 text-muted-foreground"
           )}
@@ -345,9 +487,6 @@ function ThreadStatus({
   className,
   ...props
 }: ThreadStatusProps) {
-  const active =
-    state === "thinking" || state === "working" || state === "streaming"
-
   return (
     <div
       data-slot="thread-status"
@@ -355,20 +494,12 @@ function ThreadStatus({
       role="status"
       aria-label={statusLabels[state]}
       className={cn(
-        "sticky top-0 z-10 -mx-3 bg-background/95 px-3 pt-3 pb-2 backdrop-blur sm:-mx-4 sm:px-4",
+        "sticky top-0 z-10 -mx-3 border-b border-border bg-background/95 px-3 py-2 backdrop-blur sm:-mx-4 sm:px-4",
         className
       )}
       {...props}
     >
-      <span
-        aria-hidden="true"
-        className={cn(
-          "absolute inset-x-0 top-0 h-px bg-foreground/70",
-          active &&
-            "animate-[thread-status-pulse_2.6s_cubic-bezier(0.45,0,0.55,1)_infinite] motion-reduce:animate-none"
-        )}
-      />
-      <div className="flex min-h-8 items-center justify-between gap-3 rounded-md border border-border bg-background px-3 py-1.5">
+      <div className="flex min-h-8 items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate text-sm font-medium text-foreground">
             {label}
@@ -408,6 +539,25 @@ function ChevronIcon({ open }: { open: boolean }) {
       )}
     >
       <path d="m6 4 4 4-4 4" />
+    </svg>
+  )
+}
+
+function ArrowDownIcon() {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      width="14"
+      height="14"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M8 3.5v8" />
+      <path d="m4.5 8.5 3.5 3.5 3.5-3.5" />
     </svg>
   )
 }
@@ -482,6 +632,55 @@ function toolCallToggleLabel(title: React.ReactNode) {
     : "Toggle tool call details"
 }
 
+function ThreadToolCallHeader({
+  title,
+  state,
+  duration,
+  summary,
+  open,
+  hasDetails,
+}: {
+  title: React.ReactNode
+  state: ThreadToolCallState
+  duration?: React.ReactNode
+  summary?: React.ReactNode
+  open: boolean
+  hasDetails: boolean
+}) {
+  return (
+    <>
+      <span
+        className={cn(
+          "grid size-5 shrink-0 place-items-center rounded-sm bg-background text-muted-foreground shadow-[0_0_0_1px_var(--border)]",
+          state === "done" && "text-foreground/70",
+          state === "error" && "text-destructive"
+        )}
+      >
+        <ToolCallIcon state={state} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-sm font-medium text-foreground">
+          {title}
+        </span>
+        {summary ? (
+          <span className="block truncate text-xs text-muted-foreground">
+            {summary}
+          </span>
+        ) : null}
+      </span>
+      <span
+        className={cn(
+          "shrink-0 text-xs text-muted-foreground",
+          duration && "tabular-nums"
+        )}
+      >
+        {duration ?? toolCallStateLabel[state]}
+      </span>
+      {hasDetails ? <ChevronIcon open={open} /> : null}
+    </>
+  )
+}
+
 function ThreadToolCall({
   title,
   state = "pending",
@@ -501,13 +700,38 @@ function ThreadToolCall({
     onOpenChange,
   })
 
+  if (!hasDetails) {
+    return (
+      <div
+        data-slot="thread-tool-call"
+        data-state={state}
+        className={cn(
+          "overflow-hidden rounded-md border border-border bg-muted/20",
+          className
+        )}
+        {...props}
+      >
+        <div className="flex min-h-11 w-full min-w-0 items-center gap-2.5 px-3 py-2 text-left">
+          <ThreadToolCallHeader
+            title={title}
+            state={state}
+            duration={duration}
+            summary={summary}
+            open={open}
+            hasDetails={hasDetails}
+          />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
       <div
         data-slot="thread-tool-call"
         data-state={state}
         className={cn(
-          "overflow-hidden rounded-lg border border-border bg-muted/20",
+          "overflow-hidden rounded-md border border-border bg-muted/20",
           className
         )}
         {...props}
@@ -519,46 +743,26 @@ function ThreadToolCall({
             <button
               {...triggerProps}
               aria-expanded={hasDetails ? open : undefined}
-              aria-label={hasDetails ? toolCallToggleLabel(title) : "Tool call"}
+              aria-label={hasDetails ? toolCallToggleLabel(title) : undefined}
               className={cn(
-                "flex min-h-11 w-full min-w-0 items-center gap-2.5 px-3 py-2 text-left transition-[background-color,box-shadow,transform] outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.97]",
+                "flex min-h-11 w-full min-w-0 items-center gap-2.5 px-3 py-2 text-left transition-[background-color,box-shadow] outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
                 hasDetails &&
                   "[@media(hover:hover)_and_(pointer:fine)]:hover:bg-muted/60"
               )}
             >
-              <span
-                className={cn(
-                  "grid size-5 shrink-0 place-items-center text-muted-foreground",
-                  state === "done" && "text-foreground/70",
-                  state === "error" && "text-destructive"
-                )}
-              >
-                <ToolCallIcon state={state} />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-medium text-foreground">
-                  {title}
-                </span>
-                {summary ? (
-                  <span className="block truncate text-xs text-muted-foreground">
-                    {summary}
-                  </span>
-                ) : null}
-              </span>
-              <span
-                className={cn(
-                  "shrink-0 text-xs text-muted-foreground",
-                  duration && "tabular-nums"
-                )}
-              >
-                {duration ?? toolCallStateLabel[state]}
-              </span>
-              {hasDetails ? <ChevronIcon open={open} /> : null}
+              <ThreadToolCallHeader
+                title={title}
+                state={state}
+                duration={duration}
+                summary={summary}
+                open={open}
+                hasDetails={hasDetails}
+              />
             </button>
           )}
         />
         {hasDetails ? (
-          <CollapsibleContent className="animate-[thread-content-enter_180ms_cubic-bezier(0.22,1,0.36,1)] border-t border-border px-3 py-3 text-sm leading-6 text-muted-foreground motion-reduce:animate-none">
+          <CollapsibleContent className="border-t border-border bg-background/45 px-3 py-3 text-sm leading-6 text-muted-foreground">
             {children}
           </CollapsibleContent>
         ) : null}
@@ -608,6 +812,8 @@ export type {
   ThreadStatusProps,
   ThreadStatusState,
   ThreadStreamChunk,
+  ThreadStreamRenderState,
+  ThreadStreamSource,
   ThreadToolCallProps,
   ThreadToolCallState,
 }

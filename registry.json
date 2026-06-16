@@ -140,14 +140,6 @@
         }
       ],
       "css": {
-        "@keyframes thread-status-pulse": {
-          "0%, 100%": {
-            "opacity": "0.4"
-          },
-          "50%": {
-            "opacity": "0.8"
-          }
-        },
         "@keyframes thread-pending-pulse": {
           "0%, 100%": {
             "opacity": "0.55"
@@ -155,16 +147,53 @@
           "50%": {
             "opacity": "1"
           }
+        }
+      }
+    },
+    {
+      "name": "thread-markdown",
+      "type": "registry:ui",
+      "title": "Thread Markdown",
+      "description": "A Streamdown renderer for Thread messages that handles partial markdown during agent streaming.",
+      "dependencies": ["streamdown"],
+      "registryDependencies": ["https://agenticcraft.dev/r/thread.json"],
+      "files": [
+        {
+          "path": "registry/base-nova/ui/thread-markdown.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@keyframes sd-fadeIn": {
+          "from": {
+            "opacity": "0"
+          },
+          "to": {
+            "opacity": "1"
+          }
         },
-        "@keyframes thread-content-enter": {
+        "@keyframes sd-blurIn": {
           "from": {
             "opacity": "0",
-            "transform": "translateY(-4px)"
+            "filter": "blur(4px)"
+          },
+          "to": {
+            "opacity": "1",
+            "filter": "blur(0)"
+          }
+        },
+        "@keyframes sd-slideUp": {
+          "from": {
+            "opacity": "0",
+            "transform": "translateY(4px)"
           },
           "to": {
             "opacity": "1",
             "transform": "translateY(0)"
           }
+        },
+        "[data-sd-animate]": {
+          "animation": "var(--sd-animation, sd-fadeIn) var(--sd-duration, 150ms) var(--sd-easing, ease) var(--sd-delay, 0ms) both"
         }
       }
     },

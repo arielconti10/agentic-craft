@@ -47,7 +47,12 @@ high-trust agent experiences.
 
 ## Development
 
-See [CLAUDE.md](./CLAUDE.md) for stack details, all commands, the registry invariant, and the QA bar.
+See [AGENTS.md](./AGENTS.md) for stack details, all commands, the registry
+invariants, audit gates, and the QA bar. It is the canonical guide for working
+on the repo, including with AI coding agents. [CLAUDE.md](./CLAUDE.md) adds
+Claude-Code-specific notes. For design and product rationale see
+[DESIGN.md](./DESIGN.md); for the canonical research behind the patterns see
+[docs/research.md](./docs/research.md).
 
 ```bash
 npm install

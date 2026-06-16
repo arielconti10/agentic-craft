@@ -1,0 +1,167 @@
+{
+  "articleRect": {
+    "width": 1180,
+    "x": 197.5
+  },
+  "buttons": [
+    {
+      "ariaLabel": null,
+      "rect": {
+        "height": 40,
+        "width": 104.21875,
+        "x": 1249.28125,
+        "y": 168.5
+      },
+      "text": "Replay demo"
+    },
+    {
+      "ariaLabel": "Toggle Search workspace details",
+      "rect": {
+        "height": 52,
+        "width": 874,
+        "x": 462.5,
+        "y": 428.5
+      },
+      "text": "Search workspace12 files scanned · 3 matches1.1s"
+    },
+    {
+      "ariaLabel": "Toggle Read tests details",
+      "rect": {
+        "height": 52,
+        "width": 874,
+        "x": 462.5,
+        "y": 548
+      },
+      "text": "Read testsCache warmup covered, duplicate mutation guarded2.8s"
+    },
+    {
+      "ariaLabel": "Tool call",
+      "rect": {
+        "height": 52,
+        "width": 874,
+        "x": 462.5,
+        "y": 618
+      },
+      "text": "Synthesize answerWritingRunning"
+    },
+    {
+      "ariaLabel": null,
+      "rect": {
+        "height": 28,
+        "width": 60.34375,
+        "x": 257.5,
+        "y": 866
+      },
+      "text": "pnpm"
+    },
+    {
+      "ariaLabel": null,
+      "rect": {
+        "height": 28,
+        "width": 52.4921875,
+        "x": 317.84375,
+        "y": 866
+      },
+      "text": "npm"
+    },
+    {
+      "ariaLabel": null,
+      "rect": {
+        "height": 28,
+        "width": 52.0703125,
+        "x": 370.3359375,
+        "y": 866
+      },
+      "text": "yarn"
+    },
+    {
+      "ariaLabel": null,
+      "rect": {
+        "height": 28,
+        "width": 48.78125,
+        "x": 422.40625,
+        "y": 866
+      },
+      "text": "bun"
+    },
+    {
+      "ariaLabel": "Copy command",
+      "rect": {
+        "height": 28,
+        "width": 28,
+        "x": 1317.5,
+        "y": 864.5
+      },
+      "text": "Copy command"
+    }
+  ],
+  "cards": [
+    {
+      "rect": {
+        "bottom": 804.5,
+        "height": 568,
+        "left": 221.5,
+        "right": 1353.5,
+        "top": 236.5,
+        "width": 1132,
+        "x": 221.5,
+        "y": 236.5
+      },
+      "text": "Billing migration reviewPR #1284 · api/billing · 3 touched areas4.2ssafe to shipRun packetBranchbilling/retry-guardFiles12Matches3FindingsMu"
+    },
+    {
+      "rect": {
+        "bottom": 513.5,
+        "height": 72,
+        "left": 237.5,
+        "right": 428.5,
+        "top": 441.5,
+        "width": 191,
+        "x": 237.5,
+        "y": 441.5
+      },
+      "text": "Mutation guard runs before invoice creation.Cache warmup failure is isolated."
+    },
+    {
+      "rect": {
+        "bottom": 658.5,
+        "height": 96,
+        "left": 237.5,
+        "right": 428.5,
+        "top": 562.5,
+        "width": 191,
+        "x": 237.5,
+        "y": 562.5
+      },
+      "text": "retry-policy.tscreate-invoice.tsmigration.smoke.ts"
+    },
+    {
+      "rect": {
+        "bottom": 804.5,
+        "height": 520,
+        "left": 445.5,
+        "right": 1353.5,
+        "top": 284.5,
+        "width": 908,
+        "x": 445.5,
+        "y": 284.5
+      },
+      "text": "Reviewing branch2 tool calls complete · answer streamingStreamingYou14:06Inspect the billing migration and tell me if the retry path is safe"
+    },
+    {
+      "rect": {
+        "bottom": 956.5,
+        "height": 128,
+        "left": 221.5,
+        "right": 1353.5,
+        "top": 828.5,
+        "width": 1132,
+        "x": 221.5,
+        "y": 828.5
+      },
+      "text": "Installationpnpmnpmyarnbunpnpm dlx shadcn@latest add https://agenticcraft.dev/r/thread.jsonCopy command"
+    }
+  ],
+  "title": "Thread · Agentic Craft",
+  "url": "http://localhost:3001/thread"
+}

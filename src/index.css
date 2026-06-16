@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "streamdown/styles.css";
 @import "./components/ui/composer.css";
 @import "./views/landing/landing.css";
 
@@ -274,16 +275,6 @@ details[data-slot="observable-work-step"][open]
   }
 }
 
-@keyframes thread-status-pulse {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
 @keyframes thread-pending-pulse {
   0%,
   100% {
@@ -291,17 +282,6 @@ details[data-slot="observable-work-step"][open]
   }
   50% {
     opacity: 1;
-  }
-}
-
-@keyframes thread-content-enter {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 

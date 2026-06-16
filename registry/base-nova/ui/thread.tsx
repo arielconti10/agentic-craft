@@ -12,6 +12,8 @@ import type {
   ThreadStatusProps,
   ThreadStatusState,
   ThreadStreamChunk,
+  ThreadStreamRenderState,
+  ThreadStreamSource,
   ThreadToolCallProps,
   ThreadToolCallState,
 } from "@/components/ui/thread-client"
@@ -43,6 +45,8 @@ export type {
   ThreadStatusProps,
   ThreadStatusState,
   ThreadStreamChunk,
+  ThreadStreamRenderState,
+  ThreadStreamSource,
   ThreadToolCallProps,
   ThreadToolCallState,
 }
