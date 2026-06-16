@@ -47,7 +47,7 @@ function MemoryLedgerItem({
       {...props}
     >
       <ReferenceItem.Media>
-        <HugeiconsIcon icon={Brain01Icon} strokeWidth={1.5} />
+        <HugeiconsIcon icon={Brain01Icon} />
       </ReferenceItem.Media>
       <ReferenceItem.Content>
         <ReferenceItem.Header>
@@ -61,7 +61,7 @@ function MemoryLedgerItem({
         <ReferenceItem.Description>{title}</ReferenceItem.Description>
         <ReferenceItem.Meta>
           <span className="inline-flex min-w-0 items-center gap-1">
-            <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} />
+            <HugeiconsIcon icon={File01Icon} size={12} />
             <span className="truncate">{source}</span>
           </span>
           <span aria-hidden="true">·</span>

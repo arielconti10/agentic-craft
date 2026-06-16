@@ -75,7 +75,6 @@ function ArtifactDocument({
           <div className="flex min-w-0 items-center gap-2">
             <HugeiconsIcon
               icon={File01Icon}
-              strokeWidth={1.5}
               className="shrink-0 text-muted-foreground"
               aria-hidden="true"
             />
@@ -95,11 +94,7 @@ function ArtifactDocument({
           {onOpen && (
             <Button type="button" variant="ghost" size="sm" onClick={onOpen}>
               Open
-              <HugeiconsIcon
-                icon={ArrowExpand01Icon}
-                strokeWidth={1.5}
-                data-icon="inline-end"
-              />
+              <HugeiconsIcon icon={ArrowExpand01Icon} data-icon="inline-end" />
             </Button>
           )}
         </div>
@@ -156,11 +151,7 @@ function ArtifactDocument({
               <div>{section.body}</div>
               {section.source && (
                 <p className="mt-2 inline-flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
-                  <HugeiconsIcon
-                    icon={Link01Icon}
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                  />
+                  <HugeiconsIcon icon={Link01Icon} aria-hidden="true" />
                   <span className="truncate">{section.source}</span>
                 </p>
               )}

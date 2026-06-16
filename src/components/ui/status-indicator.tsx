@@ -60,7 +60,6 @@ function StatusIndicator({
           <HugeiconsIcon
             icon={Tick01Icon}
             size={12}
-            strokeWidth={2}
             className="text-foreground/70"
             aria-hidden="true"
           />
@@ -69,7 +68,6 @@ function StatusIndicator({
         <HugeiconsIcon
           icon={Loading03Icon}
           size={14}
-          strokeWidth={1.5}
           className="animate-spin text-foreground/70 motion-reduce:animate-none"
           aria-hidden="true"
         />
@@ -79,7 +77,6 @@ function StatusIndicator({
         <HugeiconsIcon
           icon={Clock01Icon}
           size={14}
-          strokeWidth={1.5}
           className="text-muted-foreground"
           aria-hidden="true"
         />
@@ -87,7 +84,6 @@ function StatusIndicator({
         <HugeiconsIcon
           icon={Alert01Icon}
           size={14}
-          strokeWidth={1.5}
           className="text-muted-foreground"
           aria-hidden="true"
         />
@@ -95,7 +91,6 @@ function StatusIndicator({
         <HugeiconsIcon
           icon={Alert01Icon}
           size={14}
-          strokeWidth={1.5}
           className="text-destructive"
           aria-hidden="true"
         />

@@ -86,7 +86,6 @@ export function ComposerAttachments({
           <HugeiconsIcon
             icon={FILE_ICONS[file.type ?? "file"]}
             size={12}
-            strokeWidth={1.5}
             className="shrink-0 text-muted-foreground"
           />
           <span className="max-w-[150px] truncate font-medium">
@@ -96,7 +95,6 @@ export function ComposerAttachments({
             <HugeiconsIcon
               icon={Loading03Icon}
               size={11}
-              strokeWidth={1.5}
               className="shrink-0 animate-spin text-muted-foreground motion-reduce:animate-none"
               aria-hidden="true"
             />
@@ -104,7 +102,6 @@ export function ComposerAttachments({
             <HugeiconsIcon
               icon={Alert01Icon}
               size={11}
-              strokeWidth={1.5}
               className="shrink-0"
               aria-hidden="true"
             />
@@ -112,7 +109,6 @@ export function ComposerAttachments({
             <HugeiconsIcon
               icon={Tick01Icon}
               size={11}
-              strokeWidth={1.5}
               className="shrink-0 text-muted-foreground"
               aria-hidden="true"
             />
@@ -141,7 +137,7 @@ export function ComposerAttachments({
               aria-label={`Remove ${file.name}`}
               className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
             >
-              <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={1.5} />
+              <HugeiconsIcon icon={Cancel01Icon} size={12} />
             </button>
           )}
         </span>

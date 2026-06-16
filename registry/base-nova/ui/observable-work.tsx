@@ -69,7 +69,7 @@ function ObservableWorkStepHeader({
             aria-hidden="true"
             className="text-muted-foreground transition-transform group-open/observable-step:rotate-180 motion-reduce:transition-none [&_svg]:size-3.5"
           >
-            <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={1.5} />
+            <HugeiconsIcon icon={ArrowDown01Icon} />
           </span>
         )}
       </span>

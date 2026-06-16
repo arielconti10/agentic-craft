@@ -51,7 +51,6 @@ function ActionPreview({
             <HugeiconsIcon
               icon={status === "locked" ? LockKeyIcon : Shield01Icon}
               size={14}
-              strokeWidth={1.5}
               className="shrink-0 text-muted-foreground"
               aria-hidden="true"
             />
@@ -89,7 +88,7 @@ function ActionPreview({
       </div>
 
       {items.some((item) => item.emphasis) && (
-        <div className="mt-4 flex flex-col gap-2 border-l-2 border-foreground/30 py-1 pl-3">
+        <div className="mt-4 flex flex-col gap-2 rounded-md border border-border/70 bg-muted/30 px-3 py-2">
           {items
             .filter((item) => item.emphasis)
             .map((item) => (

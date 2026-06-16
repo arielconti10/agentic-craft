@@ -67,4 +67,23 @@ describe("RunTrace", () => {
     const el: Element | null = titleEl.closest("summary")
     expect(el).toBeNull()
   })
+
+  it("renders event statuses through StatusIndicator", () => {
+    const events: RunTraceEvent[] = [
+      { id: "queued", title: "Queued event", status: "queued" },
+      { id: "warning", title: "Warning event", status: "warning" },
+      { id: "blocked", title: "Blocked event", status: "blocked" },
+    ]
+    const { container } = render(
+      <RunTrace title="Test trace" events={events} />
+    )
+
+    const indicators = container.querySelectorAll(
+      "[data-slot='status-indicator']"
+    )
+    expect(indicators).toHaveLength(3)
+    expect(indicators[0]).toHaveAttribute("data-status", "pending")
+    expect(indicators[1]).toHaveAttribute("data-status", "warning")
+    expect(indicators[2]).toHaveAttribute("data-status", "blocked")
+  })
 })

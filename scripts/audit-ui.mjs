@@ -31,6 +31,10 @@ const rawFiles = execFileSync("git", ["ls-files", "app", "src", "registry"], {
   .filter((file) => existsSync(resolve(root, file)))
 
 const registryFiles = rawFiles.filter((file) => file.startsWith("registry/"))
+const darkOverrideFiles = rawFiles.filter(
+  (file) =>
+    file.startsWith("registry/base-nova/") || file.startsWith("src/views/")
+)
 
 const forbiddenRegistryClasses = [
   "agent-prose",
@@ -57,6 +61,9 @@ const forbiddenRegistryClassPattern = new RegExp(
     .join("|")})\\b`,
   "g"
 )
+
+const darkColorOverridePattern =
+  /\b(?:[\w-]+:)*dark:(?:[\w-]+:)*(?:bg|text|border|ring|fill|stroke|outline|decoration|divide|placeholder|caret|accent|from|via|to)-[^\s"'`<>}]+/g
 
 // Deduplicate: skip registry/base-nova/ui/ entries whose basename also exists
 // in src/components/ui/ (handles both symlink and real-file-copy cases).
@@ -123,6 +130,21 @@ for (const file of registryFiles) {
       line,
       id: "no-site-only-registry-classes",
       message: `Registry files must not reference site-only class "${match[0]}".`,
+    })
+  }
+}
+
+for (const file of darkOverrideFiles) {
+  const abs = resolve(root, file)
+  const source = readFileSync(abs, "utf8")
+
+  for (const match of source.matchAll(darkColorOverridePattern)) {
+    const line = source.slice(0, match.index).split("\n").length
+    findings.push({
+      file: relative(root, abs),
+      line,
+      id: "no-dark-color-overrides",
+      message: `Use theme tokens instead of dark-mode color override "${match[0]}".`,
     })
   }
 }

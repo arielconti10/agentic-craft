@@ -5,6 +5,11 @@ import { cn } from "@/lib/utils"
 import { HugeiconsIcon } from "@hugeicons/react"
 import type { IconSvgElement } from "@hugeicons/react"
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
+import {
+  Collapsible,
+  CollapsibleContent as CollapsiblePanel,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 
 /* ── Types ── */
 
@@ -14,7 +19,6 @@ type ToolCallStatus = "running" | "completed" | "failed"
 
 interface ToolCallContextValue {
   expanded: boolean
-  onExpandedChange: (expanded: boolean) => void
   icon: IconSvgElement
   status: ToolCallStatus
   timestamp?: string
@@ -35,43 +39,48 @@ function ToolCall({
   status = "completed",
   timestamp,
   defaultExpanded = false,
+  expanded,
+  onExpandedChange,
   className,
   children,
   ...props
-}: React.ComponentProps<"div"> & {
+}: Omit<
+  React.ComponentProps<typeof Collapsible>,
+  "defaultOpen" | "open" | "onOpenChange" | "render"
+> & {
   icon: IconSvgElement
   status?: ToolCallStatus
   timestamp?: string
   defaultExpanded?: boolean
+  expanded?: boolean
+  onExpandedChange?: (expanded: boolean) => void
 }) {
-  const [expanded, setExpanded] = React.useState(
-    defaultExpanded || status === "failed"
-  )
-
-  const ctx = React.useMemo(
-    () => ({
-      expanded,
-      onExpandedChange: setExpanded,
-      icon,
-      status,
-      timestamp,
-    }),
-    [expanded, icon, status, timestamp]
-  )
-
   return (
-    <ToolCallContext value={ctx}>
-      <div
-        data-slot="tool-call"
-        className={cn(
+    <Collapsible
+      data-slot="tool-call"
+      defaultOpen={defaultExpanded || status === "failed"}
+      open={expanded}
+      onOpenChange={onExpandedChange}
+      className={(state) =>
+        cn(
           "relative flex min-w-0 flex-col gap-3 text-muted-foreground",
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    </ToolCallContext>
+          typeof className === "function" ? className(state) : className
+        )
+      }
+      render={(rootProps, state) => (
+        <ToolCallContext
+          value={{
+            expanded: state.open,
+            icon,
+            status,
+            timestamp,
+          }}
+        >
+          <div {...rootProps}>{children}</div>
+        </ToolCallContext>
+      )}
+      {...props}
+    />
   )
 }
 
@@ -81,11 +90,12 @@ function ToolCallTrigger({
   className,
   children,
   expandable = true,
+  onClick,
   ...props
-}: React.ComponentProps<"button"> & {
+}: Omit<React.ComponentProps<typeof CollapsibleTrigger>, "render"> & {
   expandable?: boolean
 }) {
-  const { expanded, onExpandedChange, icon, status, timestamp } = useToolCall()
+  const { expanded, icon, status, timestamp } = useToolCall()
   const canExpand = expandable && status !== "running"
 
   return (
@@ -94,50 +104,64 @@ function ToolCallTrigger({
       aria-busy={status === "running" || undefined}
       className="group/tool-wrapper relative flex items-center gap-2"
     >
-      <button
+      <CollapsibleTrigger
         type="button"
         data-compact-touch
-        onClick={canExpand ? () => onExpandedChange(!expanded) : undefined}
-        aria-expanded={canExpand ? expanded : undefined}
-        aria-label={canExpand ? "Toggle tool call details" : "Tool call"}
-        className={cn(
-          "flex min-h-8 w-fit max-w-full min-w-0 items-center gap-2 py-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
-          canExpand ? "cursor-pointer" : "cursor-default",
-          className
+        onClick={(event) => {
+          if (!canExpand) {
+            event.preventDefault()
+            event.preventBaseUIHandler()
+          }
+          onClick?.(event)
+        }}
+        className={(state) =>
+          cn(
+            "flex min-h-8 w-fit max-w-full min-w-0 items-center gap-2 py-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+            canExpand ? "cursor-pointer" : "cursor-default",
+            typeof className === "function" ? className(state) : className
+          )
+        }
+        render={(triggerProps) => (
+          <button
+            {...triggerProps}
+            aria-expanded={canExpand ? expanded : undefined}
+            aria-label={
+              triggerProps["aria-label"] ??
+              (canExpand ? "Toggle tool call details" : "Tool call")
+            }
+          >
+            <div className="relative flex size-5 shrink-0 items-center justify-center rounded-full">
+              <div className="absolute inset-1/2 size-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-background" />
+              <HugeiconsIcon
+                icon={icon}
+                size={16}
+                className={cn(
+                  "relative",
+                  status === "running" && "animate-tool-call-pulse",
+                  status === "failed"
+                    ? "text-destructive"
+                    : "text-muted-foreground group-hover/tool-wrapper:text-foreground"
+                )}
+              />
+            </div>
+            {children}
+            {canExpand && (
+              <HugeiconsIcon
+                icon={ArrowRight01Icon}
+                size={14}
+                className={cn(
+                  "shrink-0 transition-transform duration-200",
+                  status === "failed"
+                    ? "text-destructive"
+                    : "group-hover/tool-wrapper:text-foreground",
+                  expanded && "rotate-90"
+                )}
+              />
+            )}
+          </button>
         )}
         {...props}
-      >
-        <div className="relative flex size-5 shrink-0 items-center justify-center rounded-full">
-          <div className="absolute inset-1/2 size-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-background" />
-          <HugeiconsIcon
-            icon={icon}
-            size={16}
-            strokeWidth={1.5}
-            className={cn(
-              "relative",
-              status === "running" && "animate-tool-call-pulse",
-              status === "failed"
-                ? "text-destructive"
-                : "text-muted-foreground group-hover/tool-wrapper:text-foreground"
-            )}
-          />
-        </div>
-        {children}
-        {canExpand && (
-          <HugeiconsIcon
-            icon={ArrowRight01Icon}
-            size={14}
-            strokeWidth={1.5}
-            className={cn(
-              "shrink-0 transition-transform duration-200",
-              status === "failed"
-                ? "text-destructive"
-                : "group-hover/tool-wrapper:text-foreground",
-              expanded && "rotate-90"
-            )}
-          />
-        )}
-      </button>
+      />
       {status === "running" && <span className="sr-only">Running</span>}
       {status === "failed" && <span className="sr-only">Failed</span>}
       {timestamp && (
@@ -181,18 +205,15 @@ function ToolCallContent({
   className,
   children,
   ...props
-}: React.ComponentProps<"div">) {
-  const { expanded } = useToolCall()
-  if (!expanded) return null
-
+}: React.ComponentProps<typeof CollapsiblePanel>) {
   return (
-    <div
+    <CollapsiblePanel
       data-slot="tool-call-content"
       className={cn("animate-composer-slide -mt-1 pb-1 pl-7", className)}
       {...props}
     >
       {children}
-    </div>
+    </CollapsiblePanel>
   )
 }
 
@@ -202,18 +223,15 @@ function ToolCallError({
   className,
   children,
   ...props
-}: React.ComponentProps<"div">) {
-  const { expanded } = useToolCall()
-  if (!expanded) return null
-
+}: React.ComponentProps<typeof CollapsiblePanel>) {
   return (
-    <div
+    <CollapsiblePanel
       data-slot="tool-call-error"
       className={cn("animate-composer-slide -mt-1 pb-1 pl-7", className)}
       {...props}
     >
       <p className="text-xs text-destructive/80">{children}</p>
-    </div>
+    </CollapsiblePanel>
   )
 }
 

@@ -62,7 +62,6 @@ export function ComposerScope({
               <HugeiconsIcon
                 icon={item.icon}
                 size={12}
-                strokeWidth={1.5}
                 className="shrink-0 text-muted-foreground"
               />
               <span className="max-w-[160px] truncate">{item.label}</span>
@@ -73,11 +72,7 @@ export function ComposerScope({
                   aria-label={`Remove ${item.label}`}
                   className="text-muted-foreground transition-colors hover:text-foreground sm:opacity-0 sm:group-focus-within/scope:opacity-100 sm:group-hover/scope:opacity-100"
                 >
-                  <HugeiconsIcon
-                    icon={Cancel01Icon}
-                    size={10}
-                    strokeWidth={2}
-                  />
+                  <HugeiconsIcon icon={Cancel01Icon} size={10} />
                 </button>
               )}
             </span>
@@ -90,7 +85,7 @@ export function ComposerScope({
             aria-label="Dismiss scope"
             className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
           >
-            <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
+            <HugeiconsIcon icon={Cancel01Icon} size={14} />
           </button>
         )}
       </div>
@@ -114,7 +109,6 @@ export function ComposerReply({
         <HugeiconsIcon
           icon={MailReply01Icon}
           size={13}
-          strokeWidth={1.5}
           className="shrink-0 text-muted-foreground/60"
         />
         <span className="flex-1 truncate text-xs text-muted-foreground">
@@ -127,7 +121,7 @@ export function ComposerReply({
             aria-label="Dismiss reply context"
             className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
           >
-            <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
+            <HugeiconsIcon icon={Cancel01Icon} size={14} />
           </button>
         )}
       </div>
@@ -154,7 +148,7 @@ export function ComposerPlan({
       <div className="px-2.5 py-1.5 sm:px-3 sm:py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <HugeiconsIcon icon={Task01Icon} size={13} strokeWidth={1.5} />
+            <HugeiconsIcon icon={Task01Icon} size={13} />
             <span className="font-medium text-foreground">Plan</span>
             <span className="tabular-nums">
               {completedCount}/{tasks.length}
@@ -171,7 +165,6 @@ export function ComposerPlan({
             <HugeiconsIcon
               icon={expanded ? ArrowShrink01Icon : ArrowExpand01Icon}
               size={14}
-              strokeWidth={1.5}
             />
           </button>
         </div>

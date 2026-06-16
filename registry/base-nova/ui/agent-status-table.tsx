@@ -142,7 +142,6 @@ function DisclosureChevron({ open }: { open: boolean }) {
   return (
     <HugeiconsIcon
       icon={ArrowDown01Icon}
-      strokeWidth={1.5}
       aria-hidden="true"
       className={cn(
         "size-3.5 shrink-0 text-muted-foreground transition-transform duration-200 motion-reduce:transition-none",

@@ -100,7 +100,7 @@ function FileLifecycleDropzone({
       {children ?? (
         <>
           <div className="flex size-8 items-center justify-center rounded-md border border-border bg-muted/40 text-muted-foreground">
-            <HugeiconsIcon icon={Upload01Icon} strokeWidth={1.5} />
+            <HugeiconsIcon icon={Upload01Icon} />
           </div>
           <div>
             <p className="font-medium">Drop files here</p>
@@ -152,7 +152,7 @@ function FileLifecycleItem({
       {...props}
     >
       <div className="hidden size-8 items-center justify-center rounded-md border border-border/60 bg-muted/40 text-muted-foreground sm:flex">
-        <HugeiconsIcon icon={Icon} strokeWidth={1.5} />
+        <HugeiconsIcon icon={Icon} />
       </div>
       <div className="min-w-0">
         <div className="flex min-w-0 items-center gap-2">
@@ -191,7 +191,7 @@ function FileLifecycleItem({
             onClick={() => onRetry(file)}
             aria-label={`Retry ${file.name}`}
           >
-            <HugeiconsIcon icon={ReloadIcon} strokeWidth={1.5} />
+            <HugeiconsIcon icon={ReloadIcon} />
           </Button>
         )}
         {onRemove && (
@@ -203,7 +203,7 @@ function FileLifecycleItem({
             onClick={() => onRemove(file)}
             aria-label={`Remove ${file.name}`}
           >
-            <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.5} />
+            <HugeiconsIcon icon={Cancel01Icon} />
           </Button>
         )}
       </div>

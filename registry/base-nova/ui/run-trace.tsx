@@ -1,15 +1,12 @@
 "use client"
 
 import * as React from "react"
-import {
-  Alert01Icon,
-  Clock01Icon,
-  Loading03Icon,
-  Tick01Icon,
-} from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
 
 import { cn } from "@/lib/utils"
+import {
+  StatusIndicator,
+  type StatusIndicatorStatus,
+} from "@/components/ui/status-indicator"
 
 type RunTraceStatus =
   | "queued"
@@ -45,15 +42,14 @@ const indicatorLabel = {
   error: "Error",
 } satisfies Record<RunTraceStatus, string>
 
-/* Matches the status-indicator vocabulary; queued reuses its dashed-circle
-   pending treatment so queued and blocked (clock) stay distinct. */
-const statusIcon = {
-  running: Loading03Icon,
-  complete: Tick01Icon,
-  blocked: Clock01Icon,
-  warning: Alert01Icon,
-  error: Alert01Icon,
-} satisfies Record<Exclude<RunTraceStatus, "queued">, typeof Tick01Icon>
+const indicatorStatus = {
+  queued: "pending",
+  running: "active",
+  complete: "complete",
+  blocked: "blocked",
+  warning: "warning",
+  error: "error",
+} satisfies Record<RunTraceStatus, StatusIndicatorStatus>
 
 function RunTrace({
   title,
@@ -92,32 +88,17 @@ function RunTrace({
 
           const innerContent = (
             <>
-              <span
-                title={indicatorLabel[event.status]}
-                className="relative mt-0.5 flex size-6 items-center justify-center rounded-md border border-border/70 bg-muted/30 text-muted-foreground"
-              >
+              <span className="relative mt-0.5 flex size-6 items-center justify-center rounded-md border border-border/70 bg-muted/30 text-muted-foreground">
                 {!isLast && (
                   <span
                     aria-hidden="true"
                     className="absolute top-6 left-1/2 h-[calc(100%+12px)] w-px -translate-x-1/2 bg-border/70"
                   />
                 )}
-                {event.status === "queued" ? (
-                  <span className="size-3 rounded-full border border-dashed border-muted-foreground/70" />
-                ) : (
-                  <HugeiconsIcon
-                    icon={statusIcon[event.status]}
-                    size={13}
-                    strokeWidth={1.5}
-                    className={
-                      event.status === "running"
-                        ? "animate-spin motion-reduce:animate-none"
-                        : undefined
-                    }
-                    aria-hidden="true"
-                  />
-                )}
-                <span className="sr-only">{indicatorLabel[event.status]}</span>
+                <StatusIndicator
+                  status={indicatorStatus[event.status]}
+                  label={indicatorLabel[event.status]}
+                />
               </span>
               <span className="min-w-0">
                 <span className="block min-w-0 truncate font-medium text-foreground">

@@ -55,7 +55,6 @@ function EffectivePolicyPreview({
         <HugeiconsIcon
           icon={Shield01Icon}
           size={14}
-          strokeWidth={1.5}
           className="text-muted-foreground"
           aria-hidden="true"
         />

@@ -57,7 +57,7 @@ export function ComposerMenu({
           className
         )}
       >
-        <HugeiconsIcon icon={Add01Icon} size={16} strokeWidth={1.5} />
+        <HugeiconsIcon icon={Add01Icon} size={16} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         side="top"
@@ -170,7 +170,7 @@ export function ComposerSend({
             : "bg-muted/60 text-muted-foreground/40"
         )}
       >
-        <HugeiconsIcon icon={ArrowUp02Icon} size={13} strokeWidth={2} />
+        <HugeiconsIcon icon={ArrowUp02Icon} size={13} />
       </span>
     </button>
   )

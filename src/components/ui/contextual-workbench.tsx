@@ -232,11 +232,7 @@ function ContextualWorkbenchChatPane({
             className="flex w-full items-center justify-between gap-3 text-left text-xs text-muted-foreground transition-[color] hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
           >
             <span>37 previous messages</span>
-            <HugeiconsIcon
-              icon={ArrowDown01Icon}
-              strokeWidth={1.5}
-              aria-hidden="true"
-            />
+            <HugeiconsIcon icon={ArrowDown01Icon} aria-hidden="true" />
           </button>
         </div>
         <div className="border-b border-border/70 px-3 py-2.5">
@@ -277,7 +273,6 @@ function ContextualWorkbenchChatPane({
                 <HugeiconsIcon
                   icon={PlusSignIcon}
                   data-icon="inline-start"
-                  strokeWidth={1.5}
                   aria-hidden="true"
                 />
                 <span className="sr-only">Add context</span>
@@ -288,7 +283,6 @@ function ContextualWorkbenchChatPane({
               <HugeiconsIcon
                 icon={ArrowUp02Icon}
                 data-icon="inline-start"
-                strokeWidth={1.5}
                 aria-hidden="true"
               />
               <span className="sr-only">Send</span>
@@ -339,30 +333,10 @@ function BrowserPreview() {
   return (
     <div className="flex h-full min-h-[260px] flex-1 flex-col">
       <div className="flex items-center gap-2 border-b border-border/70 px-2 py-1.5 text-[11px] text-muted-foreground">
-        <HugeiconsIcon
-          icon={ArrowLeft01Icon}
-          size={13}
-          strokeWidth={1.5}
-          aria-hidden="true"
-        />
-        <HugeiconsIcon
-          icon={ArrowRight01Icon}
-          size={13}
-          strokeWidth={1.5}
-          aria-hidden="true"
-        />
-        <HugeiconsIcon
-          icon={RefreshIcon}
-          size={13}
-          strokeWidth={1.5}
-          aria-hidden="true"
-        />
-        <HugeiconsIcon
-          icon={Globe02Icon}
-          size={13}
-          strokeWidth={1.5}
-          aria-hidden="true"
-        />
+        <HugeiconsIcon icon={ArrowLeft01Icon} size={13} aria-hidden="true" />
+        <HugeiconsIcon icon={ArrowRight01Icon} size={13} aria-hidden="true" />
+        <HugeiconsIcon icon={RefreshIcon} size={13} aria-hidden="true" />
+        <HugeiconsIcon icon={Globe02Icon} size={13} aria-hidden="true" />
         <span className="min-w-0 flex-1 truncate">127.0.0.1:4173</span>
       </div>
       <div className="min-h-0 flex-1 bg-background p-8 text-foreground">
@@ -526,7 +500,6 @@ function ContextualWorkbenchSurfacePane({
                 <HugeiconsIcon
                   icon={getSurfaceIcon(candidate)}
                   data-icon="inline-start"
-                  strokeWidth={1.5}
                   aria-hidden="true"
                 />
                 {candidate.label}
@@ -538,7 +511,6 @@ function ContextualWorkbenchSurfacePane({
           <HugeiconsIcon
             icon={PlusSignIcon}
             data-icon="inline-start"
-            strokeWidth={1.5}
             aria-hidden="true"
           />
           <span className="sr-only">Add workbench surface</span>

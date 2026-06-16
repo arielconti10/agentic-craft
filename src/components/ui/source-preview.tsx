@@ -57,7 +57,6 @@ function SourcePreview({
           <HugeiconsIcon
             icon={icon}
             size={13}
-            strokeWidth={1.5}
             className="shrink-0 text-white/60"
             aria-hidden="true"
           />
@@ -74,7 +73,6 @@ function SourcePreview({
             >
               <HugeiconsIcon
                 icon={ArrowExpand01Icon}
-                strokeWidth={1.5}
                 data-icon="inline-start"
               />
             </Button>
@@ -92,11 +90,7 @@ function SourcePreview({
               size="icon-xs"
               className="text-white/70 hover:bg-white/10 hover:text-white focus-visible:ring-white/40"
             >
-              <HugeiconsIcon
-                icon={ArrowLeft01Icon}
-                strokeWidth={1.5}
-                data-icon="inline-start"
-              />
+              <HugeiconsIcon icon={ArrowLeft01Icon} data-icon="inline-start" />
             </Button>
             <span className="tabular-nums">
               {(index ?? 0) + 1} of {total}
@@ -110,11 +104,7 @@ function SourcePreview({
               size="icon-xs"
               className="text-white/70 hover:bg-white/10 hover:text-white focus-visible:ring-white/40"
             >
-              <HugeiconsIcon
-                icon={ArrowRight01Icon}
-                strokeWidth={1.5}
-                data-icon="inline-start"
-              />
+              <HugeiconsIcon icon={ArrowRight01Icon} data-icon="inline-start" />
             </Button>
           </div>
         )}
@@ -124,7 +114,7 @@ function SourcePreview({
         <p className="text-[13px] leading-5 text-white/88">“{excerpt}”</p>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
           <div className="inline-flex items-center gap-1.5 rounded-md bg-white/12 px-2 py-1 text-[11px] text-white/75">
-            <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} />
+            <HugeiconsIcon icon={File01Icon} size={12} />
             {location}
           </div>
           {source && onOpenSource ? (
@@ -137,11 +127,7 @@ function SourcePreview({
               className="h-6 rounded-md bg-white/12 px-2 text-[11px] font-medium text-white hover:bg-white/18 focus-visible:ring-white/40"
             >
               View source
-              <HugeiconsIcon
-                icon={ArrowExpand01Icon}
-                strokeWidth={1.5}
-                data-icon="inline-end"
-              />
+              <HugeiconsIcon icon={ArrowExpand01Icon} data-icon="inline-end" />
             </Button>
           ) : null}
         </div>
@@ -414,12 +400,7 @@ function SourcePreviewCitation({
         )}
       >
         {showIcon && marker.icon && (
-          <HugeiconsIcon
-            icon={marker.icon}
-            size={12}
-            strokeWidth={1.5}
-            aria-hidden="true"
-          />
+          <HugeiconsIcon icon={marker.icon} size={12} aria-hidden="true" />
         )}
         <span className="tabular-nums">{marker.id}</span>
       </SourcePreviewPopoverTrigger>

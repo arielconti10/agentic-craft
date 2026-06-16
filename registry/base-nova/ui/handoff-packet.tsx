@@ -122,12 +122,7 @@ function HandoffPacket({
       <div className="grid border-b border-border/70 text-xs sm:grid-cols-[1fr_auto_1fr]">
         <div className="flex min-w-0 items-center gap-2 px-3 py-2 sm:px-4">
           <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-muted/50 text-muted-foreground">
-            <HugeiconsIcon
-              icon={Robot01Icon}
-              size={14}
-              strokeWidth={1.5}
-              aria-hidden="true"
-            />
+            <HugeiconsIcon icon={Robot01Icon} size={14} aria-hidden="true" />
           </span>
           <span className="min-w-0">
             <span className="block text-muted-foreground">Sender</span>
@@ -137,19 +132,13 @@ function HandoffPacket({
           </span>
         </div>
         <div className="hidden items-center px-2 text-muted-foreground sm:flex">
-          <HugeiconsIcon
-            icon={ArrowRight01Icon}
-            size={16}
-            strokeWidth={1.5}
-            aria-hidden="true"
-          />
+          <HugeiconsIcon icon={ArrowRight01Icon} size={16} aria-hidden="true" />
         </div>
         <div className="flex min-w-0 items-center gap-2 border-t border-border/70 px-3 py-2 sm:border-t-0 sm:px-4">
           <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-muted/50 text-muted-foreground">
             <HugeiconsIcon
               icon={status === "rejected" ? Alert01Icon : Tick01Icon}
               size={14}
-              strokeWidth={1.5}
               aria-hidden="true"
             />
           </span>
