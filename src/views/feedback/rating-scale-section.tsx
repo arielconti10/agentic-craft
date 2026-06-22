@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import {
   Table,
@@ -90,7 +91,8 @@ export function RatingScaleSection() {
           onToggle={handleRatingToggle}
         />
 
-        <div className="rounded-lg border border-border/40 p-4 sm:p-6">
+        <Card className="gap-0 py-0 ring-0 rounded-lg bg-background border border-border/40">
+          <CardContent className="p-4 sm:p-6">
           <div>
             <p
               className="agent-prose text-base"
@@ -143,7 +145,8 @@ export function RatingScaleSection() {
               )}
             </div>
           </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Spec table */}

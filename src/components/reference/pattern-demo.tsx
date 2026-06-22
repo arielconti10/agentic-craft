@@ -1,5 +1,12 @@
 import type * as React from "react"
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
 function PatternDemo({
@@ -14,23 +21,26 @@ function PatternDemo({
   children: React.ReactNode
 }) {
   return (
-    <div
-      data-slot="pattern-demo"
+    <Card
       className={cn(
-        "mt-8 rounded-lg border border-border bg-background",
+        // Override Card defaults (rounded-xl, bg-card, ring, outer py, header gap)
+        // to preserve the PatternDemo specimen look exactly.
+        "mt-8 gap-0 rounded-lg border border-border bg-background py-0 ring-0",
         className
       )}
     >
-      <div className="border-b border-border/60 px-4 py-3">
-        <p className="text-sm font-medium text-foreground">{title}</p>
+      <CardHeader className="gap-0 border-b border-border/60 px-4 py-3">
+        <CardTitle className="text-sm font-medium text-foreground">
+          {title}
+        </CardTitle>
         {description && (
-          <p className="mt-1 hidden text-xs leading-relaxed text-muted-foreground sm:block">
+          <CardDescription className="mt-1 hidden text-xs leading-relaxed sm:block">
             {description}
-          </p>
+          </CardDescription>
         )}
-      </div>
-      <div className="p-4">{children}</div>
-    </div>
+      </CardHeader>
+      <CardContent className="p-4">{children}</CardContent>
+    </Card>
   )
 }
 
