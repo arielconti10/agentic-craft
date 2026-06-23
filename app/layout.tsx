@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import localFont from "next/font/local"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { ThemeProvider } from "@/components/theme-provider"
 import "@/index.css"
@@ -149,6 +150,7 @@ export default function RootLayout({
         <TooltipProvider>
           <ThemeProvider defaultTheme="system">{children}</ThemeProvider>
         </TooltipProvider>
+        <SpeedInsights />
       </body>
     </html>
   )
