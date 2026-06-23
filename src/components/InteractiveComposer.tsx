@@ -340,7 +340,7 @@ function ComposerDemo({
           </div>
           <div aria-live="polite" className="flex justify-start">
             {lastExchange.agentReply && (
-              <div className="agent-prose demo-slide-in max-w-[85%] font-serif text-base text-foreground">
+              <div className="agent-prose demo-slide-in max-w-[min(85%,65ch)] font-serif text-base text-foreground">
                 {lastExchange.agentReply}
               </div>
             )}

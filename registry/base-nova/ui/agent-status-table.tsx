@@ -119,7 +119,9 @@ function AgentDetailBody({
         </p>
       )}
       {detail.returned && (
-        <p className="font-mono text-xs text-foreground">{detail.returned}</p>
+        <p className="font-mono text-xs text-foreground slashed-zero tabular-nums">
+          {detail.returned}
+        </p>
       )}
       {detail.output && (
         <p className="max-w-[65ch] text-sm leading-6 text-foreground">

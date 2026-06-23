@@ -52,7 +52,7 @@ export function LandingHomeContent() {
         <h1 className="max-w-[760px] font-serif text-4xl leading-[1.12] font-light tracking-tight text-balance sm:text-5xl">
           A reference guide for design engineers building agent interfaces.
         </h1>
-        <p className="mt-5 max-w-[680px] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-5 max-w-[66ch] text-sm leading-relaxed text-muted-foreground">
           Distilled from Microsoft HAX, Shape of AI, LukeW, NN/g, Smashing, and
           direct study of Anthropic, OpenAI, Perplexity, Google, Vercel, and
           Cursor. Code is distributed through the shadcn registry, but the site

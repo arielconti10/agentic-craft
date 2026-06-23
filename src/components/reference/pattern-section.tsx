@@ -24,7 +24,7 @@ function PatternSection({
         {title}
       </h2>
       {description && (
-        <p className="mt-3 max-w-[680px] text-sm leading-relaxed text-pretty text-muted-foreground">
+        <p className="mt-3 max-w-[66ch] text-sm leading-relaxed text-pretty text-muted-foreground">
           {description}
         </p>
       )}

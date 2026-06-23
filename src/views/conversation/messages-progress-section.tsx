@@ -72,9 +72,14 @@ const PROSE_PREFERENCE_DETAILS: Record<ProsePreference, ProsePreferenceDetail> =
   }
 
 const agentProseBaseStyle: React.CSSProperties = {
-  letterSpacing: "-0.4px",
   WebkitFontSmoothing: "antialiased",
 }
+
+const userMessageClassName =
+  "max-w-[min(75%,58ch)] rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground"
+
+const agentMessageClassName =
+  "max-w-[min(75%,65ch)] rounded-lg border border-border bg-muted px-4 py-3"
 
 const PROGRESS_STEPS: {
   label: string
@@ -203,7 +208,7 @@ export function MessagesProgressSection() {
 
             {/* User message */}
             <div className="flex justify-end">
-              <div className="max-w-[75%] rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">
+              <div className={userMessageClassName}>
                 Can you review the project brief against the roadmap and launch
                 checklist?
               </div>
@@ -211,7 +216,7 @@ export function MessagesProgressSection() {
 
             {/* Agent message */}
             <div className="flex justify-start">
-              <div className="max-w-[75%] rounded-lg border border-border bg-muted px-4 py-3">
+              <div className={agentMessageClassName}>
                 <div
                   className={prosePreferenceDetail.className}
                   style={agentProseStyle}
@@ -234,7 +239,7 @@ export function MessagesProgressSection() {
 
             {/* Follow-up user message */}
             <div className="flex justify-end">
-              <div className="max-w-[75%] rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">
+              <div className={userMessageClassName}>
                 Can you list the specific requirements that are missing from the
                 mapping?
               </div>
@@ -242,7 +247,7 @@ export function MessagesProgressSection() {
 
             {/* Agent response with list */}
             <div className="flex justify-start">
-              <div className="max-w-[75%] rounded-lg border border-border bg-muted px-4 py-3">
+              <div className={agentMessageClassName}>
                 <div
                   className={prosePreferenceDetail.className}
                   style={agentProseStyle}
@@ -267,7 +272,7 @@ export function MessagesProgressSection() {
 
             {/* Streaming message (mid-stream with cursor) */}
             <div className="flex justify-start">
-              <div className="max-w-[75%] rounded-lg border border-border bg-muted px-4 py-3">
+              <div className={agentMessageClassName}>
                 <div
                   className={prosePreferenceDetail.className}
                   style={agentProseStyle}

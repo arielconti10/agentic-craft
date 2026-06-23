@@ -20,7 +20,7 @@ export function OperationalSurfacesContent() {
         <h1 className="font-serif text-4xl leading-[1.12] font-light tracking-tight text-balance">
           Where delegated agent work becomes manageable.
         </h1>
-        <p className="mt-4 max-w-[680px] text-sm leading-6 text-muted-foreground">
+        <p className="mt-4 max-w-[66ch] text-sm leading-6 text-muted-foreground">
           Agents do not only live in a thread. Inbox, kanban, manager surface,
           run monitor, and background task views give users a way to inspect,
           compare, stop, and resume work after it leaves the chat turn.

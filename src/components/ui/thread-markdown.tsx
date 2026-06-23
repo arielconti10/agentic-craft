@@ -104,7 +104,7 @@ const threadMarkdownComponents: Components = {
   code: ({ className, ...props }) => (
     <code
       className={cn(
-        "rounded border border-border bg-muted px-1 py-0.5 font-mono text-[0.9em]",
+        "rounded border border-border bg-muted px-1 py-0.5 font-mono text-[0.9em] slashed-zero tabular-nums",
         className?.includes("language-") &&
           "block border-0 bg-transparent p-0 text-[13px] leading-5",
         className

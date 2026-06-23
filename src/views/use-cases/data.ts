@@ -242,7 +242,7 @@ const observableWork: ObservableStepFixture[] = [
 ]
 
 const composer = {
-  placeholder: "Ask for the next launch review pass...",
+  placeholder: "Ask for the next launch review pass…",
   defaultValue: "",
   scope: [
     { id: "brief", label: "Release readiness brief", icon: File01Icon },

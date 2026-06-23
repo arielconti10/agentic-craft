@@ -57,28 +57,28 @@ Primary sources first. Where a primary source is unavailable, secondary sources 
 
 The shift from traditional UX to Agentic Experience (AX) is structural, not cosmetic. Designers who treat agents as "smarter forms" ship the wrong thing.
 
-| Dimension | Traditional UX | Agentic Experience |
-|-----------|----------------|-------------------|
-| Unit of design | A screen flow | An ongoing relationship |
-| Path planning | Designer pre-plans every flow | Agent plans its own execution |
-| Context | User re-supplies on each session | Context is learned across sessions |
-| Success metric | Task completed quickly | Trust accumulated and value compounded |
-| Failure mode | User picks the wrong path | Agent confidently does the wrong thing |
-| Trust contract | Static (same behavior always) | Dynamic (must be re-earned as autonomy grows) |
-| Designer's role | Drawing flows | Defining constraints |
-| Feedback loop | Immediate, synchronous | Async, multi-turn, cross-session |
+| Dimension       | Traditional UX                   | Agentic Experience                            |
+| --------------- | -------------------------------- | --------------------------------------------- |
+| Unit of design  | A screen flow                    | An ongoing relationship                       |
+| Path planning   | Designer pre-plans every flow    | Agent plans its own execution                 |
+| Context         | User re-supplies on each session | Context is learned across sessions            |
+| Success metric  | Task completed quickly           | Trust accumulated and value compounded        |
+| Failure mode    | User picks the wrong path        | Agent confidently does the wrong thing        |
+| Trust contract  | Static (same behavior always)    | Dynamic (must be re-earned as autonomy grows) |
+| Designer's role | Drawing flows                    | Defining constraints                          |
+| Feedback loop   | Immediate, synchronous           | Async, multi-turn, cross-session              |
 
-**The reframe that matters.** Generative UI shifts designers from designing for the average user to designing constraints — *what must be shown / should be shown / never shown* — and letting the system compose the rest. ([NN/g: Generative UI](https://www.nngroup.com/articles/generative-ui/))
+**The reframe that matters.** Generative UI shifts designers from designing for the average user to designing constraints — _what must be shown / should be shown / never shown_ — and letting the system compose the rest. ([NN/g: Generative UI](https://www.nngroup.com/articles/generative-ui/))
 
 **The shift in agent role.** Agents are no longer tools; they are actors. Service design must now account for personal agents that act for users and organizational agents that act for businesses. Agent-to-agent compatibility is becoming a competitive metric. ([NN/g: Service Design with AI Agents](https://www.nngroup.com/articles/service-design-evolve-ai-agents/))
 
-NN/g's 2026 working definition of an AI agent — *"a system that pursues a goal by iteratively taking actions, evaluating progress, and deciding its own next steps"* — is the cleanest formulation in the field. ([NN/g: State of UX 2026](https://www.nngroup.com/articles/state-of-ux-2026/)) The loop-based framing distinguishes agents from chatbots and from autocomplete.
+NN/g's 2026 working definition of an AI agent — _"a system that pursues a goal by iteratively taking actions, evaluating progress, and deciding its own next steps"_ — is the cleanest formulation in the field. ([NN/g: State of UX 2026](https://www.nngroup.com/articles/state-of-ux-2026/)) The loop-based framing distinguishes agents from chatbots and from autocomplete.
 
-**Why this section is short.** The framing is settled. The disagreements in the field are about what to do *with* this framing — those are the next eight sections.
+**Why this section is short.** The framing is settled. The disagreements in the field are about what to do _with_ this framing — those are the next eight sections.
 
 ## 2. Foundational pattern frameworks
 
-Six frameworks form the working canon. None is complete; each captures something the others miss. We treat them as inputs, not authorities — the position the rest of this document takes is informed by them but is not bound by them.
+Seven frameworks form the working canon. None is complete; each captures something the others miss. We treat them as inputs, not authorities — the position the rest of this document takes is informed by them but is not bound by them.
 
 ### 2.1 Shape of AI — the pattern library
 
@@ -127,7 +127,7 @@ Luke Wroblewski's two pieces are the strongest practitioner-focused framework fo
 
 **["Agent Management Interface Patterns"](https://www.lukew.com/ff/entry.asp?2106) (June 2025).** Identifies five management needs — start, schedule, scrutinize, steer, stop — and tests kanban, dashboards, inboxes, task lists, and calendars as primary organizational metaphors. Finds **inbox and kanban most legible** for multi-agent management.
 
-**["Showing the Work of Agents in UI"](https://www.lukew.com/ff/entry.asp?2142) (February 2026).** Documents the core split between users who want to see agent reasoning (*monitoring users*) and users who just want results (*outcome users*). Key empirical finding from Bench: defaulting to fully visible work caused abandonment; **progressive disclosure resolves the split** — tool calls collapsed by default, expandable on demand, with a timeline of decision points.
+**["Showing the Work of Agents in UI"](https://www.lukew.com/ff/entry.asp?2142) (February 2026).** Documents the core split between users who want to see agent reasoning (_monitoring users_) and users who just want results (_outcome users_). Key empirical finding from Bench: defaulting to fully visible work caused abandonment; **progressive disclosure resolves the split** — tool calls collapsed by default, expandable on demand, with a timeline of decision points.
 
 These two pieces are the load-bearing empirical work for §3 and §7 below.
 
@@ -137,7 +137,17 @@ Victor Yocco's ["Designing for Agentic AI"](https://www.smashingmagazine.com/202
 
 We adopt the lifecycle framing and the anti-pattern terminology in §3 and §11.
 
-### 2.7 What they all miss
+### 2.7 Linear AIG — platform-native agent conduct
+
+Linear's [Agent Interaction Guidelines](https://linear.app/developers/aig) are the most compact product-platform framing of agent conduct we have seen. They define six baseline expectations: agents visibly identify themselves as agents, inhabit the host platform through native actions, respond immediately when invoked, expose whether they are thinking / waiting / executing / finished, disengage when asked, and keep final accountability with a human owner.
+
+**Highest-value contribution.** AIG makes agent behavior legible in the same surfaces where human work already happens. The examples are not abstract design rules; they are issue activity, comment threads, session traces, and delegation flows. That reinforces agentic-craft's position that status, trace, and approval components belong inside existing work surfaces, not in a detached "AI console."
+
+**What it clarifies for agentic-craft.** The identity and accountability points sharpen our treatment of provenance (§5), handoff (§12.6), and status primitives (§13). An agent should not merely show a trace; the product must also make clear _which actor_ produced the trace and _which human remains responsible_ for the outcome.
+
+**What it misses.** AIG is intentionally narrow: it does not cover memory, cost, agent-authored UI, autonomy matrices, or multi-agent operations beyond delegation. Treat it as a conduct baseline for native platform agents, not a complete pattern library.
+
+### 2.8 What they all miss
 
 None of these frameworks adequately covers:
 
@@ -148,10 +158,9 @@ None of these frameworks adequately covers:
 
 Those gaps are the territory of sections 3, 8, and 9.
 
-
 ## 3. Visible work, locked consequences
 
-> **Position.** Trust in agentic systems is built by making two things first-class: the *work the agent does* (visible, structured, inspectable but not theatrical) and *the consequences of its actions* (locked previews users approve before anything is committed).
+> **Position.** Trust in agentic systems is built by making two things first-class: the _work the agent does_ (visible, structured, inspectable but not theatrical) and _the consequences of its actions_ (locked previews users approve before anything is committed).
 
 ### 3.1 Visible work
 
@@ -165,6 +174,7 @@ The agent shows what it is doing as a structured trace: tool calls with state, s
 
 - A row per tool call with status (running / done / failed / blocked), input summary, output summary
 - A timeline of steps with explicit transitions
+- A clear actor label for agent-authored activity, especially when agents and humans share the same feed ([Linear AIG](https://linear.app/developers/aig))
 - Sources consulted (with provenance — see §5)
 - Time elapsed and cost incurred (see §7.3)
 - A skip-thinking option when the system can deliver a meaningful answer without completing reasoning ([Cloudscape: Thinking](https://cloudscape.design/gen-ai/patterns/thinking/))
@@ -174,15 +184,15 @@ The agent shows what it is doing as a structured trace: tool calls with state, s
 - It is not raw chain-of-thought. Anthropic's choice to expose summarized thinking is correct; exposing raw reasoning encourages over-trust in confident-sounding prose. ([Anthropic: Extended Thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking))
 - It is not a spinner. A spinner on a tool call is the canonical AI-demo chrome failure — it implies progress without showing any.
 - It is not theater. If a step ran in 40ms, do not animate it for 600ms.
-- It is not appropriate everywhere. Sub-second inline completions (Cursor's tab-complete) should hide their work; surfacing it *is* the latency. Show work when the user is deciding; hide it when the user is typing.
+- It is not appropriate everywhere. Sub-second inline completions (Cursor's tab-complete) should hide their work; surfacing it _is_ the latency. Show work when the user is deciding; hide it when the user is typing.
 
 **Honest disclosure.** Empty disclosure rows that pretend to expand are a violation: nothing should look interactive that isn't. ([agentic-craft DESIGN.md](https://github.com/bitcomplete/agentic-craft/blob/main/DESIGN.md))
 
 ### 3.2 Locked consequence previews
 
-Before any action with meaningful side effects, the agent renders a *locked preview*: a fully-structured representation of the artifact that will be created, in the format of the target system, with explicit approve/reject controls.
+Before any action with meaningful side effects, the agent renders a _locked preview_: a fully-structured representation of the artifact that will be created, in the format of the target system, with explicit approve/reject controls.
 
-**Why "locked."** Once the preview is shown, the parameters are committed: hitting approve produces *exactly* the artifact shown. No re-prompting, no slight differences. The preview *is* the contract.
+**Why "locked."** Once the preview is shown, the parameters are committed: hitting approve produces _exactly_ the artifact shown. No re-prompting, no slight differences. The preview _is_ the contract.
 
 **What it shows.**
 
@@ -196,15 +206,14 @@ Before any action with meaningful side effects, the agent renders a *locked prev
 
 **Risk-tier the gates.** Locked previews are not a uniform demand on every action. The convention emerging across products is risk-tiered gates: auto-execute low-risk reads, preview-and-approve medium-risk changes, full structured-confirmation for high-risk destructive or external actions, block-or-notify-only for irreversible operations. Refusing to risk-tier produces **agentic sludge** — the over-confirmation anti-pattern Smashing Magazine named in February 2026. The exact thresholds belong in the per-action-type autonomy matrix (see §4.2).
 
-**Our position on what locked previews are *not*.**
+**Our position on what locked previews are _not_.**
 
-- They are not the same as a confirm dialog ("Are you sure?"). A confirm asks the user to remember what they were doing; a preview *shows* what's about to happen.
-- They are not optional for *consequential* actions. Whether an action is consequential is determined by the autonomy matrix, not by the designer's intuition.
+- They are not the same as a confirm dialog ("Are you sure?"). A confirm asks the user to remember what they were doing; a preview _shows_ what's about to happen.
+- They are not optional for _consequential_ actions. Whether an action is consequential is determined by the autonomy matrix, not by the designer's intuition.
 
-**Composition.** Visible work and locked previews compose: the agent shows work *until* it reaches an action gate, then renders the preview, then waits. The trace continues after approval.
+**Composition.** Visible work and locked previews compose: the agent shows work _until_ it reaches an action gate, then renders the preview, then waits. The trace continues after approval.
 
-**Claude Cowork as the canonical product framing.** Anthropic ships exactly this position in their product copy: *"Claude Cowork is designed with human oversight in mind. It completes tasks, but consequential decisions remain with the user."* ([Claude Cowork](https://www.anthropic.com/product/claude-cowork)) The autonomy-with-gates contract is the product's framing, not a designer's add-on.
-
+**Claude Cowork as the canonical product framing.** Anthropic ships exactly this position in their product copy: _"Claude Cowork is designed with human oversight in mind. It completes tasks, but consequential decisions remain with the user."_ ([Claude Cowork](https://www.anthropic.com/product/claude-cowork)) The autonomy-with-gates contract is the product's framing, not a designer's add-on.
 
 ## 4. Autonomy as a contract
 
@@ -216,13 +225,13 @@ Multiple frameworks converged on a 5–6 level structure between 2024 and 2026, 
 
 We adopt the 5-level model as canonical for agentic-craft.
 
-| Level | Name | What the agent does | What the user does | UI surface |
-|-------|------|---------------------|---------------------|------------|
-| **L1** | Operator | Single-step responses to narrow commands. No memory, no plan. | Initiates every action | Inline composer; suggestion chips |
-| **L2** | Collaborator | Plans a sequence of steps; user initiates each | Triggers the plan; supervises each step | Plan card; observable work; per-step approve |
-| **L3** | Consultant (HITL) | Plans and executes; pauses before flagged actions | Approves at action gates | Locked consequence preview; decision surface |
-| **L4** | Approver (HOTL) | Acts autonomously within a sandbox; surfaces results for review | Reviews outcomes; intervenes when needed | Run monitor; kill switch; live trace |
-| **L5** | Observer | Self-directed; manages its own goals | Reviews after the fact | Activity log; anomaly alerts |
+| Level  | Name              | What the agent does                                             | What the user does                       | UI surface                                   |
+| ------ | ----------------- | --------------------------------------------------------------- | ---------------------------------------- | -------------------------------------------- |
+| **L1** | Operator          | Single-step responses to narrow commands. No memory, no plan.   | Initiates every action                   | Inline composer; suggestion chips            |
+| **L2** | Collaborator      | Plans a sequence of steps; user initiates each                  | Triggers the plan; supervises each step  | Plan card; observable work; per-step approve |
+| **L3** | Consultant (HITL) | Plans and executes; pauses before flagged actions               | Approves at action gates                 | Locked consequence preview; decision surface |
+| **L4** | Approver (HOTL)   | Acts autonomously within a sandbox; surfaces results for review | Reviews outcomes; intervenes when needed | Run monitor; kill switch; live trace         |
+| **L5** | Observer          | Self-directed; manages its own goals                            | Reviews after the fact                   | Activity log; anomaly alerts                 |
 
 **Why 5 and not 6.** L2/L3/L4 carry the product-relevant gates (per-step approval, action-gate approval, sandboxed autonomy). The 6-level CSA framework adds a useful L0 ("no agent") that isn't a UI state. Variant taxonomies are catalogued in Appendix A.
 
@@ -239,7 +248,7 @@ A single "autonomy level" setting is a usability lie. Real autonomy is a matrix:
 - **Per-cost** — A $0.01 action and a $50 action need different approval flows even if both are "send_email."
 - **Per-rate** — "Auto-archive tickets" is fine at 10/day, alarming at 1,000/day.
 
-**Pattern.** Surface the *effective policy* — the actual behavior the matrix produces — as a separate preview. agentic-craft calls this the **effective-policy-preview**: a compact summary that takes the autonomy, approval, notification, and memory settings and shows the user what they actually produced ("Will ask: emails to external addresses, any action > $10. Will not ask: internal reads, archival.")
+**Pattern.** Surface the _effective policy_ — the actual behavior the matrix produces — as a separate preview. agentic-craft calls this the **effective-policy-preview**: a compact summary that takes the autonomy, approval, notification, and memory settings and shows the user what they actually produced ("Will ask: emails to external addresses, any action > $10. Will not ask: internal reads, archival.")
 
 This is the single piece of agent UI most often missing in shipping products.
 
@@ -255,12 +264,11 @@ Autonomy contracts are not set-and-forget. The agent should re-confirm autonomy 
 
 ### 4.4 Anthropic's "disposition dial"
 
-Beyond per-product autonomy settings, Anthropic positions its own model behavior on a "disposition dial" ranging from *fully corrigible* (does whatever instructed) to *fully autonomous* (acts on its own values). Current Claude models sit closer to the corrigible end — a deliberate safety choice with direct UX implications: agents defer to the principal hierarchy (Anthropic → operator → user) rather than override it. The autonomy contract a product designs sits on top of this model-level disposition.
-
+Beyond per-product autonomy settings, Anthropic positions its own model behavior on a "disposition dial" ranging from _fully corrigible_ (does whatever instructed) to _fully autonomous_ (acts on its own values). Current Claude models sit closer to the corrigible end — a deliberate safety choice with direct UX implications: agents defer to the principal hierarchy (Anthropic → operator → user) rather than override it. The autonomy contract a product designs sits on top of this model-level disposition.
 
 ## 5. Trust through provenance
 
-> **Position.** Trust in agentic systems is not earned through confident prose. It is earned through *provenance* — visible links between every claim and its source. An agent that says less but cites everything beats an agent that says more without sources.
+> **Position.** Trust in agentic systems is not earned through confident prose. It is earned through _provenance_ — visible links between every claim and its source. An agent that says less but cites everything beats an agent that says more without sources.
 
 ### 5.1 Provenance as the universal pattern
 
@@ -268,11 +276,11 @@ Provenance generalizes citations, source previews, and footprints into one conce
 
 **The three layers.**
 
-| Layer | What's traced | Pattern |
-|-------|---------------|---------|
-| **Claims** | Prose statements → source documents | Inline citations with source-preview hover |
-| **Outputs** | Generated artifacts (reports, code, drafts) → which sections came from which sources | Source-backed artifact with cited sections |
-| **Actions** | External actions → which inputs justified them | "Why this action" inside the locked preview |
+| Layer       | What's traced                                                                        | Pattern                                     |
+| ----------- | ------------------------------------------------------------------------------------ | ------------------------------------------- |
+| **Claims**  | Prose statements → source documents                                                  | Inline citations with source-preview hover  |
+| **Outputs** | Generated artifacts (reports, code, drafts) → which sections came from which sources | Source-backed artifact with cited sections  |
+| **Actions** | External actions → which inputs justified them                                       | "Why this action" inside the locked preview |
 
 ### 5.2 Confidence done right
 
@@ -289,8 +297,9 @@ Provenance generalizes citations, source previews, and footprints into one conce
 - Incognito modes exist and are visible when active.
 - Nothing pretends to be deterministic that isn't.
 
-**[Convention]** Citation patterns are settled (Perplexity and Claude shipped the canonical implementations). Provenance for *actions* and *memory* is **[Emerging]** — most products do not yet show "this action was justified by these inputs."
+**[Convention]** Citation patterns are settled (Perplexity and Claude shipped the canonical implementations). Provenance for _actions_ and _memory_ is **[Emerging]** — most products do not yet show "this action was justified by these inputs."
 
+**Agent identity belongs here too.** When agents inhabit the same activity feeds, comments, and ownership fields as humans, identity disclosure becomes provenance for actors: the interface must make clear when an action came from an agent and which human is accountable for the delegated work. ([Linear AIG](https://linear.app/developers/aig))
 
 ## 6. Memory as ledger, not magic
 
@@ -300,15 +309,15 @@ Provenance generalizes citations, source previews, and footprints into one conce
 
 Memory is not a personality. It is a ledger of entries. Each entry has:
 
-| Field | Purpose |
-|-------|---------|
-| **Content** | What is remembered |
-| **Source** | Where it came from (which conversation, which document) |
-| **Scope** | Personal / project / org |
-| **Created** | When |
-| **Last used** | When the agent last applied this memory |
-| **Expiry** | When it expires (some memories should sunset) |
-| **Status** | Active / muted / archived |
+| Field         | Purpose                                                 |
+| ------------- | ------------------------------------------------------- |
+| **Content**   | What is remembered                                      |
+| **Source**    | Where it came from (which conversation, which document) |
+| **Scope**     | Personal / project / org                                |
+| **Created**   | When                                                    |
+| **Last used** | When the agent last applied this memory                 |
+| **Expiry**    | When it expires (some memories should sunset)           |
+| **Status**    | Active / muted / archived                               |
 
 The user surface is a row per memory with edit, mute, expire, and delete affordances. agentic-craft ships this as **memory-ledger-item**.
 
@@ -323,14 +332,14 @@ The user surface is a row per memory with edit, mute, expire, and delete afforda
 
 The four major consumer products now ship visible memory management surfaces with different shapes:
 
-| Product | Surface | User edit | Delete | Scope | Off switch |
-|---------|---------|-----------|--------|-------|-----------|
-| **ChatGPT** | "Dreaming" memory summary page; synthesizes a memory profile asynchronously from past conversations | Text-box edit; highlight-to-correct | Per-item or full | Whole account | Yes; Temporary Chat does not read or create memories ([OpenAI release notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes)) |
-| **Claude** | Memory tool surfaced in tool list; Memory Import from ChatGPT (March 2026) | Via MCP/tool API | Via MCP/tool API | Session + persistent | Per-conversation incognito |
-| **Gemini** | Personal-context settings: "Memory" toggle + "Instructions for Gemini" standing instructions | Yes (standing instructions) | Yes | Account | Yes (toggle) |
-| **Perplexity** | Two-part system: structured preferences + search history; cross-model persistence | Partial (preference overrides) | Yes; 30-day recovery | Account, cross-model | Documented gap |
+| Product        | Surface                                                                                             | User edit                           | Delete               | Scope                | Off switch                                                                                                                                       |
+| -------------- | --------------------------------------------------------------------------------------------------- | ----------------------------------- | -------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **ChatGPT**    | "Dreaming" memory summary page; synthesizes a memory profile asynchronously from past conversations | Text-box edit; highlight-to-correct | Per-item or full     | Whole account        | Yes; Temporary Chat does not read or create memories ([OpenAI release notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes)) |
+| **Claude**     | Memory tool surfaced in tool list; Memory Import from ChatGPT (March 2026)                          | Via MCP/tool API                    | Via MCP/tool API     | Session + persistent | Per-conversation incognito                                                                                                                       |
+| **Gemini**     | Personal-context settings: "Memory" toggle + "Instructions for Gemini" standing instructions        | Yes (standing instructions)         | Yes                  | Account              | Yes (toggle)                                                                                                                                     |
+| **Perplexity** | Two-part system: structured preferences + search history; cross-model persistence                   | Partial (preference overrides)      | Yes; 30-day recovery | Account, cross-model | Documented gap                                                                                                                                   |
 
-The convention is now **visible-and-editable memory**; the open shape question is *how* to expose it (settings panel vs. inline tool vs. summary page).
+The convention is now **visible-and-editable memory**; the open shape question is _how_ to expose it (settings panel vs. inline tool vs. summary page).
 
 ### 6.4 Memory is reviewable, not just visible
 
@@ -356,13 +365,13 @@ The convention is now **visible-and-editable memory**; the open shape question i
 
 After [LukeW's analysis](https://www.lukew.com/ff/entry.asp?2106) and observation across shipping products, five layouts cover most operational needs. Each has trade-offs; the right choice depends on what the user is trying to do.
 
-| Layout | Best when | Strengths | Weaknesses |
-|--------|-----------|-----------|------------|
-| **Kanban** | Work moves through defined stages | At-a-glance state for many agents; drag-to-reorder familiar | Implies workflow; weak on dependencies |
-| **Dashboard** | High-level status across many agents/sources | Dense; flexible; no implied sequence | Easily overwhelming; weak on dependencies |
-| **Inbox** | Approvals and questions one at a time | Familiar mental model; satisfying "zero" state | Scales poorly with volume; weak on parallel state |
-| **Task list (hierarchical)** | Complex plans with sub-tasks and dependencies | Shows dependencies clearly; checkbox completion | Less visual; nesting hides parallel state |
-| **Calendar** | Scheduled and time-bounded agents | Native time framing; integrates with real meetings | Variable-duration tasks hard to render; weak on event-triggered |
+| Layout                       | Best when                                     | Strengths                                                   | Weaknesses                                                      |
+| ---------------------------- | --------------------------------------------- | ----------------------------------------------------------- | --------------------------------------------------------------- |
+| **Kanban**                   | Work moves through defined stages             | At-a-glance state for many agents; drag-to-reorder familiar | Implies workflow; weak on dependencies                          |
+| **Dashboard**                | High-level status across many agents/sources  | Dense; flexible; no implied sequence                        | Easily overwhelming; weak on dependencies                       |
+| **Inbox**                    | Approvals and questions one at a time         | Familiar mental model; satisfying "zero" state              | Scales poorly with volume; weak on parallel state               |
+| **Task list (hierarchical)** | Complex plans with sub-tasks and dependencies | Shows dependencies clearly; checkbox completion             | Less visual; nesting hides parallel state                       |
+| **Calendar**                 | Scheduled and time-bounded agents             | Native time framing; integrates with real meetings          | Variable-duration tasks hard to render; weak on event-triggered |
 
 **[Convention]** All five ship across the market. Inbox is the most common default for HITL-heavy products; dashboards dominate ops-heavy products; kanban is common in agent-building tools.
 
@@ -370,7 +379,7 @@ After [LukeW's analysis](https://www.lukew.com/ff/entry.asp?2106) and observatio
 
 Google Antigravity (November 2025) introduced an explicit name for a pattern that's becoming standard: the **Manager Surface** — a dedicated interface, separate from the editor or chat, where you "spawn, orchestrate, and observe multiple agents working asynchronously across different workspaces." ([Google Antigravity](https://developers.googleblog.com/build-with-google-antigravity-our-new-agentic-development-platform/))
 
-The Manager Surface is not a new layout; it's a *posture* — agents have their own dedicated space, not a sidebar inside an editor. Cursor's Background Agent panel and Claude Code's `/workflows` inspector follow the same posture. **[Convention-forming]** as of mid-2026.
+The Manager Surface is not a new layout; it's a _posture_ — agents have their own dedicated space, not a sidebar inside an editor. Cursor's Background Agent panel and Claude Code's `/workflows` inspector follow the same posture. **[Convention-forming]** as of mid-2026.
 
 ### 7.3 Observability is product surface, not infra
 
@@ -399,13 +408,13 @@ Agents now spend most of their time off-screen. The UI surface for background wo
 
 ## 8. Agent-authored UI: the third layer
 
-> **Position.** One of the fastest-moving architectural shifts in agentic UI since 2024 is the move from *agents that inhabit interfaces* to *agents that author interfaces at runtime*. This is a separate layer of the stack, with its own patterns, and it is not yet well-handled by existing frameworks.
+> **Position.** One of the fastest-moving architectural shifts in agentic UI since 2024 is the move from _agents that inhabit interfaces_ to _agents that author interfaces at runtime_. This is a separate layer of the stack, with its own patterns, and it is not yet well-handled by existing frameworks.
 
 ### 8.1 What "agent-authored UI" means
 
 Traditional pattern: the designer ships a UI; the agent operates inside it.
 
-New pattern: the agent picks (or generates) UI components dynamically — a chart when a chart is the right answer, a form when a form is, a custom widget for a niche decision — and streams that UI to the user as a tool output. The designer ships the *primitives* and the *constraints*; the agent assembles them.
+New pattern: the agent picks (or generates) UI components dynamically — a chart when a chart is the right answer, a form when a form is, a custom widget for a niche decision — and streams that UI to the user as a tool output. The designer ships the _primitives_ and the _constraints_; the agent assembles them.
 
 ### 8.2 Why it matters
 
@@ -417,28 +426,28 @@ New pattern: the agent picks (or generates) UI components dynamically — a char
 
 The independent research surfaced a clean layering: **agent-authored UI is not one protocol — it's a stack of four protocols at distinct layers**, plus product-level implementations.
 
-| Layer | Protocol | What it standardizes | Status |
-|-------|----------|----------------------|--------|
-| Agent ↔ Tools & Data | **MCP** (Model Context Protocol) | Secure tool/data access | [Convention] |
-| Agent ↔ Agent | **A2A** | Multi-agent coordination | [Convention-forming] |
-| Agent ↔ User (events) | **AG-UI** | Real-time, event-based connection between agent backend and frontend | [Emerging] |
-| Agent ↔ User (generative UI) | **A2UI** | Generative-UI layout passing as data (not executable code) | [Emerging] |
+| Layer                        | Protocol                         | What it standardizes                                                 | Status               |
+| ---------------------------- | -------------------------------- | -------------------------------------------------------------------- | -------------------- |
+| Agent ↔ Tools & Data         | **MCP** (Model Context Protocol) | Secure tool/data access                                              | [Convention]         |
+| Agent ↔ Agent                | **A2A**                          | Multi-agent coordination                                             | [Convention-forming] |
+| Agent ↔ User (events)        | **AG-UI**                        | Real-time, event-based connection between agent backend and frontend | [Emerging]           |
+| Agent ↔ User (generative UI) | **A2UI**                         | Generative-UI layout passing as data (not executable code)           | [Emerging]           |
 
 The AG-UI documentation makes the relationship explicit: AG-UI handles streaming, thinking-step visualization, and event channels; A2UI handles layout descriptions agents emit for clients to render; MCP handles tool access. They are complementary, not competitive. ([AG-UI docs](https://docs.ag-ui.com), [A2UI announcement](https://developers.googleblog.com/en/introducing-a2ui-an-open-project-for-agent-driven-interfaces/))
 
 **Product-level implementations.**
 
-| Implementation | Vendor | Model | Status |
-|---|---|---|---|
-| **MCP Apps** | Anthropic + OpenAI + MCP community | MCP server returns UI as a tool result; client renders it inside chat in a sandboxed iframe with bidirectional context | **[Convention-forming]** — announced January 26, 2026; launch clients include ChatGPT, Claude, Goose, and VS Code ([MCP Apps announcement](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/)) |
-| **A2UI** | Google (open source) | Renderers for Lit, Angular, Flutter; layouts passed as messages, not executable code | **[Emerging]** — public December 15, 2025 ([Google Developer Blog](https://developers.googleblog.com/en/introducing-a2ui-an-open-project-for-agent-driven-interfaces/)) |
-| **AG-UI** | Open community | Event-based protocol; supports both static generative UI and declarative generative UI | **[Emerging]** ([docs.ag-ui.com](https://docs.ag-ui.com)) |
-| **AI SDK 6 generative UI** | Vercel | Tool parts in `useChat`; server streams React components from LLM tool calls; type-safe end to end. `streamUI`/RSC `render()` was deprecated in AI SDK 5 (July 31, 2025) and removed in AI SDK 6 (December 22, 2025) | **[Convention-forming]** for TypeScript AI applications ([AI SDK 6](https://vercel.com/blog/ai-sdk-6)) |
-| **Gemini Visual Layout / Dynamic View** | Google (Gemini) | Model-decided rich layouts inside Gemini responses | **[Emerging]**; availability has fluctuated ([Gemini Visual Layout](https://support.google.com/gemini/answer/16741341)) |
+| Implementation                          | Vendor                             | Model                                                                                                                                                                                                                | Status                                                                                                                                                                                                       |
+| --------------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **MCP Apps**                            | Anthropic + OpenAI + MCP community | MCP server returns UI as a tool result; client renders it inside chat in a sandboxed iframe with bidirectional context                                                                                               | **[Convention-forming]** — announced January 26, 2026; launch clients include ChatGPT, Claude, Goose, and VS Code ([MCP Apps announcement](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/)) |
+| **A2UI**                                | Google (open source)               | Renderers for Lit, Angular, Flutter; layouts passed as messages, not executable code                                                                                                                                 | **[Emerging]** — public December 15, 2025 ([Google Developer Blog](https://developers.googleblog.com/en/introducing-a2ui-an-open-project-for-agent-driven-interfaces/))                                      |
+| **AG-UI**                               | Open community                     | Event-based protocol; supports both static generative UI and declarative generative UI                                                                                                                               | **[Emerging]** ([docs.ag-ui.com](https://docs.ag-ui.com))                                                                                                                                                    |
+| **AI SDK 6 generative UI**              | Vercel                             | Tool parts in `useChat`; server streams React components from LLM tool calls; type-safe end to end. `streamUI`/RSC `render()` was deprecated in AI SDK 5 (July 31, 2025) and removed in AI SDK 6 (December 22, 2025) | **[Convention-forming]** for TypeScript AI applications ([AI SDK 6](https://vercel.com/blog/ai-sdk-6))                                                                                                       |
+| **Gemini Visual Layout / Dynamic View** | Google (Gemini)                    | Model-decided rich layouts inside Gemini responses                                                                                                                                                                   | **[Emerging]**; availability has fluctuated ([Gemini Visual Layout](https://support.google.com/gemini/answer/16741341))                                                                                      |
 
 ### 8.4 Design patterns for agent-authored UI
 
-**Constraint surfaces.** The designer's job is no longer to lay out every screen; it is to define what the agent is *allowed* to render, in what slots, with what budget. This is closer to a CSS-grid template + component allow-list than a Figma file.
+**Constraint surfaces.** The designer's job is no longer to lay out every screen; it is to define what the agent is _allowed_ to render, in what slots, with what budget. This is closer to a CSS-grid template + component allow-list than a Figma file.
 
 **Slot architecture.** Pages reserve named slots ("primary visualization," "secondary detail," "action gate"). The agent fills each slot with one of a registered set of components. The user's spatial mental model survives because the slots are stable.
 
@@ -457,15 +466,15 @@ The AG-UI documentation makes the relationship explicit: AG-UI handles streaming
 
 ### 8.6 What agentic-craft contributes
 
-agentic-craft is not yet a renderer for agent-authored UI — but it is the *primitives library* such a renderer would draw from. Items like `action-preview`, `clarifying-questions`, `decision-surface`, `source-preview`, `agent-status-table`, and `usage-meter` are the kind of well-typed components an agent-authored UI runtime should reach for. The position to take: ship the primitives now; the renderer integration is a 2027 problem.
+agentic-craft is not yet a renderer for agent-authored UI — but it is the _primitives library_ such a renderer would draw from. Items like `action-preview`, `clarifying-questions`, `decision-surface`, `source-preview`, `agent-status-table`, and `usage-meter` are the kind of well-typed components an agent-authored UI runtime should reach for. The position to take: ship the primitives now; the renderer integration is a 2027 problem.
 
 ## 9. Dynamic Workflows as a product surface
 
-> **Position.** Anthropic's Dynamic Workflows (May 2026) is the most concrete shipping example of *workflow-as-product* — a user surface for declarative multi-agent orchestration that is neither chat nor dashboard. It deserves first-class treatment in this document because the UI patterns it introduces are likely to become conventions across the industry.
+> **Position.** Anthropic's Dynamic Workflows (May 2026) is the most concrete shipping example of _workflow-as-product_ — a user surface for declarative multi-agent orchestration that is neither chat nor dashboard. It deserves first-class treatment in this document because the UI patterns it introduces are likely to become conventions across the industry.
 
 ### 9.1 What Dynamic Workflows is
 
-A research preview in Claude Code that lets users (or agents) declare a workflow as a script, then run it across a fleet of subagents. The workflow is *plan-as-code* — explicit phases, agent definitions, and dependencies — and the UI is purpose-built for monitoring, pausing, resuming, and re-running it. ([Anthropic: Introducing Dynamic Workflows in Claude Code](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code), [Claude Code Workflows docs](https://code.claude.com/docs/en/workflows))
+A research preview in Claude Code that lets users (or agents) declare a workflow as a script, then run it across a fleet of subagents. The workflow is _plan-as-code_ — explicit phases, agent definitions, and dependencies — and the UI is purpose-built for monitoring, pausing, resuming, and re-running it. ([Anthropic: Introducing Dynamic Workflows in Claude Code](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code), [Claude Code Workflows docs](https://code.claude.com/docs/en/workflows))
 
 ### 9.2 The UX surface (full inventory)
 
@@ -477,26 +486,26 @@ This is the most detailed product UI we've seen for multi-agent operations, and 
 
 **Keyboard navigation.**
 
-| Key | Action |
-|-----|--------|
-| `↑` `↓` | Navigate runs / phases / agents |
-| `Enter` / `→` | Drill into the selected item |
-| `Esc` | Back up one level |
-| `p` | Pause / resume the run |
-| `x` | Stop the run |
-| `r` | Restart the run |
-| `s` | Save current run as a reusable slash command |
+| Key           | Action                                       |
+| ------------- | -------------------------------------------- |
+| `↑` `↓`       | Navigate runs / phases / agents              |
+| `Enter` / `→` | Drill into the selected item                 |
+| `Esc`         | Back up one level                            |
+| `p`           | Pause / resume the run                       |
+| `x`           | Stop the run                                 |
+| `r`           | Restart the run                              |
+| `s`           | Save current run as a reusable slash command |
 
 **Effort levels.** Claude's `effort` parameter has **five levels**: `low`, `medium`, `high` (default), `xhigh`, and `max`. These are an API-level reasoning-depth control supported across Opus 4.6+, Sonnet 4.6, and the newer Mythos/Fable family. The `budget_tokens` parameter is deprecated on Opus 4.6 and Sonnet 4.6 in favor of `effort`. ([Claude effort docs](https://platform.claude.com/docs/en/build-with-claude/effort))
 
 **The `ultracode` trigger.** Separately from effort levels, Claude Code exposes an `ultracode` keyword trigger in the input field (highlighted violet). Typing `ultracode` or invoking `/effort ultracode` activates the combination of `xhigh` reasoning plus automatic multi-agent orchestration. This is the product-facing entry point to Dynamic Workflows. ([DevelopersDigest: ultracode explained](https://www.developersdigest.tech/blog/ultracode-effort-level-explained))
 
-| Trigger | Effect |
-|---------|--------|
-| Type `ultracode` in input | Activates `xhigh` + auto-orchestration; can be dismissed with `Option+W` (mac) / `Alt+W` (win/linux) |
-| `/effort ultracode` | Command-line invocation of the same |
-| Natural language ("use a workflow for this") | Claude offers to write a workflow script |
-| `/deep-research` | Bundled workflow for research tasks |
+| Trigger                                      | Effect                                                                                               |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Type `ultracode` in input                    | Activates `xhigh` + auto-orchestration; can be dismissed with `Option+W` (mac) / `Alt+W` (win/linux) |
+| `/effort ultracode`                          | Command-line invocation of the same                                                                  |
+| Natural language ("use a workflow for this") | Claude offers to write a workflow script                                                             |
+| `/deep-research`                             | Bundled workflow for research tasks                                                                  |
 
 **Approval card.** When a workflow is about to run an external script, an approval card appears: `Yes, run it / Yes, don't ask again for X / View raw script / No`. `Ctrl+G` opens the script in the editor. `Tab` lets the user adjust the prompt before approval.
 
@@ -518,7 +527,7 @@ Two patterns are genuinely novel:
 
 1. **Phase rail as the primary surface.** Not a kanban, not a list, not a graph — a horizontal rail of phases with rollup metrics per phase. agentic-craft mirrors this in **workflow-phases**.
 
-2. **Plan-as-code with a UI layer.** The user can both write the workflow as a script and operate it through the keyboard-driven UI. The UI doesn't hide the script; it *exposes* it (`Ctrl+G` opens the raw script). This is a refusal of the false choice between "no-code workflow builders" and "raw CLI."
+2. **Plan-as-code with a UI layer.** The user can both write the workflow as a script and operate it through the keyboard-driven UI. The UI doesn't hide the script; it _exposes_ it (`Ctrl+G` opens the raw script). This is a refusal of the false choice between "no-code workflow builders" and "raw CLI."
 
 ### 9.4 Where Dynamic Workflows leaves things underspecified
 
@@ -541,7 +550,7 @@ These are the registry's only items that explicitly target multi-agent orchestra
 
 ### 9.6 The deterministic counterpoint: Microsoft Conductor
 
-Microsoft open-sourced [Conductor](https://opensource.microsoft.com/blog/2026/05/14/conductor-deterministic-orchestration-for) (May 14, 2026), a deterministic multi-agent orchestration framework emphasizing *predictable execution paths* over LLM-driven orchestration. Less user-facing UI, more infrastructure — but it stakes out the opposite design pole from Dynamic Workflows: deterministic vs. probabilistic orchestration. **[Emerging]**. Whether the field eventually splits into two camps (deterministic for enterprise; probabilistic for dev tools) or one approach wins is an open question.
+Microsoft open-sourced [Conductor](https://opensource.microsoft.com/blog/2026/05/14/conductor-deterministic-orchestration-for) (May 14, 2026), a deterministic multi-agent orchestration framework emphasizing _predictable execution paths_ over LLM-driven orchestration. Less user-facing UI, more infrastructure — but it stakes out the opposite design pole from Dynamic Workflows: deterministic vs. probabilistic orchestration. **[Emerging]**. Whether the field eventually splits into two camps (deterministic for enterprise; probabilistic for dev tools) or one approach wins is an open question.
 
 ## 10. Product inventories
 
@@ -561,7 +570,7 @@ Microsoft open-sourced [Conductor](https://opensource.microsoft.com/blog/2026/05
 
 **Memory Import (March 2026).** Anthropic added the ability to import structured memory from other platforms (including ChatGPT). Memory is surfaced as a named tool within Claude's tool surface; the memory layer is explicitly tool-based — agents can read/write programmatically via MCP, not just through conversational extraction. The first cross-vendor memory portability shipped by a major product.
 
-**Claude Cowork (January 12, 2026).** Desktop agent product targeting non-technical knowledge work. Available on all paid plans through the Claude desktop app; runs on macOS and Windows. Folder-scoped: users designate a folder and Cowork can read/write within it. Built on the Claude Agent SDK (the same architecture as Claude Code). The product framing is explicit about autonomy with oversight gates: *"Claude Cowork is designed with human oversight in mind. It completes tasks, but consequential decisions remain with the user."* ([Claude Cowork](https://www.anthropic.com/product/claude-cowork)) Cowork is the clearest shipping product example of folder-scoped L3-by-default autonomy.
+**Claude Cowork (January 12, 2026).** Desktop agent product targeting non-technical knowledge work. Available on all paid plans through the Claude desktop app; runs on macOS and Windows. Folder-scoped: users designate a folder and Cowork can read/write within it. Built on the Claude Agent SDK (the same architecture as Claude Code). The product framing is explicit about autonomy with oversight gates: _"Claude Cowork is designed with human oversight in mind. It completes tasks, but consequential decisions remain with the user."_ ([Claude Cowork](https://www.anthropic.com/product/claude-cowork)) Cowork is the clearest shipping product example of folder-scoped L3-by-default autonomy.
 
 **Dynamic Workflows (May 28, 2026).** See section 9.
 
@@ -615,7 +624,7 @@ Microsoft open-sourced [Conductor](https://opensource.microsoft.com/blog/2026/05
 
 **Models.** Gemini 3.5 (May 2026) and Gemini 3 Pro are the consumer-facing lineup as of mid-2026. The Antigravity platform launched November 2025 (see §10.6) hosts both Gemini and third-party models.
 
-**Gemini Spark (May 19, 2026).** A 24/7 personal AI agent running on Gemini 3.5 and built on the Antigravity platform. Spark "operates autonomously, under your direction" and is designed to "check with you before taking major actions on your behalf." It runs in the background on phone or laptop *even while those devices are off*. Rolling out to trusted testers (May 2026), Beta to Google AI Ultra subscribers (US) shortly after. ([Google I/O 2026: all announcements](https://blog.google/innovation-and-ai/technology/ai/google-io-2026-all-our-announcements/), [I/O 2026 keynote](https://blog.google/innovation-and-ai/sundar-pichai-io-2026/))
+**Gemini Spark (May 19, 2026).** A 24/7 personal AI agent running on Gemini 3.5 and built on the Antigravity platform. Spark "operates autonomously, under your direction" and is designed to "check with you before taking major actions on your behalf." It runs in the background on phone or laptop _even while those devices are off_. Rolling out to trusted testers (May 2026), Beta to Google AI Ultra subscribers (US) shortly after. ([Google I/O 2026: all announcements](https://blog.google/innovation-and-ai/technology/ai/google-io-2026-all-our-announcements/), [I/O 2026 keynote](https://blog.google/innovation-and-ai/sundar-pichai-io-2026/))
 
 Spark is the field's first consumer-scale **ambient agent** — an L4-default autonomy posture in the hands of millions of users, with the safety case resting on the "checks with you" gate. Its success or failure is one of the most consequential live experiments in the space.
 
@@ -696,7 +705,7 @@ Streaming a response token-by-token when the underlying call was synchronous. Pr
 
 ### 11.3 Spinners on tool calls
 
-A spinner gives no information. A tool call has *state* (running / done / failed / blocked) and *content* (which tool, what input, what output). Show that.
+A spinner gives no information. A tool call has _state_ (running / done / failed / blocked) and _content_ (which tool, what input, what output). Show that.
 
 **[agentic-craft enforcement]** No success/failure icons on tool calls; one status glyph per state; no spinners. Audited via `scripts/audit-ui.mjs`.
 
@@ -721,7 +730,7 @@ Showing `0.73 confidence` to a non-expert user. They cannot use this number — 
 
 Shipping at L4 or L5 by default without the structural gates that make it safe. "Background mode is on" before the user knows what background mode does, with no "checks with you before major actions" contract.
 
-**The nuance.** Gemini Spark ships at ambient/L4-default and is shipping at consumer scale — but with an explicit "checks with you before taking major actions" contract baked into the product framing. Devin 2.2 ships at L4 by design for a narrower power-user audience. The anti-pattern is *not* "any L4-default product is wrong"; it's "L4-default without a structural gate is wrong."
+**The nuance.** Gemini Spark ships at ambient/L4-default and is shipping at consumer scale — but with an explicit "checks with you before taking major actions" contract baked into the product framing. Devin 2.2 ships at L4 by design for a narrower power-user audience. The anti-pattern is _not_ "any L4-default product is wrong"; it's "L4-default without a structural gate is wrong."
 
 **What to do instead.** If you default high, the gate is non-negotiable. If you can't ship the gate, default to L2.
 
@@ -801,7 +810,7 @@ Personal use: clear. Team use: who paid for the agent's work? What's the UI for 
 
 ### 12.6 Agent identity at scale
 
-When agents start collaborating with other agents (A2A protocols, MCP), how does the user surface convey *which agent did what*? Naming, avatars, and provenance are not yet enough.
+When agents start collaborating with other agents (A2A protocols, MCP), how does the user surface convey _which agent did what_? Naming, avatars, and provenance are not yet enough.
 
 ### 12.7 Trust transfer across products
 
@@ -835,55 +844,55 @@ What's the UX for "the agent could do this, but the operation is suspicious enou
 
 ### 13.1 Primitives (registry:ui)
 
-| Item | Sections | What it implements |
-|------|----------|---------------------|
-| **composer** | §3.1, §7.4 | The chat input with islands, attachments, suggestions, and context-usage visualization — the entry point for visible work. |
-| **tool-call** | §3.1 | The universal tool-call row with running/completed/failed states. Visible work, base unit. |
-| **tool-tree** | §3.1, §7.3 | Parallel tool call visualization with L-connectors. Visible work for multi-step or parallel execution. |
-| **observable-work** | §3.1, §11.4 | Step disclosure for showing agent work, sources, state, completion — without exposing hidden reasoning. The summarized-thinking position made concrete (collapsed by default, expandable on demand, per Cloudscape). |
-| **status-indicator** | §3.1, §7.3, §11.3 | The product-wide status vocabulary: one shape per state. Refuses the spinner. Most-reused primitive. |
-| **reference-item** | §5.1, §6.1 | The composable row for sources, memories, findings — the provenance row. |
-| **source-preview** | §5.1, §5.3 | Citation preview with title, excerpt, location. Provenance for claims. |
-| **artifact-document** | §5.1, §10.5 | Source-backed output document with cited sections and missing-source states. Provenance for outputs. |
-| **decision-surface** | §3.2, §4.1 | The composable approval/clarification/rollback surface. The locked-preview pattern made composable. |
-| **action-preview** | §3.2 | The locked consequence preview itself. Center of §3.2. The Claude Cowork oversight contract made concrete. |
-| **clarifying-questions** | §3.2, §4.2 | Structured question group — text, single-choice, multi-choice. Replaces freeform "what did you mean?" |
-| **file-lifecycle** | §3.1, §10.1, §11.8 | Drag/upload/validate/retry states. Visible work for the file path. Cowork-shaped: file as primary unit. |
-| **agent-status-table** | §7.2, §7.3 | Rich operational table — status, active task, progress, confidence, cost, last activity. The operational dashboard primitive. Manager-surface-shaped. |
-| **usage-meter** | §4.2, §7.4, §12.5 | Token/cost/limit/coverage meter. Cost as design dimension. |
-| **contextual-workbench** | §10.7, §8.4 | The responsive surface that keeps chat visible while opening browser/source/diff/artifact beside it. The IDE-shaped-agent layout primitive. |
-| **effective-policy-preview** | §4.2 | Compact summary of what the autonomy + approval + notification + memory settings actually produce. The single piece of agent UI most often missing in shipping products. |
-| **memory-ledger-item** | §6.1, §6.5 | Provenance-rich memory row with scope, expiry, last-used. Memory as ledger, made concrete. |
-| **run-trace** | §7.3, §12.4 | Dense per-run trace with source touches, status, warnings, timing, expandable recovery. Datadog-style for agent runs. |
-| **handoff-packet** | §10.7, §12.6 | Ownership-transfer surface for multi-agent flows. Agent-to-agent handoff with explicit payload and recovery path. |
-| **workflow-phases** | §9.3, §9.5 | The phase rail — sequential phases with rollup metrics. Direct from Dynamic Workflows. |
+| Item                         | Sections           | What it implements                                                                                                                                                                                                   |
+| ---------------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **composer**                 | §3.1, §7.4         | The chat input with islands, attachments, suggestions, and context-usage visualization — the entry point for visible work.                                                                                           |
+| **tool-call**                | §3.1               | The universal tool-call row with running/completed/failed states. Visible work, base unit.                                                                                                                           |
+| **tool-tree**                | §3.1, §7.3         | Parallel tool call visualization with L-connectors. Visible work for multi-step or parallel execution.                                                                                                               |
+| **observable-work**          | §3.1, §11.4        | Step disclosure for showing agent work, sources, state, completion — without exposing hidden reasoning. The summarized-thinking position made concrete (collapsed by default, expandable on demand, per Cloudscape). |
+| **status-indicator**         | §3.1, §7.3, §11.3  | The product-wide status vocabulary: one shape per state. Refuses the spinner. Most-reused primitive.                                                                                                                 |
+| **reference-item**           | §5.1, §6.1         | The composable row for sources, memories, findings — the provenance row.                                                                                                                                             |
+| **source-preview**           | §5.1, §5.3         | Citation preview with title, excerpt, location. Provenance for claims.                                                                                                                                               |
+| **artifact-document**        | §5.1, §10.5        | Source-backed output document with cited sections and missing-source states. Provenance for outputs.                                                                                                                 |
+| **decision-surface**         | §3.2, §4.1         | The composable approval/clarification/rollback surface. The locked-preview pattern made composable.                                                                                                                  |
+| **action-preview**           | §3.2               | The locked consequence preview itself. Center of §3.2. The Claude Cowork oversight contract made concrete.                                                                                                           |
+| **clarifying-questions**     | §3.2, §4.2         | Structured question group — text, single-choice, multi-choice. Replaces freeform "what did you mean?"                                                                                                                |
+| **file-lifecycle**           | §3.1, §10.1, §11.8 | Drag/upload/validate/retry states. Visible work for the file path. Cowork-shaped: file as primary unit.                                                                                                              |
+| **agent-status-table**       | §7.2, §7.3         | Rich operational table — status, active task, progress, confidence, cost, last activity. The operational dashboard primitive. Manager-surface-shaped.                                                                |
+| **usage-meter**              | §4.2, §7.4, §12.5  | Token/cost/limit/coverage meter. Cost as design dimension.                                                                                                                                                           |
+| **contextual-workbench**     | §10.7, §8.4        | The responsive surface that keeps chat visible while opening browser/source/diff/artifact beside it. The IDE-shaped-agent layout primitive.                                                                          |
+| **effective-policy-preview** | §4.2               | Compact summary of what the autonomy + approval + notification + memory settings actually produce. The single piece of agent UI most often missing in shipping products.                                             |
+| **memory-ledger-item**       | §6.1, §6.5         | Provenance-rich memory row with scope, expiry, last-used. Memory as ledger, made concrete.                                                                                                                           |
+| **run-trace**                | §7.3, §12.4        | Dense per-run trace with source touches, status, warnings, timing, expandable recovery. Datadog-style for agent runs.                                                                                                |
+| **handoff-packet**           | §2.7, §10.7, §12.6 | Ownership-transfer surface for multi-agent flows. Agent-to-agent handoff with explicit payload, accountable human owner, and recovery path.                                                                          |
+| **workflow-phases**          | §9.3, §9.5         | The phase rail — sequential phases with rollup metrics. Direct from Dynamic Workflows.                                                                                                                               |
 
 ### 13.2 Blocks (registry:block)
 
-| Block | Sections | Composes |
-|-------|----------|----------|
-| **review-workflow** | §3.1, §3.2, §5 | observable-work + clarifying-questions + action-preview + decision-surface + reference-item |
-| **approval-workflow** | §3.2, §4.1 | observable-work + action-preview + decision-surface |
-| **clarifying-workflow** | §3.2, §4.2 | observable-work + clarifying-questions |
-| **source-backed-artifact** | §5.1, §5.3 | artifact-document + source-preview + usage-meter |
-| **memory-review** | §6.4, §6.5 | memory-ledger-item + source-preview + decision-surface |
-| **run-monitor** | §7.3, §7.4 | run-trace + agent-status-table + usage-meter |
-| **multi-agent-handoff** | §10.7, §12.6 | handoff-packet + agent-status-table + run-trace |
-| **agent-settings** | §4.2, §4.3 | effective-policy-preview |
-| **workflow-run-monitor** | §9.3, §9.5 | workflow-phases + agent-status-table + usage-meter |
+| Block                      | Sections       | Composes                                                                                    |
+| -------------------------- | -------------- | ------------------------------------------------------------------------------------------- |
+| **review-workflow**        | §3.1, §3.2, §5 | observable-work + clarifying-questions + action-preview + decision-surface + reference-item |
+| **approval-workflow**      | §3.2, §4.1     | observable-work + action-preview + decision-surface                                         |
+| **clarifying-workflow**    | §3.2, §4.2     | observable-work + clarifying-questions                                                      |
+| **source-backed-artifact** | §5.1, §5.3     | artifact-document + source-preview + usage-meter                                            |
+| **memory-review**          | §6.4, §6.5     | memory-ledger-item + source-preview + decision-surface                                      |
+| **run-monitor**            | §7.3, §7.4     | run-trace + agent-status-table + usage-meter                                                |
+| **multi-agent-handoff**    | §10.7, §12.6   | handoff-packet + agent-status-table + run-trace                                             |
+| **agent-settings**         | §4.2, §4.3     | effective-policy-preview                                                                    |
+| **workflow-run-monitor**   | §9.3, §9.5     | workflow-phases + agent-status-table + usage-meter                                          |
 
 ### 13.3 Coverage check
 
-| Section | Registry coverage | Gap |
-|---------|------------------|-----|
-| §3 Visible work + locked previews | Strong — 6 primitives | None |
-| §4 Autonomy as contract | Medium — effective-policy-preview, agent-settings | No per-action-type matrix UI yet |
-| §5 Provenance | Strong — source-preview, artifact-document, source-backed-artifact | None |
-| §6 Memory as ledger | Strong — memory-ledger-item, memory-review | No incognito-mode primitive; no per-topic memory control surface (the §12.10 gap) |
-| §7 Operational surfaces | Medium — agent-status-table, run-trace, run-monitor | No inbox primitive; no calendar primitive; no dedicated Manager Surface scaffold |
-| §8 Agent-authored UI | Weak — primitives exist but no renderer integration | The renderer is a 2027 problem (deliberate) |
-| §9 Dynamic Workflows | Strong — workflow-phases, workflow-run-monitor | No plan-as-code editor UI |
-| §11 Anti-patterns | Partial — `scripts/audit-ui.mjs` enforces §11.1, §11.3, §11.4, §11.9; remaining items are design-review concerns | None |
+| Section                           | Registry coverage                                                                                                | Gap                                                                               |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| §3 Visible work + locked previews | Strong — 6 primitives                                                                                            | None                                                                              |
+| §4 Autonomy as contract           | Medium — effective-policy-preview, agent-settings                                                                | No per-action-type matrix UI yet                                                  |
+| §5 Provenance                     | Strong — source-preview, artifact-document, source-backed-artifact                                               | None                                                                              |
+| §6 Memory as ledger               | Strong — memory-ledger-item, memory-review                                                                       | No incognito-mode primitive; no per-topic memory control surface (the §12.10 gap) |
+| §7 Operational surfaces           | Medium — agent-status-table, run-trace, run-monitor                                                              | No inbox primitive; no calendar primitive; no dedicated Manager Surface scaffold  |
+| §8 Agent-authored UI              | Weak — primitives exist but no renderer integration                                                              | The renderer is a 2027 problem (deliberate)                                       |
+| §9 Dynamic Workflows              | Strong — workflow-phases, workflow-run-monitor                                                                   | No plan-as-code editor UI                                                         |
+| §11 Anti-patterns                 | Partial — `scripts/audit-ui.mjs` enforces §11.1, §11.3, §11.4, §11.9; remaining items are design-review concerns | None                                                                              |
 
 ### 13.4 Roadmap implications
 
@@ -907,7 +916,7 @@ Whether to ship these is a product decision; the research justifies all five.
 
 3. **Risk-tier the gates.** Not all actions need approval. Auto-approve low-risk; preview-and-approve medium-risk; explicit confirmation for high-risk; block-or-notify for irreversible. Uniform confirmation produces agentic sludge. (Yocco; §3.2, §11.12.)
 
-4. **Locked previews before any consequential action.** Not a confirm dialog. A structured preview of exactly what will happen, in the format of the target system. The preview *is* the contract. The Cowork framing — "consequential decisions remain with the user" — is the product-level expression of this. (§3.2.)
+4. **Locked previews before any consequential action.** Not a confirm dialog. A structured preview of exactly what will happen, in the format of the target system. The preview _is_ the contract. The Cowork framing — "consequential decisions remain with the user" — is the product-level expression of this. (§3.2.)
 
 5. **Provenance is universal.** Every claim, every output, every action — traceable to its inputs. An agent that says less but cites everything beats one that says more without sources. (§5.)
 
@@ -963,6 +972,7 @@ For completeness, the autonomy taxonomies we considered but did not adopt as can
 - [Apple: HIG for Machine Learning](https://developer.apple.com/design/human-interface-guidelines/machine-learning)
 - [Google PAIR Guidebook](https://pair.withgoogle.com/guidebook)
 - [Microsoft: Conductor — deterministic orchestration](https://opensource.microsoft.com/blog/2026/05/14/conductor-deterministic-orchestration-for)
+- [Linear: Agent Interaction Guidelines](https://linear.app/developers/aig)
 - [LukeW: Agent Management Interface Patterns (June 2025)](https://www.lukew.com/ff/entry.asp?2106)
 - [LukeW: Showing the Work of Agents in UI (February 2026)](https://www.lukew.com/ff/entry.asp?2142)
 - [NN/g: Generative UI](https://www.nngroup.com/articles/generative-ui/)

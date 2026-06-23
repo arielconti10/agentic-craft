@@ -227,7 +227,7 @@ export function ThreadContent() {
   return (
     <article className="mx-auto w-full max-w-[960px] px-4 py-8 sm:px-6 sm:py-12">
       <header className="mb-7 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-[720px]">
+        <div className="max-w-[66ch]">
           <p className="section-label mb-3">Pattern 01</p>
           <h1 className="text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
             Thread

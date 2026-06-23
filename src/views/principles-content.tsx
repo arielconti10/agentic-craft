@@ -39,7 +39,7 @@ export function PrinciplesContent() {
           title={principle.title}
           description={principle.statement}
         >
-          <div className="mt-5 flex max-w-[680px] flex-col gap-3">
+          <div className="mt-5 flex max-w-[66ch] flex-col gap-3">
             <p className="text-sm leading-relaxed text-muted-foreground">
               {principle.elaboration}
             </p>

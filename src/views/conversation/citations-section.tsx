@@ -73,7 +73,7 @@ export function CitationsSection() {
       </p>
 
       <div className="mt-7 border-y border-border/50 py-3">
-        <div className="mx-auto max-w-[720px]">
+        <div className="mx-auto max-w-[66ch]">
           <div className="bg-muted/20 px-3 py-4 sm:px-4 sm:py-5">
             <div className="agent-prose font-serif text-base">
               <p>
