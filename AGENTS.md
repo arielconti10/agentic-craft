@@ -47,6 +47,9 @@ Keep this file short. Read only the task-specific docs you need.
 | Product/design rationale                           | `DESIGN.md`                     |
 | Pattern research                                   | `docs/research.md`              |
 | Registry install surface                           | `README.md` and `registry.json` |
+| Composer/autonomy session handoff (eve-chat)       | `sessions/2026-07-03-eve-chat-composer-autonomy.md` |
+| eve-chat compound composer + playgrounds (snapshot)| `references/eve-chat/README.md` |
+| July 2026 autonomy/composer web audits             | `audits/` (see session doc index) |
 
 Project-local skills live in `.agents/skills/`. Use only the skills relevant to
 the task; do not load them all by default. Skill-local `AGENTS.md` files apply
