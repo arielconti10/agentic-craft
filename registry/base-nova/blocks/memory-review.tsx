@@ -4,7 +4,7 @@ import * as React from "react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DecisionSurface } from "@/components/ui/decision-surface"
+import { HumanGate } from "@/components/ui/human-gate"
 import { MemoryLedgerItem } from "@/components/ui/memory-ledger-item"
 import { SourcePreview } from "@/components/ui/source-preview"
 
@@ -52,37 +52,37 @@ function MemoryReviewBlock() {
           onDelete={() => setSelected("policy")}
         />
 
-        <DecisionSurface.Root>
-          <DecisionSurface.Trigger render={<Button type="button" size="sm" />}>
+        <HumanGate.Root>
+          <HumanGate.Trigger render={<Button type="button" size="sm" />}>
             Review memory save
-          </DecisionSurface.Trigger>
-          <DecisionSurface.Content>
-            <DecisionSurface.Header>
-              <DecisionSurface.Title>Save this memory?</DecisionSurface.Title>
-              <DecisionSurface.Description>
+          </HumanGate.Trigger>
+          <HumanGate.Content>
+            <HumanGate.Header>
+              <HumanGate.Title>Save this memory?</HumanGate.Title>
+              <HumanGate.Description>
                 Saved memory will be reused in matching launch review tasks
                 until the expiry period ends or the user removes it.
-              </DecisionSurface.Description>
-            </DecisionSurface.Header>
-            <DecisionSurface.Body>
-              <DecisionSurface.ImpactList>
-                <DecisionSurface.ImpactItem label="Scope">
+              </HumanGate.Description>
+            </HumanGate.Header>
+            <HumanGate.Body>
+              <HumanGate.ImpactList>
+                <HumanGate.ImpactItem label="Scope">
                   Workspace
-                </DecisionSurface.ImpactItem>
-                <DecisionSurface.ImpactItem label="Source">
+                </HumanGate.ImpactItem>
+                <HumanGate.ImpactItem label="Source">
                   Launch review session
-                </DecisionSurface.ImpactItem>
-                <DecisionSurface.ImpactItem label="Expiry">
+                </HumanGate.ImpactItem>
+                <HumanGate.ImpactItem label="Expiry">
                   90 days
-                </DecisionSurface.ImpactItem>
-              </DecisionSurface.ImpactList>
-            </DecisionSurface.Body>
-            <DecisionSurface.Footer>
-              <DecisionSurface.Cancel>Deny</DecisionSurface.Cancel>
-              <DecisionSurface.Confirm>Save memory</DecisionSurface.Confirm>
-            </DecisionSurface.Footer>
-          </DecisionSurface.Content>
-        </DecisionSurface.Root>
+                </HumanGate.ImpactItem>
+              </HumanGate.ImpactList>
+            </HumanGate.Body>
+            <HumanGate.Footer>
+              <HumanGate.Cancel>Deny</HumanGate.Cancel>
+              <HumanGate.Confirm>Save memory</HumanGate.Confirm>
+            </HumanGate.Footer>
+          </HumanGate.Content>
+        </HumanGate.Root>
       </div>
 
       <SourcePreview

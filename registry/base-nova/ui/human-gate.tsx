@@ -15,26 +15,24 @@ import {
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 
-function DecisionSurfaceRoot({
-  ...props
-}: React.ComponentProps<typeof Dialog>) {
+function HumanGateRoot({ ...props }: React.ComponentProps<typeof Dialog>) {
   return <Dialog {...props} />
 }
 
-function DecisionSurfaceTrigger({
+function HumanGateTrigger({
   ...props
 }: React.ComponentProps<typeof DialogTrigger>) {
   return <DialogTrigger {...props} />
 }
 
-function DecisionSurfaceContent({
+function HumanGateContent({
   className,
   children,
   ...props
 }: React.ComponentProps<typeof DialogContent>) {
   return (
     <DialogContent
-      data-slot="decision-surface-content"
+      data-slot="human-gate-content"
       className={cn("sm:max-w-lg", className)}
       {...props}
     >
@@ -43,51 +41,48 @@ function DecisionSurfaceContent({
   )
 }
 
-function DecisionSurfaceHeader({
+function HumanGateHeader({
   className,
   ...props
 }: React.ComponentProps<typeof DialogHeader>) {
   return (
     <DialogHeader
-      data-slot="decision-surface-header"
+      data-slot="human-gate-header"
       className={cn("pr-8", className)}
       {...props}
     />
   )
 }
 
-function DecisionSurfaceTitle({
+function HumanGateTitle({
   ...props
 }: React.ComponentProps<typeof DialogTitle>) {
   return <DialogTitle {...props} />
 }
 
-function DecisionSurfaceDescription({
+function HumanGateDescription({
   ...props
 }: React.ComponentProps<typeof DialogDescription>) {
   return <DialogDescription {...props} />
 }
 
-function DecisionSurfaceBody({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function HumanGateBody({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      data-slot="decision-surface-body"
+      data-slot="human-gate-body"
       className={cn("flex flex-col gap-3", className)}
       {...props}
     />
   )
 }
 
-function DecisionSurfaceImpactList({
+function HumanGateImpactList({
   className,
   ...props
 }: React.ComponentProps<"dl">) {
   return (
     <dl
-      data-slot="decision-surface-impact-list"
+      data-slot="human-gate-impact-list"
       className={cn(
         "grid grid-cols-[minmax(96px,0.45fr)_1fr] gap-x-4 gap-y-2 rounded-lg border border-border/70 p-3 text-sm",
         className
@@ -97,7 +92,7 @@ function DecisionSurfaceImpactList({
   )
 }
 
-function DecisionSurfaceImpactItem({
+function HumanGateImpactItem({
   label,
   children,
 }: {
@@ -112,14 +107,14 @@ function DecisionSurfaceImpactItem({
   )
 }
 
-function DecisionSurfaceFooter({
+function HumanGateFooter({
   className,
   ...props
 }: React.ComponentProps<typeof DialogFooter>) {
   return <DialogFooter className={cn("mt-1", className)} {...props} />
 }
 
-function DecisionSurfaceCancel({
+function HumanGateCancel({
   children = "Cancel",
   ...props
 }: React.ComponentProps<typeof DialogClose>) {
@@ -130,7 +125,7 @@ function DecisionSurfaceCancel({
   )
 }
 
-function DecisionSurfaceConfirm({
+function HumanGateConfirm({
   variant = "default",
   children = "Confirm",
   ...props
@@ -142,33 +137,33 @@ function DecisionSurfaceConfirm({
   )
 }
 
-const DecisionSurface = {
-  Root: DecisionSurfaceRoot,
-  Trigger: DecisionSurfaceTrigger,
-  Content: DecisionSurfaceContent,
-  Header: DecisionSurfaceHeader,
-  Title: DecisionSurfaceTitle,
-  Description: DecisionSurfaceDescription,
-  Body: DecisionSurfaceBody,
-  ImpactList: DecisionSurfaceImpactList,
-  ImpactItem: DecisionSurfaceImpactItem,
-  Footer: DecisionSurfaceFooter,
-  Cancel: DecisionSurfaceCancel,
-  Confirm: DecisionSurfaceConfirm,
+const HumanGate = {
+  Root: HumanGateRoot,
+  Trigger: HumanGateTrigger,
+  Content: HumanGateContent,
+  Header: HumanGateHeader,
+  Title: HumanGateTitle,
+  Description: HumanGateDescription,
+  Body: HumanGateBody,
+  ImpactList: HumanGateImpactList,
+  ImpactItem: HumanGateImpactItem,
+  Footer: HumanGateFooter,
+  Cancel: HumanGateCancel,
+  Confirm: HumanGateConfirm,
 }
 
 export {
-  DecisionSurface,
-  DecisionSurfaceRoot,
-  DecisionSurfaceTrigger,
-  DecisionSurfaceContent,
-  DecisionSurfaceHeader,
-  DecisionSurfaceTitle,
-  DecisionSurfaceDescription,
-  DecisionSurfaceBody,
-  DecisionSurfaceImpactList,
-  DecisionSurfaceImpactItem,
-  DecisionSurfaceFooter,
-  DecisionSurfaceCancel,
-  DecisionSurfaceConfirm,
+  HumanGate,
+  HumanGateRoot,
+  HumanGateTrigger,
+  HumanGateContent,
+  HumanGateHeader,
+  HumanGateTitle,
+  HumanGateDescription,
+  HumanGateBody,
+  HumanGateImpactList,
+  HumanGateImpactItem,
+  HumanGateFooter,
+  HumanGateCancel,
+  HumanGateConfirm,
 }

@@ -229,7 +229,7 @@ We adopt the 5-level model as canonical for agentic-craft.
 | ------ | ----------------- | --------------------------------------------------------------- | ---------------------------------------- | -------------------------------------------- |
 | **L1** | Operator          | Single-step responses to narrow commands. No memory, no plan.   | Initiates every action                   | Inline composer; suggestion chips            |
 | **L2** | Collaborator      | Plans a sequence of steps; user initiates each                  | Triggers the plan; supervises each step  | Plan card; observable work; per-step approve |
-| **L3** | Consultant (HITL) | Plans and executes; pauses before flagged actions               | Approves at action gates                 | Locked consequence preview; decision surface |
+| **L3** | Consultant (HITL) | Plans and executes; pauses before flagged actions               | Approves at action gates                 | Locked consequence preview; human gate |
 | **L4** | Approver (HOTL)   | Acts autonomously within a sandbox; surfaces results for review | Reviews outcomes; intervenes when needed | Run monitor; kill switch; live trace         |
 | **L5** | Observer          | Self-directed; manages its own goals                            | Reviews after the fact                   | Activity log; anomaly alerts                 |
 
@@ -466,7 +466,7 @@ The AG-UI documentation makes the relationship explicit: AG-UI handles streaming
 
 ### 8.6 What agentic-craft contributes
 
-agentic-craft is not yet a renderer for agent-authored UI — but it is the _primitives library_ such a renderer would draw from. Items like `action-preview`, `clarifying-questions`, `decision-surface`, `source-preview`, `agent-status-table`, and `usage-meter` are the kind of well-typed components an agent-authored UI runtime should reach for. The position to take: ship the primitives now; the renderer integration is a 2027 problem.
+agentic-craft is not yet a renderer for agent-authored UI — but it is the _primitives library_ such a renderer would draw from. Items like `action-preview`, `clarifying-questions`, `human-gate`, `source-preview`, `agent-status-table`, and `usage-meter` are the kind of well-typed components an agent-authored UI runtime should reach for. The position to take: ship the primitives now; the renderer integration is a 2027 problem.
 
 ## 9. Dynamic Workflows as a product surface
 
@@ -854,7 +854,7 @@ What's the UX for "the agent could do this, but the operation is suspicious enou
 | **reference-item**           | §5.1, §6.1         | The composable row for sources, memories, findings — the provenance row.                                                                                                                                             |
 | **source-preview**           | §5.1, §5.3         | Citation preview with title, excerpt, location. Provenance for claims.                                                                                                                                               |
 | **artifact-document**        | §5.1, §10.5        | Source-backed output document with cited sections and missing-source states. Provenance for outputs.                                                                                                                 |
-| **decision-surface**         | §3.2, §4.1         | The composable approval/clarification/rollback surface. The locked-preview pattern made composable.                                                                                                                  |
+| **human-gate**         | §3.2, §4.1         | The composable approval/clarification/rollback surface. The locked-preview pattern made composable.                                                                                                                  |
 | **action-preview**           | §3.2               | The locked consequence preview itself. Center of §3.2. The Claude Cowork oversight contract made concrete.                                                                                                           |
 | **clarifying-questions**     | §3.2, §4.2         | Structured question group — text, single-choice, multi-choice. Replaces freeform "what did you mean?"                                                                                                                |
 | **file-lifecycle**           | §3.1, §10.1, §11.8 | Drag/upload/validate/retry states. Visible work for the file path. Cowork-shaped: file as primary unit.                                                                                                              |
@@ -871,11 +871,11 @@ What's the UX for "the agent could do this, but the operation is suspicious enou
 
 | Block                      | Sections       | Composes                                                                                    |
 | -------------------------- | -------------- | ------------------------------------------------------------------------------------------- |
-| **review-workflow**        | §3.1, §3.2, §5 | observable-work + clarifying-questions + action-preview + decision-surface + reference-item |
-| **approval-workflow**      | §3.2, §4.1     | observable-work + action-preview + decision-surface                                         |
+| **review-workflow**        | §3.1, §3.2, §5 | observable-work + clarifying-questions + action-preview + human-gate + reference-item |
+| **approval-workflow**      | §3.2, §4.1     | observable-work + action-preview + human-gate                                         |
 | **clarifying-workflow**    | §3.2, §4.2     | observable-work + clarifying-questions                                                      |
 | **source-backed-artifact** | §5.1, §5.3     | artifact-document + source-preview + usage-meter                                            |
-| **memory-review**          | §6.4, §6.5     | memory-ledger-item + source-preview + decision-surface                                      |
+| **memory-review**          | §6.4, §6.5     | memory-ledger-item + source-preview + human-gate                                      |
 | **run-monitor**            | §7.3, §7.4     | run-trace + agent-status-table + usage-meter                                                |
 | **multi-agent-handoff**    | §10.7, §12.6   | handoff-packet + agent-status-table + run-trace                                             |
 | **agent-settings**         | §4.2, §4.3     | effective-policy-preview                                                                    |

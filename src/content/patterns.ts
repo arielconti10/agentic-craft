@@ -19,8 +19,8 @@ export const patternEntries: PatternEntry[] = [
     shadcnPrimitives: ["Badge", "Collapsible", "Table"],
   },
   {
-    id: "decision-surface",
-    title: "Decision Surface",
+    id: "human-gate",
+    title: "Human Gate",
     category: "Actions",
     summary: "Pause before external, costly, or irreversible actions.",
     userAnxiety:

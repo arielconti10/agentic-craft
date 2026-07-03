@@ -15,7 +15,7 @@ import { PatternSpecTable } from "@/components/reference/pattern-spec-table"
 import { ActionPreview } from "@/components/ui/action-preview"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
-import { DecisionSurface } from "@/components/ui/decision-surface"
+import { HumanGate } from "@/components/ui/human-gate"
 import { EffectivePolicyPreview } from "@/components/ui/effective-policy-preview"
 import { cn } from "@/lib/utils"
 
@@ -331,48 +331,46 @@ function AutonomyWorkedExample({ level }: { level: AutonomyLevel }) {
 
 function ConfirmActionButton({ level }: { level: AutonomyLevel }) {
   return (
-    <DecisionSurface.Root>
-      <DecisionSurface.Trigger render={<Button type="button" size="sm" />}>
+    <HumanGate.Root>
+      <HumanGate.Trigger render={<Button type="button" size="sm" />}>
         {level.primaryAction}
-      </DecisionSurface.Trigger>
-      <DecisionSurface.Content>
-        <DecisionSurface.Header>
-          <DecisionSurface.Title>Approve this action?</DecisionSurface.Title>
-          <DecisionSurface.Description>
+      </HumanGate.Trigger>
+      <HumanGate.Content>
+        <HumanGate.Header>
+          <HumanGate.Title>Approve this action?</HumanGate.Title>
+          <HumanGate.Description>
             The agent will send the locked message exactly as previewed. Review
             the impact before approving.
-          </DecisionSurface.Description>
-        </DecisionSurface.Header>
-        <DecisionSurface.Body>
-          <DecisionSurface.ImpactList>
-            <DecisionSurface.ImpactItem label="Affected object">
+          </HumanGate.Description>
+        </HumanGate.Header>
+        <HumanGate.Body>
+          <HumanGate.ImpactList>
+            <HumanGate.ImpactItem label="Affected object">
               Release checklist follow-up
-            </DecisionSurface.ImpactItem>
-            <DecisionSurface.ImpactItem label="Recipient">
+            </HumanGate.ImpactItem>
+            <HumanGate.ImpactItem label="Recipient">
               release-owner@meridian.internal
-            </DecisionSurface.ImpactItem>
-            <DecisionSurface.ImpactItem label="Source">
+            </HumanGate.ImpactItem>
+            <HumanGate.ImpactItem label="Source">
               Launch checklist, risk log, owner thread
-            </DecisionSurface.ImpactItem>
-            <DecisionSurface.ImpactItem label="Cost / time">
+            </HumanGate.ImpactItem>
+            <HumanGate.ImpactItem label="Cost / time">
               $0.18 estimated / under 2 min
-            </DecisionSurface.ImpactItem>
-            <DecisionSurface.ImpactItem label="Consequence">
+            </HumanGate.ImpactItem>
+            <HumanGate.ImpactItem label="Consequence">
               {level.consequence}
-            </DecisionSurface.ImpactItem>
-            <DecisionSurface.ImpactItem label="Rollback">
+            </HumanGate.ImpactItem>
+            <HumanGate.ImpactItem label="Rollback">
               {level.rollback}
-            </DecisionSurface.ImpactItem>
-          </DecisionSurface.ImpactList>
-        </DecisionSurface.Body>
-        <DecisionSurface.Footer>
-          <DecisionSurface.Cancel />
-          <DecisionSurface.Confirm>
-            {level.primaryAction}
-          </DecisionSurface.Confirm>
-        </DecisionSurface.Footer>
-      </DecisionSurface.Content>
-    </DecisionSurface.Root>
+            </HumanGate.ImpactItem>
+          </HumanGate.ImpactList>
+        </HumanGate.Body>
+        <HumanGate.Footer>
+          <HumanGate.Cancel />
+          <HumanGate.Confirm>{level.primaryAction}</HumanGate.Confirm>
+        </HumanGate.Footer>
+      </HumanGate.Content>
+    </HumanGate.Root>
   )
 }
 

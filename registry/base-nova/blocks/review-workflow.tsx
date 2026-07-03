@@ -8,7 +8,7 @@ import {
   type ClarifyingQuestion,
   type ClarifyingQuestionValue,
 } from "@/components/ui/clarifying-questions"
-import { DecisionSurface } from "@/components/ui/decision-surface"
+import { HumanGate } from "@/components/ui/human-gate"
 import { ObservableWork } from "@/components/ui/observable-work"
 import { ReferenceItem } from "@/components/ui/reference-item"
 import { Badge } from "@/components/ui/badge"
@@ -130,36 +130,34 @@ function ReviewWorkflowBlock() {
           { label: "Rollback", value: "Post a correction or revoke the draft" },
         ]}
       >
-        <DecisionSurface.Root>
-          <DecisionSurface.Trigger render={<Button type="button" size="sm" />}>
+        <HumanGate.Root>
+          <HumanGate.Trigger render={<Button type="button" size="sm" />}>
             Review approval
-          </DecisionSurface.Trigger>
-          <DecisionSurface.Content>
-            <DecisionSurface.Header>
-              <DecisionSurface.Title>
-                Send the findings summary?
-              </DecisionSurface.Title>
-              <DecisionSurface.Description>
+          </HumanGate.Trigger>
+          <HumanGate.Content>
+            <HumanGate.Header>
+              <HumanGate.Title>Send the findings summary?</HumanGate.Title>
+              <HumanGate.Description>
                 The agent will send the locked summary payload with cited
                 evidence to the selected review channel.
-              </DecisionSurface.Description>
-            </DecisionSurface.Header>
-            <DecisionSurface.Body>
-              <DecisionSurface.ImpactList>
-                <DecisionSurface.ImpactItem label="Audience">
+              </HumanGate.Description>
+            </HumanGate.Header>
+            <HumanGate.Body>
+              <HumanGate.ImpactList>
+                <HumanGate.ImpactItem label="Audience">
                   Project reviewers
-                </DecisionSurface.ImpactItem>
-                <DecisionSurface.ImpactItem label="Reversibility">
+                </HumanGate.ImpactItem>
+                <HumanGate.ImpactItem label="Reversibility">
                   Correction can be posted after send
-                </DecisionSurface.ImpactItem>
-              </DecisionSurface.ImpactList>
-            </DecisionSurface.Body>
-            <DecisionSurface.Footer>
-              <DecisionSurface.Cancel />
-              <DecisionSurface.Confirm>Approve</DecisionSurface.Confirm>
-            </DecisionSurface.Footer>
-          </DecisionSurface.Content>
-        </DecisionSurface.Root>
+                </HumanGate.ImpactItem>
+              </HumanGate.ImpactList>
+            </HumanGate.Body>
+            <HumanGate.Footer>
+              <HumanGate.Cancel />
+              <HumanGate.Confirm>Approve</HumanGate.Confirm>
+            </HumanGate.Footer>
+          </HumanGate.Content>
+        </HumanGate.Root>
       </ActionPreview>
     </div>
   )

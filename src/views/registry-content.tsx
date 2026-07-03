@@ -133,8 +133,8 @@ export function RegistryContent() {
         <h2 className="text-xl font-semibold tracking-tight">Primitives</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Primitives are small, composable surfaces: composer, source preview,
-          observable work, decision surface, artifact document, memory rows, and
-          usage meters.
+          observable work, human gate, artifact document, memory rows, and usage
+          meters.
         </p>
         <div className="mt-8">
           <RegistryItemTable items={primitiveItems} />

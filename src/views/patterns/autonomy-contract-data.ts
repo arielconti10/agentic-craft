@@ -352,7 +352,7 @@ const COMPONENTS_USED = [
     spec: "Turns autonomy from a level name into the current execution, confirmation, and initiation rules.",
   },
   {
-    element: "Decision Surface",
+    element: "Human Gate",
     spec: "Carries the explicit approval step when the contract is Execute with confirm.",
   },
   {

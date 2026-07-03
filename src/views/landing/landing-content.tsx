@@ -9,52 +9,90 @@ const GITHUB_URL = "https://github.com/bitcomplete/agentic-craft"
 const REGISTRY_CMD =
   "npx shadcn@latest add bitcomplete/agentic-craft/observable-work"
 
-const AREAS = [
-  [
-    "Conversation",
-    "/conversation",
-    "Message surfaces, citations, observable work, clarifying questions.",
-  ],
-  [
-    "Sources & artifacts",
-    "/sources",
-    "Citation systems, source previews, source-backed documents.",
-  ],
-  [
-    "Agent actions",
-    "/actions",
-    "Tool calls, subagents, plans, decision flows, approval gates.",
-  ],
-  [
-    "Trust & control plane",
-    "/trust",
-    "Autonomy settings, consent, provenance, audit trails, kill switch.",
-  ],
-  [
-    "Memory",
-    "/memory",
-    "Memory panels, ledger items, provenance previews, privacy controls.",
-  ],
-  [
-    "Multi-agent",
-    "/multi-agent",
-    "Agent identity, handoff, routing, parallel execution.",
-  ],
-  [
-    "Feedback",
-    "/feedback",
-    "Corrections, ratings, error reports, escalation, feedback history.",
-  ],
-  [
-    "Observability",
-    "/observability",
-    "Activity timelines, token usage, session timelines, error states.",
-  ],
-  [
-    "Templates",
-    "/templates",
-    "Complete workflow references built from the primitives.",
-  ],
+type LedgerRow = readonly [name: string, href: string, description: string]
+
+type LedgerGroup = {
+  readonly label: string
+  readonly description: string
+  readonly rows: readonly LedgerRow[]
+}
+
+const MODEL: readonly LedgerGroup[] = [
+  {
+    label: "Surfaces",
+    description: "The anatomy of one session.",
+    rows: [
+      [
+        "Thread",
+        "/thread",
+        "The conversation: messages, observable work, inline tool activity.",
+      ],
+      [
+        "Composer",
+        "/conversation",
+        "The instruction surface: input, context, steering, submit lifecycle.",
+      ],
+      [
+        "Run Panel",
+        "/observability",
+        "Execution context: activity, usage, session timeline, errors.",
+      ],
+      [
+        "Human Gate",
+        "/actions",
+        "Decide before continuation: approvals, ask blocks, locked previews.",
+      ],
+      [
+        "Review Surface",
+        "/sources",
+        "Inspect outputs before accepting: artifacts, diffs, sources.",
+      ],
+    ],
+  },
+  {
+    label: "Operations",
+    description: "Containers for many sessions.",
+    rows: [
+      [
+        "Operational surfaces",
+        "/operational-surfaces",
+        "Inbox, kanban, manager surface, run monitor, background tasks.",
+      ],
+      [
+        "Multi-agent",
+        "/multi-agent",
+        "Agent identity, handoff, routing, parallel execution.",
+      ],
+    ],
+  },
+  {
+    label: "Contracts",
+    description: "Invariants that render across every surface.",
+    rows: [
+      [
+        "Autonomy & trust",
+        "/trust",
+        "Autonomy levers, consent, provenance, audit trails, kill switch.",
+      ],
+      [
+        "Memory",
+        "/memory",
+        "Memory ledger, provenance previews, review queues, privacy controls.",
+      ],
+      [
+        "Feedback",
+        "/feedback",
+        "Corrections, ratings, escalation, visible consequences.",
+      ],
+    ],
+  },
+] as const
+
+const ROUTING_RULE = [
+  ["understand the conversation", "Thread"],
+  ["understand the execution context", "Run Panel"],
+  ["decide before continuing", "Human Gate"],
+  ["inspect an output", "Review Surface"],
 ] as const
 
 function LogoMark() {
@@ -423,9 +461,9 @@ export function LandingContent() {
                 style={{ "--rd": "60ms" } as React.CSSProperties}
               >
                 <p>
-                  Researched interaction patterns for orchestration, tool use,
-                  approvals, memory, and observability — shipped as installable
-                  components.
+                  A session decomposes into five surfaces — Thread, Composer,
+                  Run Panel, Human Gate, Review Surface. Researched patterns for
+                  each, shipped as installable components.
                 </p>
                 <div className="hero-cta">
                   <a
@@ -456,34 +494,60 @@ export function LandingContent() {
           <div className="wrap band-inner">
             <section className="section" id="areas" data-od-id="areas">
               <div className="section-head will-reveal">
-                <p className="kicker">01 · Reference areas</p>
-                <h2>Nine areas. One system.</h2>
+                <p className="kicker">01 · The model</p>
+                <h2>Five surfaces. One routing rule.</h2>
                 <p>
-                  A taxonomy of agentic UX, synthesized from research and
-                  shipping products. Behavior, states, and rationale for every
-                  pattern.
+                  A session decomposes into five surfaces. Fleets of sessions
+                  get an operations tier. Autonomy, memory, and provenance are
+                  contracts that hold across all of them.
+                </p>
+                <p>
+                  {ROUTING_RULE.map(([need, surface], index) => (
+                    <React.Fragment key={surface}>
+                      {index > 0 ? " · " : "If the user needs to "}
+                      {index > 0 ? `to ${need}` : need} →{" "}
+                      <strong>{surface}</strong>
+                    </React.Fragment>
+                  ))}
                 </p>
               </div>
-              <div className="ledger">
-                {AREAS.map(([name, href, description], index) => (
-                  <a
-                    key={name}
-                    className="ledger-row will-reveal"
-                    href={href}
-                    style={{ "--rd": `${index * 25}ms` } as React.CSSProperties}
-                    aria-label={`${name} — ${description}`}
-                  >
-                    <span className="num tabular">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="name">{name}</span>
-                    <span className="desc">{description}</span>
-                    <span className="arrow" aria-hidden="true">
-                      →
-                    </span>
-                  </a>
-                ))}
-              </div>
+              {MODEL.map((group, groupIndex) => {
+                const offset = MODEL.slice(0, groupIndex).reduce(
+                  (count, g) => count + g.rows.length,
+                  0
+                )
+                return (
+                  <React.Fragment key={group.label}>
+                    <div className="section-head will-reveal">
+                      <p className="kicker">
+                        {group.label} · {group.description}
+                      </p>
+                    </div>
+                    <div className="ledger">
+                      {group.rows.map(([name, href, description], index) => (
+                        <a
+                          key={name}
+                          className="ledger-row will-reveal"
+                          href={href}
+                          style={
+                            { "--rd": `${index * 25}ms` } as React.CSSProperties
+                          }
+                          aria-label={`${name} — ${description}`}
+                        >
+                          <span className="num tabular">
+                            {String(offset + index + 1).padStart(2, "0")}
+                          </span>
+                          <span className="name">{name}</span>
+                          <span className="desc">{description}</span>
+                          <span className="arrow" aria-hidden="true">
+                            →
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  </React.Fragment>
+                )
+              })}
             </section>
 
             <section

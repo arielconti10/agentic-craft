@@ -45,7 +45,7 @@ export const templateDetails: TemplateDetail[] = [
       "Reference Item",
       "Clarifying Questions",
       "Action Preview",
-      "Decision Surface",
+      "Human Gate",
     ],
     states: [
       {
@@ -79,7 +79,7 @@ export const templateDetails: TemplateDetail[] = [
       "The action scope changes after preview, rollback is unavailable, or permission is insufficient.",
     recovery:
       "Invalidate the approval, refresh the preview, and require a new confirmation.",
-    pieces: ["Observable Work", "Action Preview", "Decision Surface", "Badge"],
+    pieces: ["Observable Work", "Action Preview", "Human Gate", "Badge"],
     states: [
       {
         state: "Preview",
@@ -190,7 +190,7 @@ export const templateDetails: TemplateDetail[] = [
       "Memory Ledger Item",
       "Source Preview",
       "Reference Item",
-      "Decision Surface",
+      "Human Gate",
     ],
     states: [
       {

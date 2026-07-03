@@ -11,7 +11,7 @@ import {
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { ActionPreview } from "@/components/ui/action-preview"
 import { Button } from "@/components/ui/button"
-import { DecisionSurface } from "@/components/ui/decision-surface"
+import { HumanGate } from "@/components/ui/human-gate"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -153,60 +153,58 @@ export function ApprovalGateSection() {
                   />
 
                   <div className="flex items-center gap-2">
-                    <DecisionSurface.Root>
-                      <DecisionSurface.Trigger
+                    <HumanGate.Root>
+                      <HumanGate.Trigger
                         render={<Button type="button" size="sm" />}
                       >
                         Approve
-                      </DecisionSurface.Trigger>
-                      <DecisionSurface.Content>
-                        <DecisionSurface.Header>
-                          <DecisionSurface.Title>
-                            Send this email?
-                          </DecisionSurface.Title>
-                          <DecisionSurface.Description>
+                      </HumanGate.Trigger>
+                      <HumanGate.Content>
+                        <HumanGate.Header>
+                          <HumanGate.Title>Send this email?</HumanGate.Title>
+                          <HumanGate.Description>
                             The agent will send this message to the listed
                             recipient. Review the impact before approving.
-                          </DecisionSurface.Description>
-                        </DecisionSurface.Header>
-                        <DecisionSurface.Body>
-                          <DecisionSurface.ImpactList>
-                            <DecisionSurface.ImpactItem label="Recipient">
+                          </HumanGate.Description>
+                        </HumanGate.Header>
+                        <HumanGate.Body>
+                          <HumanGate.ImpactList>
+                            <HumanGate.ImpactItem label="Recipient">
                               {APPROVAL_EMAIL.recipient}
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Subject">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Subject">
                               {APPROVAL_EMAIL.subject}
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Affected object">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Affected object">
                               Project launch summary email
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Cost / time">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Cost / time">
                               $0.09 estimated / under 1 min
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Permission">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Permission">
                               External communication approval
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Source">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Source">
                               Project brief, roadmap, launch checklist
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Reversibility">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Reversibility">
                               Not reversible after send
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Rollback">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Rollback">
                               Follow-up correction only
-                            </DecisionSurface.ImpactItem>
-                          </DecisionSurface.ImpactList>
-                        </DecisionSurface.Body>
-                        <DecisionSurface.Footer>
-                          <DecisionSurface.Cancel />
-                          <DecisionSurface.Confirm
+                            </HumanGate.ImpactItem>
+                          </HumanGate.ImpactList>
+                        </HumanGate.Body>
+                        <HumanGate.Footer>
+                          <HumanGate.Cancel />
+                          <HumanGate.Confirm
                             onClick={() => setApprovalStatus("approved")}
                           >
                             Approve
-                          </DecisionSurface.Confirm>
-                        </DecisionSurface.Footer>
-                      </DecisionSurface.Content>
-                    </DecisionSurface.Root>
+                          </HumanGate.Confirm>
+                        </HumanGate.Footer>
+                      </HumanGate.Content>
+                    </HumanGate.Root>
                     <Button
                       type="button"
                       onClick={() => setApprovalStatus("denied")}
@@ -358,70 +356,70 @@ export function ApprovalGateSection() {
                   </ActionPreview>
 
                   <div className="flex items-center gap-2">
-                    <DecisionSurface.Root>
-                      <DecisionSurface.Trigger
+                    <HumanGate.Root>
+                      <HumanGate.Trigger
                         render={<Button type="button" size="sm" />}
                       >
                         Approve
-                      </DecisionSurface.Trigger>
-                      <DecisionSurface.Content>
-                        <DecisionSurface.Header>
-                          <DecisionSurface.Title>
+                      </HumanGate.Trigger>
+                      <HumanGate.Content>
+                        <HumanGate.Header>
+                          <HumanGate.Title>
                             Apply these document changes?
-                          </DecisionSurface.Title>
-                          <DecisionSurface.Description>
+                          </HumanGate.Title>
+                          <HumanGate.Description>
                             The agent will update the document with the reviewed
                             additions and removals.
-                          </DecisionSurface.Description>
-                        </DecisionSurface.Header>
-                        <DecisionSurface.Body>
-                          <DecisionSurface.ImpactList>
-                            <DecisionSurface.ImpactItem label="Adds">
+                          </HumanGate.Description>
+                        </HumanGate.Header>
+                        <HumanGate.Body>
+                          <HumanGate.ImpactList>
+                            <HumanGate.ImpactItem label="Adds">
                               {
                                 APPROVAL_CHANGES.filter(
                                   (change) => change.type === "add"
                                 ).length
                               }{" "}
                               changes
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Removes">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Removes">
                               {
                                 APPROVAL_CHANGES.filter(
                                   (change) => change.type === "remove"
                                 ).length
                               }{" "}
                               references
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Affected object">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Affected object">
                               Project-Brief-v3.pdf
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Cost / time">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Cost / time">
                               $0.04 estimated / under 1 min
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Permission">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Permission">
                               Document edit approval
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Source">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Source">
                               Launch Policy v2 and roadmap notes
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Reversibility">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Reversibility">
                               Reversible through document history
-                            </DecisionSurface.ImpactItem>
-                            <DecisionSurface.ImpactItem label="Rollback">
+                            </HumanGate.ImpactItem>
+                            <HumanGate.ImpactItem label="Rollback">
                               Restore previous document version
-                            </DecisionSurface.ImpactItem>
-                          </DecisionSurface.ImpactList>
-                        </DecisionSurface.Body>
-                        <DecisionSurface.Footer>
-                          <DecisionSurface.Cancel />
-                          <DecisionSurface.Confirm
+                            </HumanGate.ImpactItem>
+                          </HumanGate.ImpactList>
+                        </HumanGate.Body>
+                        <HumanGate.Footer>
+                          <HumanGate.Cancel />
+                          <HumanGate.Confirm
                             onClick={() => setApprovalStatus("approved")}
                           >
                             Apply changes
-                          </DecisionSurface.Confirm>
-                        </DecisionSurface.Footer>
-                      </DecisionSurface.Content>
-                    </DecisionSurface.Root>
+                          </HumanGate.Confirm>
+                        </HumanGate.Footer>
+                      </HumanGate.Content>
+                    </HumanGate.Root>
                     <Button
                       type="button"
                       onClick={() => setApprovalStatus("denied")}

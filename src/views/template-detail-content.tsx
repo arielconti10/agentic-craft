@@ -97,7 +97,7 @@ function TemplateDetailContent({ slug }: { slug: TemplateSlug }) {
             {
               title: "Approval",
               description:
-                "Risky external actions use a Decision Surface before execution.",
+                "Risky external actions use a Human Gate before execution.",
             },
             {
               title: "Provenance",

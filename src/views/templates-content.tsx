@@ -20,7 +20,7 @@ import {
   type ClarifyingQuestion,
   type ClarifyingQuestionValue,
 } from "@/components/ui/clarifying-questions"
-import { DecisionSurface } from "@/components/ui/decision-surface"
+import { HumanGate } from "@/components/ui/human-gate"
 import { ObservableWork } from "@/components/ui/observable-work"
 import { ReferenceItem } from "@/components/ui/reference-item"
 import { StatusIndicator } from "@/components/ui/status-indicator"
@@ -49,7 +49,7 @@ const templateIndex = [
     title: "Approval Workflow",
     description:
       "Impact, cost, and rollback are on the table before anything external happens.",
-    primitives: "Decision Surface",
+    primitives: "Human Gate",
   },
   {
     id: "clarifying-workflow",
@@ -91,7 +91,7 @@ const templateIndex = [
     title: "Agent Settings",
     description:
       "Durable boundaries for autonomy and approvals, set once instead of per action.",
-    primitives: "Field, Switch, Decision Surface",
+    primitives: "Field, Switch, Human Gate",
   },
 ] as const
 
@@ -387,49 +387,44 @@ export function TemplatesContent() {
         </p>
         <div className="mt-8 flex flex-col gap-4">
           {approvalDone === null ? (
-            <DecisionSurface.Root
-              open={approvalOpen}
-              onOpenChange={setApprovalOpen}
-            >
-              <DecisionSurface.Trigger render={<Button variant="outline" />}>
+            <HumanGate.Root open={approvalOpen} onOpenChange={setApprovalOpen}>
+              <HumanGate.Trigger render={<Button variant="outline" />}>
                 Review proposed action
-              </DecisionSurface.Trigger>
-              <DecisionSurface.Content>
-                <DecisionSurface.Header>
-                  <DecisionSurface.Title>
-                    Send the review summary?
-                  </DecisionSurface.Title>
-                  <DecisionSurface.Description>
+              </HumanGate.Trigger>
+              <HumanGate.Content>
+                <HumanGate.Header>
+                  <HumanGate.Title>Send the review summary?</HumanGate.Title>
+                  <HumanGate.Description>
                     The agent will send a generated summary to the selected
                     project channel and attach the current evidence list.
-                  </DecisionSurface.Description>
-                </DecisionSurface.Header>
-                <DecisionSurface.Body>
-                  <DecisionSurface.ImpactList>
-                    <DecisionSurface.ImpactItem label="Audience">
+                  </HumanGate.Description>
+                </HumanGate.Header>
+                <HumanGate.Body>
+                  <HumanGate.ImpactList>
+                    <HumanGate.ImpactItem label="Audience">
                       Project reviewers
-                    </DecisionSurface.ImpactItem>
-                    <DecisionSurface.ImpactItem label="Cost">
+                    </HumanGate.ImpactItem>
+                    <HumanGate.ImpactItem label="Cost">
                       $0.09 estimated
-                    </DecisionSurface.ImpactItem>
-                    <DecisionSurface.ImpactItem label="Rollback">
+                    </HumanGate.ImpactItem>
+                    <HumanGate.ImpactItem label="Rollback">
                       Follow-up correction can be posted
-                    </DecisionSurface.ImpactItem>
-                  </DecisionSurface.ImpactList>
-                </DecisionSurface.Body>
-                <DecisionSurface.Footer>
-                  <DecisionSurface.Cancel />
-                  <DecisionSurface.Confirm
+                    </HumanGate.ImpactItem>
+                  </HumanGate.ImpactList>
+                </HumanGate.Body>
+                <HumanGate.Footer>
+                  <HumanGate.Cancel />
+                  <HumanGate.Confirm
                     onClick={() => {
                       setApprovalOpen(false)
                       setApprovalDone("approved")
                     }}
                   >
                     Approve
-                  </DecisionSurface.Confirm>
-                </DecisionSurface.Footer>
-              </DecisionSurface.Content>
-            </DecisionSurface.Root>
+                  </HumanGate.Confirm>
+                </HumanGate.Footer>
+              </HumanGate.Content>
+            </HumanGate.Root>
           ) : (
             <div className="flex flex-col gap-3">
               <div

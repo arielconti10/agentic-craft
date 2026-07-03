@@ -17,6 +17,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -29,7 +30,7 @@ import {
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/components/theme-provider"
-import { sections } from "@/content/navigation"
+import { groups } from "@/content/navigation"
 import { CommandPalette, useCommandPalette } from "@/components/command-palette"
 import { useScrollToSection } from "@/hooks/use-scroll-to-section"
 
@@ -123,99 +124,100 @@ export function AppSidebar() {
           </Button>
         </SidebarHeader>
         <SidebarContent>
-          {sections.map((section) => {
-            const isActive =
-              pathname === section.path ||
-              pathname.startsWith(`${section.path}/`)
+          {groups.map((group) => (
+            <SidebarGroup key={group.label ?? "top"}>
+              {group.label ? (
+                <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+              ) : null}
+              <SidebarMenu>
+                {group.sections.map((section) => {
+                  const isActive =
+                    pathname === section.path ||
+                    pathname.startsWith(`${section.path}/`)
 
-            // Demo page has no subs — just a link
-            if (section.subs.length === 0) {
-              return (
-                <SidebarGroup key={section.path}>
-                  <SidebarMenu>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        render={
-                          <Link
-                            href={section.path}
-                            onClick={() => setOpenMobile(false)}
+                  // Sections without subs render as a plain link
+                  if (section.subs.length === 0) {
+                    return (
+                      <SidebarMenuItem key={section.path}>
+                        <SidebarMenuButton
+                          render={
+                            <Link
+                              href={section.path}
+                              onClick={() => setOpenMobile(false)}
+                            />
+                          }
+                          isActive={isActive}
+                        >
+                          <HugeiconsIcon
+                            icon={section.icon}
+                            size={16}
+                            strokeWidth={1.5}
                           />
-                        }
-                        isActive={isActive}
-                      >
-                        <HugeiconsIcon
-                          icon={section.icon}
-                          size={16}
-                          strokeWidth={1.5}
-                        />
-                        <span>{section.title}</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
-                </SidebarGroup>
-              )
-            }
+                          <span>{section.title}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )
+                  }
 
-            return (
-              <SidebarGroup key={section.path}>
-                <Collapsible open={isActive}>
-                  <SidebarMenu>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        render={
-                          <Link
-                            href={section.path}
-                            onClick={() => setOpenMobile(false)}
+                  return (
+                    <Collapsible key={section.path} open={isActive}>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          render={
+                            <Link
+                              href={section.path}
+                              onClick={() => setOpenMobile(false)}
+                            />
+                          }
+                          isActive={isActive}
+                        >
+                          <HugeiconsIcon
+                            icon={section.icon}
+                            size={16}
+                            strokeWidth={1.5}
                           />
-                        }
-                        isActive={isActive}
-                      >
-                        <HugeiconsIcon
-                          icon={section.icon}
-                          size={16}
-                          strokeWidth={1.5}
-                        />
-                        <span>{section.title}</span>
-                        <HugeiconsIcon
-                          icon={ArrowDown01Icon}
-                          size={14}
-                          strokeWidth={1.5}
-                          aria-hidden="true"
-                          className={cn(
-                            "ml-auto transition-transform duration-200",
-                            isActive && "rotate-180"
-                          )}
-                        />
-                      </SidebarMenuButton>
-                      <CollapsibleContent>
-                        <SidebarMenuSub>
-                          {section.subs.map((sub) => (
-                            <SidebarMenuSubItem key={sub.id}>
-                              <SidebarMenuSubButton
-                                render={
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.preventDefault()
-                                      setOpenMobile(false)
-                                      scrollToSection(section.path, sub.id)
-                                    }}
-                                  />
-                                }
-                                size="sm"
-                              >
-                                <span>{sub.title}</span>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                      </CollapsibleContent>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
-                </Collapsible>
-              </SidebarGroup>
-            )
-          })}
+                          <span>{section.title}</span>
+                          <HugeiconsIcon
+                            icon={ArrowDown01Icon}
+                            size={14}
+                            strokeWidth={1.5}
+                            aria-hidden="true"
+                            className={cn(
+                              "ml-auto transition-transform duration-200",
+                              isActive && "rotate-180"
+                            )}
+                          />
+                        </SidebarMenuButton>
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            {section.subs.map((sub) => (
+                              <SidebarMenuSubItem key={sub.id}>
+                                <SidebarMenuSubButton
+                                  render={
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.preventDefault()
+                                        setOpenMobile(false)
+                                        scrollToSection(section.path, sub.id)
+                                      }}
+                                    />
+                                  }
+                                  size="sm"
+                                >
+                                  <span>{sub.title}</span>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  )
+                })}
+              </SidebarMenu>
+            </SidebarGroup>
+          ))}
         </SidebarContent>
         <SidebarFooter>
           <ThemeMenu />

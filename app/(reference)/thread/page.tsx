@@ -9,9 +9,5 @@ export const metadata: Metadata = {
 }
 
 export default function ThreadPage() {
-  return (
-    <main id="main-content" tabIndex={-1}>
-      <ThreadContent />
-    </main>
-  )
+  return <ThreadContent />
 }

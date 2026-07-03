@@ -91,60 +91,60 @@ export function RatingScaleSection() {
           onToggle={handleRatingToggle}
         />
 
-        <Card className="gap-0 py-0 ring-0 rounded-lg bg-background border border-border/40">
+        <Card className="gap-0 rounded-lg border border-border/40 bg-background py-0 ring-0">
           <CardContent className="p-4 sm:p-6">
-          <div>
-            <p
-              className="agent-prose text-base"
-              style={{ color: AGENT_PROSE_COLOR }}
-            >
-              Based on the launch policy, the product must implement Export
-              workflow for CSV and JSON exports and Retention setting for
-              account retention. Both are covered by the Meridian export
-              service’s internal platform approval.
-            </p>
-
-            {/* Rating row */}
-            <div className="mt-4 flex items-center gap-3">
-              <span className="text-xs text-muted-foreground">
-                Rate this response
-              </span>
-              <ToggleGroup
-                value={selectedRating ? [String(selectedRating)] : []}
-                onValueChange={(values) => {
-                  const next = values[0]
-                  if (next) handleRatingClick(Number(next))
-                }}
-                spacing={1}
-                size="sm"
+            <div>
+              <p
+                className="agent-prose text-base"
+                style={{ color: AGENT_PROSE_COLOR }}
               >
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <ToggleGroupItem
-                    key={n}
-                    value={String(n)}
-                    aria-label={`Rate response ${n} out of 5`}
-                    className={cn(
-                      "size-7 rounded-md p-0 text-xs",
-                      ratingPressed === n && "feedback-press",
-                      selectedRating === n
-                        ? "border border-foreground/20 bg-foreground/[0.06] font-medium text-foreground"
-                        : "border border-transparent text-muted-foreground hover:bg-muted/50 hover:text-muted-foreground"
-                    )}
-                  >
-                    {n}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
-              {ratingConfirm && (
-                <span
-                  role="status"
-                  className="feedback-fade-in text-xs text-muted-foreground"
-                >
-                  Feedback recorded
+                Based on the launch policy, the product must implement Export
+                workflow for CSV and JSON exports and Retention setting for
+                account retention. Both are covered by the Meridian export
+                service’s internal platform approval.
+              </p>
+
+              {/* Rating row */}
+              <div className="mt-4 flex items-center gap-3">
+                <span className="text-xs text-muted-foreground">
+                  Rate this response
                 </span>
-              )}
+                <ToggleGroup
+                  value={selectedRating ? [String(selectedRating)] : []}
+                  onValueChange={(values) => {
+                    const next = values[0]
+                    if (next) handleRatingClick(Number(next))
+                  }}
+                  spacing={1}
+                  size="sm"
+                >
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <ToggleGroupItem
+                      key={n}
+                      value={String(n)}
+                      aria-label={`Rate response ${n} out of 5`}
+                      className={cn(
+                        "size-7 rounded-md p-0 text-xs",
+                        ratingPressed === n && "feedback-press",
+                        selectedRating === n
+                          ? "border border-foreground/20 bg-foreground/[0.06] font-medium text-foreground"
+                          : "border border-transparent text-muted-foreground hover:bg-muted/50 hover:text-muted-foreground"
+                      )}
+                    >
+                      {n}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+                {ratingConfirm && (
+                  <span
+                    role="status"
+                    className="feedback-fade-in text-xs text-muted-foreground"
+                  >
+                    Feedback recorded
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
           </CardContent>
         </Card>
       </div>
