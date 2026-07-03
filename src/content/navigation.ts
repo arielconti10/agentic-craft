@@ -239,6 +239,18 @@ export const groups: NavigationGroup[] = [
         ],
       },
       {
+        title: "Dispatch Moment",
+        path: "/patterns/dispatch-moment",
+        icon: PencilEdit01Icon,
+        subs: [
+          { title: "Reframe", id: "dispatch-moment" },
+          { title: "Why Not Contract", id: "why-not-contract" },
+          { title: "Principles", id: "principles" },
+          { title: "Components Used", id: "components-used" },
+          { title: "Next", id: "next" },
+        ],
+      },
+      {
         title: "Use Cases",
         path: "/use-cases",
         icon: Task01Icon,

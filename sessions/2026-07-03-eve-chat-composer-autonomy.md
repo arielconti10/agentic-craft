@@ -132,7 +132,7 @@ Fixture ask: *"migrate session-chat-page to the shared adapter — don't touch d
 
 ## Suggested next steps in agentic-craft
 
-1. Choose composer problem **A**, **B**, or **C** (recommend B + C)
+1. Choose composer problem **A**, **B**, or **C** (recommend B + C) — **started:** [`/patterns/dispatch-moment`](../app/(reference)/patterns/dispatch-moment/page.tsx) sketches B+C on the registry composer
 2. Sketch against registry composer demos and/or compound-composer slots — not contract read-back
 3. Cross-check [`docs/research.md`](../docs/research.md) §4 "Autonomy as a contract" — may need revision to match reframe
 4. If promoting compound composer into the site, wire a playground route under agentic-craft (don't fork registry composer)

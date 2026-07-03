@@ -129,6 +129,77 @@ export function ComposerReply({
   )
 }
 
+/* ── ComposerDoneWhen ── */
+
+export type ComposerDoneWhenItem = {
+  id: string
+  label: string
+  tone?: "default" | "warning"
+}
+
+export function ComposerDoneWhen({
+  items,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & {
+  items: ComposerDoneWhenItem[]
+}) {
+  if (items.length === 0) return null
+
+  return (
+    <Island className={className} {...props}>
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 px-2.5 py-1.5 sm:px-3 sm:py-2">
+        <span className="text-[11px] font-medium text-muted-foreground sm:text-xs">
+          Done when
+        </span>
+        {items.map((item, index) => (
+          <React.Fragment key={item.id}>
+            {index > 0 && (
+              <span
+                className="text-[11px] text-muted-foreground/50 sm:text-xs"
+                aria-hidden="true"
+              >
+                ·
+              </span>
+            )}
+            <span
+              className={cn(
+                "rounded-md border px-1.5 py-0.5 text-[11px] leading-4 sm:px-2 sm:text-xs",
+                item.tone === "warning"
+                  ? "border-[color-mix(in_oklch,var(--status-warn)_35%,var(--border))] bg-[color-mix(in_oklch,var(--status-warn)_8%,transparent)] text-foreground"
+                  : "border-border/70 bg-muted/30 text-foreground"
+              )}
+            >
+              {item.label}
+            </span>
+          </React.Fragment>
+        ))}
+      </div>
+    </Island>
+  )
+}
+
+/* ── ComposerReceipt ── */
+
+export function ComposerReceipt({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="composer-receipt"
+      className={cn(
+        "animate-composer-slide border-b border-border/60 px-2.5 py-1.5 text-[11px] leading-4 text-muted-foreground sm:px-3 sm:py-2 sm:text-xs",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
 /* ── ComposerPlan ── */
 
 export function ComposerPlan({

@@ -1,10 +1,10 @@
 // Compile-time check that the generic contracts work across integrations.
 // This file is type-checked but never imported at runtime.
 
-import { Composer, type ComposerAttachment, type ComposerSubmit } from "./index";
+import { Composer, type ComposerAttachment, type ComposerSubmit } from "./index"
 
 // 1) eve-style: controls is a string clientContext.
-type EveControls = { clientContext: string };
+type EveControls = { clientContext: string }
 function _eveStyle() {
   return (
     <Composer.Root<EveControls>
@@ -12,8 +12,8 @@ function _eveStyle() {
       onChange={() => {}}
       onSubmit={(submit) => {
         // submit.controls is typed as { clientContext: string }
-        const _cc: string = submit.controls.clientContext;
-        void _cc;
+        const _cc: string = submit.controls.clientContext
+        void _cc
       }}
       onStop={() => {}}
       phase="idle"
@@ -29,20 +29,20 @@ function _eveStyle() {
         </Composer.Footer>
       </Composer.Frame>
     </Composer.Root>
-  );
+  )
 }
 
 // 2) Claude-Code-style: controls is { mode: Mode }.
-type Mode = "plan" | "auto" | "manual";
-type CCControls = { mode: Mode };
+type Mode = "plan" | "auto" | "manual"
+type CCControls = { mode: Mode }
 function _ccStyle() {
   return (
     <Composer.Root<CCControls>
       controls={{ mode: "plan" }}
       onChange={() => {}}
       onSubmit={(submit) => {
-        const _mode: Mode = submit.controls.mode;
-        void _mode;
+        const _mode: Mode = submit.controls.mode
+        void _mode
       }}
       onStop={() => {}}
       value=""
@@ -51,7 +51,7 @@ function _ccStyle() {
         <Composer.Input />
       </Composer.Frame>
     </Composer.Root>
-  );
+  )
 }
 
 // 3) No controls — default generic covers it.
@@ -60,8 +60,8 @@ function _noControls() {
     <Composer.Root
       onChange={() => {}}
       onSubmit={(submit: ComposerSubmit<unknown>) => {
-        void submit.message;
-        void submit.controls;
+        void submit.message
+        void submit.controls
       }}
       onStop={() => {}}
       value=""
@@ -71,7 +71,7 @@ function _noControls() {
         <span />
       </Composer.Frame>
     </Composer.Root>
-  );
+  )
 }
 
 // 4) Uncontrolled mode — defaultValue, no value/onChange. Self-clears on submit.
@@ -81,8 +81,8 @@ function _uncontrolled() {
       controls={{ mode: "auto" }}
       defaultValue="Hello"
       onSubmit={(submit) => {
-        const _mode: Mode = submit.controls.mode;
-        void _mode;
+        const _mode: Mode = submit.controls.mode
+        void _mode
       }}
       onStop={() => {}}
     >
@@ -99,7 +99,7 @@ function _uncontrolled() {
         </Composer.Footer>
       </Composer.Frame>
     </Composer.Root>
-  );
+  )
 }
 
 // 5) Attachments enabled — picker + drag/drop + paste feed the same state.
@@ -113,8 +113,8 @@ function _withAttachments() {
       onChange={() => {}}
       onSubmit={(submit) => {
         // submit.attachments is readonly ComposerAttachment[]
-        const _first: ComposerAttachment | undefined = submit.attachments[0];
-        void _first;
+        const _first: ComposerAttachment | undefined = submit.attachments[0]
+        void _first
       }}
       onStop={() => {}}
       value=""
@@ -132,11 +132,11 @@ function _withAttachments() {
         </Composer.Footer>
       </Composer.Frame>
     </Composer.Root>
-  );
+  )
 }
 
-void _eveStyle;
-void _ccStyle;
-void _noControls;
-void _uncontrolled;
-void _withAttachments;
+void _eveStyle
+void _ccStyle
+void _noControls
+void _uncontrolled
+void _withAttachments

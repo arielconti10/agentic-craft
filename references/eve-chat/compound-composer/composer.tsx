@@ -1,6 +1,12 @@
-"use client";
+"use client"
 
-import { ArrowUpIcon, FileIcon, Loader2Icon, SquareIcon, XIcon } from "lucide-react";
+import {
+  ArrowUpIcon,
+  FileIcon,
+  Loader2Icon,
+  SquareIcon,
+  XIcon,
+} from "lucide-react"
 import {
   createContext,
   use,
@@ -17,8 +23,8 @@ import {
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
-} from "react";
-import { Button } from "@/components/ui/button";
+} from "react"
+import { Button } from "@/components/ui/button"
 import {
   Attachment,
   AttachmentAction,
@@ -28,14 +34,14 @@ import {
   AttachmentGroup,
   AttachmentMedia,
   AttachmentTitle,
-} from "@/components/ui/attachment";
+} from "@/components/ui/attachment"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupTextarea,
-} from "@/components/ui/input-group";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/input-group"
+import { cn } from "@/lib/utils"
 
 // ---------------------------------------------------------------------------
 // Composer primitive
@@ -73,13 +79,13 @@ import { cn } from "@/lib/utils";
  * is revoked by the primitive on remove / submit / unmount.
  */
 export type ComposerAttachment = {
-  readonly id: string;
-  readonly file: File;
-  readonly name: string;
-  readonly type: string;
-  readonly size: number;
-  readonly previewUrl?: string;
-};
+  readonly id: string
+  readonly file: File
+  readonly name: string
+  readonly type: string
+  readonly size: number
+  readonly previewUrl?: string
+}
 
 /**
  * Payload handed to `onSubmit`. `controls` is opaque to the primitive and
@@ -87,10 +93,10 @@ export type ComposerAttachment = {
  * when attachment support is off (`maxAttachments` = 0).
  */
 export type ComposerSubmit<TControls> = {
-  readonly message: string;
-  readonly controls: TControls;
-  readonly attachments: readonly ComposerAttachment[];
-};
+  readonly message: string
+  readonly controls: TControls
+  readonly attachments: readonly ComposerAttachment[]
+}
 
 /**
  * The lifecycle phase of the submit affordance. Exposed as an explicit
@@ -100,39 +106,41 @@ export type ComposerSubmit<TControls> = {
  * - preparing: a turn is about to start; input locked, submit shows a spinner
  * - busy:      a turn is in flight; input locked, submit becomes a Stop button
  */
-export type ComposerSubmitPhase = "idle" | "preparing" | "busy";
+export type ComposerSubmitPhase = "idle" | "preparing" | "busy"
 
 type ComposerContextValue<TControls> = {
-  readonly composerId: string;
-  readonly value: string;
-  readonly onChange: (value: string) => void;
-  readonly onSubmit: () => void;
-  readonly phase: ComposerSubmitPhase;
-  readonly maxLength: number;
-  readonly placeholder: string;
-  readonly autoFocus: boolean;
-  readonly controls: TControls;
-  readonly focusInput: () => void;
-  readonly setInputRef: (node: HTMLTextAreaElement | null) => void;
+  readonly composerId: string
+  readonly value: string
+  readonly onChange: (value: string) => void
+  readonly onSubmit: () => void
+  readonly phase: ComposerSubmitPhase
+  readonly maxLength: number
+  readonly placeholder: string
+  readonly autoFocus: boolean
+  readonly controls: TControls
+  readonly focusInput: () => void
+  readonly setInputRef: (node: HTMLTextAreaElement | null) => void
   // Attachments
-  readonly attachmentsEnabled: boolean;
-  readonly attachments: readonly ComposerAttachment[];
-  readonly maxAttachments: number;
-  readonly accept: string | undefined;
-  readonly addFiles: (files: ReadonlyArray<File>) => void;
-  readonly removeAttachment: (id: string) => void;
-  readonly attachmentInputId: string;
-  readonly openFilePicker: () => void;
-};
+  readonly attachmentsEnabled: boolean
+  readonly attachments: readonly ComposerAttachment[]
+  readonly maxAttachments: number
+  readonly accept: string | undefined
+  readonly addFiles: (files: ReadonlyArray<File>) => void
+  readonly removeAttachment: (id: string) => void
+  readonly attachmentInputId: string
+  readonly openFilePicker: () => void
+}
 
-const ComposerContext = createContext<ComposerContextValue<unknown> | null>(null);
+const ComposerContext = createContext<ComposerContextValue<unknown> | null>(
+  null
+)
 
 function useComposer<TControls = unknown>(): ComposerContextValue<TControls> {
-  const value = use(ComposerContext);
+  const value = use(ComposerContext)
   if (!value) {
-    throw new Error("Composer parts must be used inside <Composer.Root>.");
+    throw new Error("Composer parts must be used inside <Composer.Root>.")
   }
-  return value as ComposerContextValue<TControls>;
+  return value as ComposerContextValue<TControls>
 }
 
 /**
@@ -142,11 +150,11 @@ function useComposer<TControls = unknown>(): ComposerContextValue<TControls> {
  * a component rendered inside `<Composer.Root>`.
  */
 export function useOpenFilePicker(): () => void {
-  const ctx = use(ComposerContext);
+  const ctx = use(ComposerContext)
   if (!ctx) {
-    return () => {};
+    return () => {}
   }
-  return ctx.attachmentsEnabled ? ctx.openFilePicker : () => {};
+  return ctx.attachmentsEnabled ? ctx.openFilePicker : () => {}
 }
 
 const IMAGE_TYPES = new Set([
@@ -156,41 +164,41 @@ const IMAGE_TYPES = new Set([
   "image/webp",
   "image/avif",
   "image/svg+xml",
-]);
+])
 
 function isImageType(type: string): boolean {
-  return IMAGE_TYPES.has(type);
+  return IMAGE_TYPES.has(type)
 }
 
 function formatAttachmentMeta(attachment: ComposerAttachment): string {
-  const type = attachment.type.split("/").pop()?.toUpperCase() || "File";
-  const size = formatBytes(attachment.size);
-  return `${type} · ${size}`;
+  const type = attachment.type.split("/").pop()?.toUpperCase() || "File"
+  const size = formatBytes(attachment.size)
+  return `${type} · ${size}`
 }
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) {
-    return `${bytes} B`;
+    return `${bytes} B`
   }
-  const units = ["KB", "MB", "GB"] as const;
-  let value = bytes / 1024;
-  let unit: (typeof units)[number] = units[0];
+  const units = ["KB", "MB", "GB"] as const
+  let value = bytes / 1024
+  let unit: (typeof units)[number] = units[0]
   for (const next of units) {
-    unit = next;
+    unit = next
     if (value < 1024 || next === units[units.length - 1]) {
-      break;
+      break
     }
-    value /= 1024;
+    value /= 1024
   }
-  return `${value >= 10 ? value.toFixed(0) : value.toFixed(1)} ${unit}`;
+  return `${value >= 10 ? value.toFixed(0) : value.toFixed(1)} ${unit}`
 }
 
 function newAttachmentId(): string {
   // crypto.randomUUID is available in all evergreen browsers and Node 19+.
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID();
+    return crypto.randomUUID()
   }
-  return `att-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  return `att-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
 }
 
 // ---------------------------------------------------------------------------
@@ -202,44 +210,46 @@ export type ComposerRootProps<TControls = unknown> = {
    * Controlled mode: current draft. When set together with `onChange`, the
    * parent owns the draft. Mutating this from the parent updates the editor.
    */
-  readonly value?: string;
+  readonly value?: string
   /**
    * Controlled mode: emits on every keystroke. Required when `value` is set.
    */
-  readonly onChange?: (value: string) => void;
+  readonly onChange?: (value: string) => void
   /**
    * Uncontrolled mode: seed for the draft on first render. The composer owns
    * its own state after that. Self-clears after a successful submit.
    */
-  readonly defaultValue?: string;
+  readonly defaultValue?: string
   /** Called with the trimmed message, controls payload, and attachments. */
-  readonly onSubmit: (submit: ComposerSubmit<TControls>) => void | Promise<void>;
+  readonly onSubmit: (submit: ComposerSubmit<TControls>) => void | Promise<void>
   /** Abort the in-flight turn. Shown when phase="busy". */
-  readonly onStop: () => void;
+  readonly onStop: () => void
 
   /** Lifecycle phase of the submit affordance. */
-  readonly phase?: ComposerSubmitPhase;
+  readonly phase?: ComposerSubmitPhase
 
   /** Opaque, integrator-typed payload carried into `onSubmit.controls`. */
-  readonly controls?: TControls;
+  readonly controls?: TControls
 
-  readonly placeholder?: string;
-  readonly maxLength?: number;
-  readonly autoFocus?: boolean;
+  readonly placeholder?: string
+  readonly maxLength?: number
+  readonly autoFocus?: boolean
 
   /**
    * Max number of attachments the composer will hold. 0 (default) disables
    * attachments entirely: the picker, drag-and-drop, and paste-image all
    * become no-ops, and `onSubmit.attachments` is always empty.
    */
-  readonly maxAttachments?: number;
+  readonly maxAttachments?: number
   /** MIME types the file input accepts, e.g. "image/*". Default: any. */
-  readonly accept?: string;
+  readonly accept?: string
   /** Observe attachment list changes (e.g. to mirror into parent state). */
-  readonly onAttachmentsChange?: (attachments: readonly ComposerAttachment[]) => void;
+  readonly onAttachmentsChange?: (
+    attachments: readonly ComposerAttachment[]
+  ) => void
 
-  readonly children: ReactNode;
-};
+  readonly children: ReactNode
+}
 
 function ComposerRoot<TControls = unknown>({
   accept,
@@ -256,74 +266,76 @@ function ComposerRoot<TControls = unknown>({
   placeholder = "Ask anything...",
   value,
 }: Readonly<ComposerRootProps<TControls>>) {
-  const composerId = useId();
-  const attachmentInputId = `${composerId}-attach`;
-  const controlsRef = useRef(controls);
-  controlsRef.current = controls;
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const attachmentInputRef = useRef<HTMLInputElement>(null);
+  const composerId = useId()
+  const attachmentInputId = `${composerId}-attach`
+  const controlsRef = useRef(controls)
+  controlsRef.current = controls
+  const inputRef = useRef<HTMLTextAreaElement>(null)
+  const attachmentInputRef = useRef<HTMLInputElement>(null)
 
-  const isControlled = value !== undefined;
-  const [internalValue, setInternalValue] = useState(defaultValue ?? "");
-  const draft = isControlled ? (value as string) : internalValue;
+  const isControlled = value !== undefined
+  const [internalValue, setInternalValue] = useState(defaultValue ?? "")
+  const draft = isControlled ? (value as string) : internalValue
 
-  const attachmentsEnabled = maxAttachments > 0;
-  const [attachments, setAttachments] = useState<readonly ComposerAttachment[]>([]);
+  const attachmentsEnabled = maxAttachments > 0
+  const [attachments, setAttachments] = useState<readonly ComposerAttachment[]>(
+    []
+  )
 
   if (process.env.NODE_ENV !== "production") {
     if (isControlled && !onChange) {
       console.warn(
-        "Composer.Root received `value` without `onChange`. Provide `onChange` for controlled mode, or use `defaultValue` for uncontrolled mode.",
-      );
+        "Composer.Root received `value` without `onChange`. Provide `onChange` for controlled mode, or use `defaultValue` for uncontrolled mode."
+      )
     }
     if (!isControlled && defaultValue !== undefined && value !== undefined) {
       console.warn(
-        "Composer.Root received both `value` and `defaultValue`. `value` takes precedence (controlled mode); `defaultValue` is ignored.",
-      );
+        "Composer.Root received both `value` and `defaultValue`. `value` takes precedence (controlled mode); `defaultValue` is ignored."
+      )
     }
     if (!attachmentsEnabled && onAttachmentsChange) {
       console.warn(
-        "Composer.Root received `onAttachmentsChange` but attachments are disabled (`maxAttachments` <= 0). The callback will never fire.",
-      );
+        "Composer.Root received `onAttachmentsChange` but attachments are disabled (`maxAttachments` <= 0). The callback will never fire."
+      )
     }
   }
 
   const handleChange = useCallback(
     (next: string) => {
       if (!isControlled) {
-        setInternalValue(next);
+        setInternalValue(next)
       }
-      onChange?.(next);
+      onChange?.(next)
     },
-    [isControlled, onChange],
-  );
+    [isControlled, onChange]
+  )
 
   const focusInput = useCallback(() => {
-    inputRef.current?.focus({ preventScroll: true });
-  }, []);
+    inputRef.current?.focus({ preventScroll: true })
+  }, [])
 
   const setInputRef = useCallback((node: HTMLTextAreaElement | null) => {
-    inputRef.current = node;
-  }, []);
+    inputRef.current = node
+  }, [])
 
   // -- Attachments ---------------------------------------------------------
 
   const addFiles = useCallback(
     (incoming: ReadonlyArray<File>) => {
       if (!attachmentsEnabled || incoming.length === 0) {
-        return;
+        return
       }
       setAttachments((current) => {
-        const remaining = Math.max(0, maxAttachments - current.length);
+        const remaining = Math.max(0, maxAttachments - current.length)
         if (remaining === 0) {
-          return current;
+          return current
         }
-        const next: ComposerAttachment[] = [];
+        const next: ComposerAttachment[] = []
         for (const file of incoming) {
           if (next.length >= remaining) {
-            break;
+            break
           }
-          const isImage = isImageType(file.type);
+          const isImage = isImageType(file.type)
           next.push({
             id: newAttachmentId(),
             file,
@@ -331,88 +343,88 @@ function ComposerRoot<TControls = unknown>({
             type: file.type,
             size: file.size,
             previewUrl: isImage ? URL.createObjectURL(file) : undefined,
-          });
+          })
         }
         if (next.length === 0) {
-          return current;
+          return current
         }
-        return [...current, ...next];
-      });
+        return [...current, ...next]
+      })
     },
-    [attachmentsEnabled, maxAttachments],
-  );
+    [attachmentsEnabled, maxAttachments]
+  )
 
   const removeAttachment = useCallback((id: string) => {
     setAttachments((current) => {
-      const target = current.find((a) => a.id === id);
+      const target = current.find((a) => a.id === id)
       if (target?.previewUrl) {
-        URL.revokeObjectURL(target.previewUrl);
+        URL.revokeObjectURL(target.previewUrl)
       }
-      return current.filter((a) => a.id !== id);
-    });
-  }, []);
+      return current.filter((a) => a.id !== id)
+    })
+  }, [])
 
   const handleAttachmentInputChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const files = Array.from(event.target.files ?? []);
-      addFiles(files);
+      const files = Array.from(event.target.files ?? [])
+      addFiles(files)
       // Reset so picking the same file again still fires onChange.
-      event.target.value = "";
+      event.target.value = ""
     },
-    [addFiles],
-  );
+    [addFiles]
+  )
 
   const openFilePicker = useCallback(() => {
-    attachmentInputRef.current?.click();
-  }, []);
+    attachmentInputRef.current?.click()
+  }, [])
 
   // Notify on attachment changes (mirrors onChange for the draft).
   useEffect(() => {
-    onAttachmentsChange?.(attachments);
-  }, [attachments, onAttachmentsChange]);
+    onAttachmentsChange?.(attachments)
+  }, [attachments, onAttachmentsChange])
 
   // Revoke any outstanding object URLs on unmount.
   useEffect(() => {
     return () => {
       for (const a of attachments) {
         if (a.previewUrl) {
-          URL.revokeObjectURL(a.previewUrl);
+          URL.revokeObjectURL(a.previewUrl)
         }
       }
-    };
+    }
     // We only want this to run on unmount, not on every attachment change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   const submit = useCallback(() => {
-    const message = draft.trim();
-    const hasAttachments = attachments.length > 0;
+    const message = draft.trim()
+    const hasAttachments = attachments.length > 0
     if (phase !== "idle" || message.length > maxLength) {
-      return;
+      return
     }
     // Allow attachments-only sends (empty text + files), but not empty+empty.
     if (!message && !hasAttachments) {
-      return;
+      return
     }
     void onSubmit({
       attachments,
       controls: controlsRef.current as TControls,
       message,
-    });
+    })
     if (!isControlled) {
-      setInternalValue("");
+      setInternalValue("")
     }
     if (hasAttachments) {
       // Revoking happens here because the submitted attachments are handed
       // off to the integrator; the primitive is done with their previews.
       for (const a of attachments) {
         if (a.previewUrl) {
-          URL.revokeObjectURL(a.previewUrl);
+          URL.revokeObjectURL(a.previewUrl)
         }
       }
-      setAttachments([]);
+      setAttachments([])
     }
-  }, [attachments, draft, isControlled, maxLength, onSubmit, phase]);
+  }, [attachments, draft, isControlled, maxLength, onSubmit, phase])
 
   const contextValue: ComposerContextValue<TControls> = {
     composerId,
@@ -434,10 +446,12 @@ function ComposerRoot<TControls = unknown>({
     removeAttachment,
     attachmentInputId,
     openFilePicker,
-  };
+  }
 
   return (
-    <ComposerContext.Provider value={contextValue as ComposerContextValue<unknown>}>
+    <ComposerContext.Provider
+      value={contextValue as ComposerContextValue<unknown>}
+    >
       {children}
       {attachmentsEnabled ? (
         <input
@@ -451,7 +465,7 @@ function ComposerRoot<TControls = unknown>({
         />
       ) : null}
     </ComposerContext.Provider>
-  );
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -460,8 +474,8 @@ function ComposerRoot<TControls = unknown>({
 // ---------------------------------------------------------------------------
 
 export type ComposerFrameProps = ComponentProps<"form"> & {
-  readonly inputGroupClassName?: string;
-};
+  readonly inputGroupClassName?: string
+}
 
 function ComposerFrame({
   children,
@@ -472,83 +486,86 @@ function ComposerFrame({
   onDrop,
   ...props
 }: ComposerFrameProps) {
-  const { addFiles, attachmentsEnabled, focusInput, onSubmit, phase } = useComposer();
-  const [dragging, setDragging] = useState(false);
+  const { addFiles, attachmentsEnabled, focusInput, onSubmit, phase } =
+    useComposer()
+  const [dragging, setDragging] = useState(false)
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+      event.preventDefault()
       if (phase !== "idle") {
-        return;
+        return
       }
-      onSubmit();
+      onSubmit()
     },
-    [onSubmit, phase],
-  );
+    [onSubmit, phase]
+  )
 
   // Clicking empty space inside the frame focuses the textarea, but clicks
   // on interactive elements (buttons, the textarea itself) are left alone.
   const handleFrameClick = useCallback(
     (event: MouseEvent<HTMLFormElement>) => {
-      onClick?.(event);
+      onClick?.(event)
       if (event.defaultPrevented) {
-        return;
+        return
       }
-      const target = event.target as HTMLElement | null;
-      if (target?.closest("button, textarea, a, input, select, [role='button']")) {
-        return;
+      const target = event.target as HTMLElement | null
+      if (
+        target?.closest("button, textarea, a, input, select, [role='button']")
+      ) {
+        return
       }
-      focusInput();
+      focusInput()
     },
-    [focusInput, onClick],
-  );
+    [focusInput, onClick]
+  )
 
   const handleDragOver = useCallback(
     (event: DragEvent<HTMLFormElement>) => {
-      onDragOver?.(event);
+      onDragOver?.(event)
       if (!attachmentsEnabled || event.defaultPrevented) {
-        return;
+        return
       }
       // Only react to drags that carry files.
       if (!Array.from(event.dataTransfer.types).includes("Files")) {
-        return;
+        return
       }
-      event.preventDefault();
-      event.dataTransfer.dropEffect = "copy";
+      event.preventDefault()
+      event.dataTransfer.dropEffect = "copy"
       if (!dragging) {
-        setDragging(true);
+        setDragging(true)
       }
     },
-    [attachmentsEnabled, dragging, onDragOver],
-  );
+    [attachmentsEnabled, dragging, onDragOver]
+  )
 
-  const handleDragLeave = useCallback(
-    (event: DragEvent<HTMLFormElement>) => {
-      // Only clear when leaving the frame itself, not when moving between kids.
-      if (event.relatedTarget && event.currentTarget.contains(event.relatedTarget as Node)) {
-        return;
-      }
-      setDragging(false);
-    },
-    [],
-  );
+  const handleDragLeave = useCallback((event: DragEvent<HTMLFormElement>) => {
+    // Only clear when leaving the frame itself, not when moving between kids.
+    if (
+      event.relatedTarget &&
+      event.currentTarget.contains(event.relatedTarget as Node)
+    ) {
+      return
+    }
+    setDragging(false)
+  }, [])
 
   const handleDrop = useCallback(
     (event: DragEvent<HTMLFormElement>) => {
-      onDrop?.(event);
+      onDrop?.(event)
       if (!attachmentsEnabled) {
-        return;
+        return
       }
-      const files = Array.from(event.dataTransfer.files ?? []);
+      const files = Array.from(event.dataTransfer.files ?? [])
       if (files.length === 0) {
-        return;
+        return
       }
-      event.preventDefault();
-      setDragging(false);
-      addFiles(files);
+      event.preventDefault()
+      setDragging(false)
+      addFiles(files)
     },
-    [addFiles, attachmentsEnabled, onDrop],
-  );
+    [addFiles, attachmentsEnabled, onDrop]
+  )
 
   return (
     <form
@@ -570,13 +587,13 @@ function ComposerFrame({
           attachmentsEnabled &&
             dragging &&
             "border-foreground/60 ring-[1.5px] ring-foreground/30 dark:border-white/60 dark:ring-white/30",
-          inputGroupClassName,
+          inputGroupClassName
         )}
       >
         {children}
       </InputGroup>
     </form>
-  );
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -584,7 +601,7 @@ function ComposerFrame({
 // ---------------------------------------------------------------------------
 
 function ComposerBefore({ children }: { readonly children: ReactNode }) {
-  return <div className="w-full px-3 pt-3">{children}</div>;
+  return <div className="w-full px-3 pt-3">{children}</div>
 }
 
 // ---------------------------------------------------------------------------
@@ -593,14 +610,14 @@ function ComposerBefore({ children }: { readonly children: ReactNode }) {
 // ---------------------------------------------------------------------------
 
 export type ComposerInfoBarProps = {
-  readonly title?: ReactNode;
-  readonly description?: ReactNode;
-  readonly onClose?: () => void;
+  readonly title?: ReactNode
+  readonly description?: ReactNode
+  readonly onClose?: () => void
   /** Optional primary action rendered on the right (e.g. "Upgrade"). */
-  readonly action?: { readonly label: string; readonly onClick: () => void };
-  readonly defaultOpen?: boolean;
-  readonly className?: string;
-};
+  readonly action?: { readonly label: string; readonly onClick: () => void }
+  readonly defaultOpen?: boolean
+  readonly className?: string
+}
 
 function ComposerInfoBar({
   action,
@@ -610,28 +627,32 @@ function ComposerInfoBar({
   onClose,
   title,
 }: Readonly<ComposerInfoBarProps>) {
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpen] = useState(defaultOpen)
 
   const handleClose = useCallback(() => {
-    setOpen(false);
-    onClose?.();
-  }, [onClose]);
+    setOpen(false)
+    onClose?.()
+  }, [onClose])
 
   if (!open || (!title && !description)) {
-    return null;
+    return null
   }
 
   return (
     <div
       className={cn(
         "flex w-full items-center justify-between gap-3 rounded-t-[14px] border-b border-border/60 bg-muted/40 px-3 py-2 text-xs dark:bg-muted/20",
-        className,
+        className
       )}
     >
       <div className="min-w-0 truncate text-muted-foreground">
-        {title ? <span className="font-medium text-foreground">{title}</span> : null}
+        {title ? (
+          <span className="font-medium text-foreground">{title}</span>
+        ) : null}
         {description ? (
-          <span className={title ? "ml-1.5 text-muted-foreground/80" : undefined}>
+          <span
+            className={title ? "ml-1.5 text-muted-foreground/80" : undefined}
+          >
             {description}
           </span>
         ) : null}
@@ -660,7 +681,7 @@ function ComposerInfoBar({
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -670,18 +691,18 @@ function ComposerInfoBar({
 
 export type ComposerAttachmentsProps = {
   /** Override the default item renderer. Receives one attachment. */
-  readonly renderItem?: (attachment: ComposerAttachment) => ReactNode;
-  readonly className?: string;
-};
+  readonly renderItem?: (attachment: ComposerAttachment) => ReactNode
+  readonly className?: string
+}
 
 function ComposerAttachments({
   className,
   renderItem,
 }: Readonly<ComposerAttachmentsProps>) {
-  const { attachments, attachmentsEnabled } = useComposer();
+  const { attachments, attachmentsEnabled } = useComposer()
 
   if (!attachmentsEnabled || attachments.length === 0) {
-    return null;
+    return null
   }
 
   return (
@@ -694,24 +715,24 @@ function ComposerAttachments({
           renderItem(a)
         ) : (
           <ComposerAttachmentsItem key={a.id} attachment={a} />
-        ),
+        )
       )}
     </AttachmentGroup>
-  );
+  )
 }
 
 export type ComposerAttachmentsItemProps = {
-  readonly attachment: ComposerAttachment;
-  readonly className?: string;
-};
+  readonly attachment: ComposerAttachment
+  readonly className?: string
+}
 
 function ComposerAttachmentsItem({
   attachment,
   className,
 }: Readonly<ComposerAttachmentsItemProps>) {
-  const { removeAttachment } = useComposer();
-  const isImage = Boolean(attachment.previewUrl) || isImageType(attachment.type);
-  const meta = formatAttachmentMeta(attachment);
+  const { removeAttachment } = useComposer()
+  const isImage = Boolean(attachment.previewUrl) || isImageType(attachment.type)
+  const meta = formatAttachmentMeta(attachment)
 
   return (
     <Attachment className={cn("w-56", className)} size="sm" state="idle">
@@ -742,7 +763,7 @@ function ComposerAttachmentsItem({
         </AttachmentAction>
       </AttachmentActions>
     </Attachment>
-  );
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -751,28 +772,24 @@ function ComposerAttachmentsItem({
 // ---------------------------------------------------------------------------
 
 export type ComposerAttachProps = {
-  readonly className?: string;
-  readonly trigger?: ReactNode;
+  readonly className?: string
+  readonly trigger?: ReactNode
   /** Disable the trigger (e.g. max reached) without touching the primitive. */
-  readonly disabled?: boolean;
-};
+  readonly disabled?: boolean
+}
 
 function ComposerAttach({
   className,
   disabled = false,
   trigger,
 }: Readonly<ComposerAttachProps>) {
-  const {
-    attachments,
-    attachmentsEnabled,
-    maxAttachments,
-    openFilePicker,
-  } = useComposer();
+  const { attachments, attachmentsEnabled, maxAttachments, openFilePicker } =
+    useComposer()
 
-  const atMax = attachments.length >= maxAttachments;
+  const atMax = attachments.length >= maxAttachments
 
   if (!attachmentsEnabled) {
-    return null;
+    return null
   }
 
   return (
@@ -780,7 +797,7 @@ function ComposerAttach({
       aria-label="Attach files"
       className={cn(
         "shrink-0 text-muted-foreground hover:bg-muted hover:text-foreground",
-        className,
+        className
       )}
       disabled={disabled || atMax}
       onClick={openFilePicker}
@@ -790,7 +807,7 @@ function ComposerAttach({
     >
       {trigger ?? <FileIcon className="size-4" />}
     </InputGroupButton>
-  );
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -803,12 +820,16 @@ export type ComposerInputProps = Omit<
   "value" | "onChange"
 > & {
   /** Max height in pixels before the textarea scrolls. Default 160. */
-  readonly maxHeight?: number;
-};
+  readonly maxHeight?: number
+}
 
-const INPUT_MIN_HEIGHT = 48;
+const INPUT_MIN_HEIGHT = 48
 
-function ComposerInput({ className, maxHeight = 160, ...props }: ComposerInputProps) {
+function ComposerInput({
+  className,
+  maxHeight = 160,
+  ...props
+}: ComposerInputProps) {
   const {
     autoFocus,
     composerId,
@@ -821,65 +842,68 @@ function ComposerInput({ className, maxHeight = 160, ...props }: ComposerInputPr
     value,
     addFiles,
     attachmentsEnabled,
-  } = useComposer();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const locked = phase !== "idle";
+  } = useComposer()
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const locked = phase !== "idle"
 
   // Auto-resize: collapse then expand to scrollHeight, capped at maxHeight.
   useEffect(() => {
-    const el = textareaRef.current;
+    const el = textareaRef.current
     if (!el) {
-      return;
+      return
     }
-    el.style.height = "auto";
-    const next = Math.max(INPUT_MIN_HEIGHT, Math.min(el.scrollHeight, maxHeight));
-    el.style.height = `${next}px`;
-    el.style.overflowY = el.scrollHeight > maxHeight ? "auto" : "hidden";
-  }, [maxHeight, value]);
+    el.style.height = "auto"
+    const next = Math.max(
+      INPUT_MIN_HEIGHT,
+      Math.min(el.scrollHeight, maxHeight)
+    )
+    el.style.height = `${next}px`
+    el.style.overflowY = el.scrollHeight > maxHeight ? "auto" : "hidden"
+  }, [maxHeight, value])
 
   useEffect(() => {
     if (!autoFocus || locked) {
-      return;
+      return
     }
-    const frame = window.requestAnimationFrame(focusInput);
-    return () => window.cancelAnimationFrame(frame);
-  }, [autoFocus, focusInput, locked]);
+    const frame = window.requestAnimationFrame(focusInput)
+    return () => window.cancelAnimationFrame(frame)
+  }, [autoFocus, focusInput, locked])
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        event.currentTarget.form?.requestSubmit();
+        event.preventDefault()
+        event.currentTarget.form?.requestSubmit()
       }
     },
-    [],
-  );
+    []
+  )
 
   const handlePaste = useCallback(
     (event: ClipboardEvent<HTMLTextAreaElement>) => {
       if (!attachmentsEnabled) {
-        return;
+        return
       }
-      const items = event.clipboardData?.items;
+      const items = event.clipboardData?.items
       if (!items) {
-        return;
+        return
       }
-      const files: File[] = [];
+      const files: File[] = []
       for (const item of Array.from(items)) {
         if (item.kind === "file") {
-          const file = item.getAsFile();
+          const file = item.getAsFile()
           if (file) {
-            files.push(file);
+            files.push(file)
           }
         }
       }
       if (files.length > 0) {
-        event.preventDefault();
-        addFiles(files);
+        event.preventDefault()
+        addFiles(files)
       }
     },
-    [addFiles, attachmentsEnabled],
-  );
+    [addFiles, attachmentsEnabled]
+  )
 
   return (
     <>
@@ -890,7 +914,7 @@ function ComposerInput({ className, maxHeight = 160, ...props }: ComposerInputPr
         autoFocus={autoFocus}
         className={cn(
           "block max-h-40 min-h-12 w-full resize-none px-3 pt-3 pb-1 text-base leading-6 placeholder:text-muted-foreground/45 disabled:cursor-not-allowed disabled:opacity-60 md:text-[15px] dark:placeholder:text-muted-foreground/60",
-          className,
+          className
         )}
         data-composer-input=""
         disabled={locked}
@@ -901,15 +925,15 @@ function ComposerInput({ className, maxHeight = 160, ...props }: ComposerInputPr
         onPaste={handlePaste}
         placeholder={placeholder}
         ref={(node) => {
-          textareaRef.current = node;
-          setInputRef(node);
+          textareaRef.current = node
+          setInputRef(node)
         }}
         rows={1}
         value={value}
         {...props}
       />
     </>
-  );
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -921,7 +945,7 @@ function ComposerFooter({ children }: { readonly children: ReactNode }) {
     <InputGroupAddon align="block-end" className="gap-2 pt-1 sm:gap-3">
       {children}
     </InputGroupAddon>
-  );
+  )
 }
 
 function ComposerControls({ children }: { readonly children?: ReactNode }) {
@@ -929,11 +953,11 @@ function ComposerControls({ children }: { readonly children?: ReactNode }) {
     <div className="flex min-w-0 flex-1 items-center gap-1.5 overflow-hidden">
       {children ?? <span aria-hidden className="block h-8" />}
     </div>
-  );
+  )
 }
 
 function ComposerSubmitSlot({ children }: { readonly children?: ReactNode }) {
-  return <div className="flex shrink-0 items-center">{children}</div>;
+  return <div className="flex shrink-0 items-center">{children}</div>
 }
 
 // ---------------------------------------------------------------------------
@@ -944,19 +968,19 @@ function ComposerSubmitIdle({
   className,
   trigger,
 }: {
-  readonly className?: string;
-  readonly trigger?: ReactNode;
+  readonly className?: string
+  readonly trigger?: ReactNode
 }) {
-  const { attachments, value } = useComposer();
-  const message = value.trim();
+  const { attachments, value } = useComposer()
+  const message = value.trim()
   // Armed when there's text OR at least one attachment (image-only sends).
-  const disabled = message.length === 0 && attachments.length === 0;
+  const disabled = message.length === 0 && attachments.length === 0
   return (
     <InputGroupButton
       aria-label="Send message"
       className={cn(
-        "ml-auto cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-auto disabled:opacity-30",
-        className,
+        "ml-auto cursor-pointer disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-30",
+        className
       )}
       disabled={disabled}
       size="icon-sm"
@@ -965,15 +989,15 @@ function ComposerSubmitIdle({
     >
       {trigger ?? <ArrowUpIcon className="size-3.5" />}
     </InputGroupButton>
-  );
+  )
 }
 
 function ComposerSubmitPreparing({
   className,
   trigger,
 }: {
-  readonly className?: string;
-  readonly trigger?: ReactNode;
+  readonly className?: string
+  readonly trigger?: ReactNode
 }) {
   return (
     <InputGroupButton
@@ -986,7 +1010,7 @@ function ComposerSubmitPreparing({
     >
       {trigger ?? <Loader2Icon className="size-3 animate-spin" />}
     </InputGroupButton>
-  );
+  )
 }
 
 function ComposerSubmitBusy({
@@ -994,16 +1018,16 @@ function ComposerSubmitBusy({
   onStop,
   trigger,
 }: {
-  readonly className?: string;
-  readonly onStop: () => void;
-  readonly trigger?: ReactNode;
+  readonly className?: string
+  readonly onStop: () => void
+  readonly trigger?: ReactNode
 }) {
   return (
     <InputGroupButton
       aria-label="Stop"
       className={cn(
-        "ml-auto cursor-default bg-foreground/15 text-foreground/55 shadow-none hover:bg-foreground/15 disabled:cursor-default disabled:pointer-events-auto disabled:opacity-100",
-        className,
+        "ml-auto cursor-default bg-foreground/15 text-foreground/55 shadow-none hover:bg-foreground/15 disabled:pointer-events-auto disabled:cursor-default disabled:opacity-100",
+        className
       )}
       onClick={onStop}
       size="icon-sm"
@@ -1012,7 +1036,7 @@ function ComposerSubmitBusy({
     >
       {trigger ?? <SquareIcon className="size-2.5 fill-current" />}
     </InputGroupButton>
-  );
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -1028,22 +1052,33 @@ function ComposerSubmit({
   onStop,
   triggers,
 }: {
-  readonly className?: string;
-  readonly onStop: () => void;
+  readonly className?: string
+  readonly onStop: () => void
   readonly triggers?: {
-    readonly idle?: ReactNode;
-    readonly preparing?: ReactNode;
-    readonly busy?: ReactNode;
-  };
+    readonly idle?: ReactNode
+    readonly preparing?: ReactNode
+    readonly busy?: ReactNode
+  }
 }) {
-  const { phase } = useComposer();
+  const { phase } = useComposer()
   if (phase === "busy") {
-    return <ComposerSubmitBusy className={className} onStop={onStop} trigger={triggers?.busy} />;
+    return (
+      <ComposerSubmitBusy
+        className={className}
+        onStop={onStop}
+        trigger={triggers?.busy}
+      />
+    )
   }
   if (phase === "preparing") {
-    return <ComposerSubmitPreparing className={className} trigger={triggers?.preparing} />;
+    return (
+      <ComposerSubmitPreparing
+        className={className}
+        trigger={triggers?.preparing}
+      />
+    )
   }
-  return <ComposerSubmitIdle className={className} trigger={triggers?.idle} />;
+  return <ComposerSubmitIdle className={className} trigger={triggers?.idle} />
 }
 
 export const Composer = {
@@ -1063,6 +1098,6 @@ export const Composer = {
   SubmitIdle: ComposerSubmitIdle,
   SubmitPreparing: ComposerSubmitPreparing,
   SubmitBusy: ComposerSubmitBusy,
-};
+}
 
-export type ComposerComponent = typeof Composer;
+export type ComposerComponent = typeof Composer
