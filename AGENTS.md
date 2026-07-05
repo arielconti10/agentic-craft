@@ -54,3 +54,23 @@ Keep this file short. Read only the task-specific docs you need.
 Project-local skills live in `.agents/skills/`. Use only the skills relevant to
 the task; do not load them all by default. Skill-local `AGENTS.md` files apply
 only while working inside that skill.
+
+## Cursor Cloud specific instructions
+
+- This is a **single static Next.js app** (App Router). There is no backend,
+  database, auth, or environment secrets — one dev server is the whole product.
+  Start it with `pnpm run dev` (serves `http://localhost:3000`); all demos run
+  client-side with baked-in fixture data.
+- Node 22 and pnpm 11.7.0 are preinstalled; the startup update script runs
+  `pnpm install --frozen-lockfile`. Standard commands live in `package.json`
+  (`dev`, `build`, `lint`, `typecheck`, `test`, `verify`, `registry:build`).
+- Registry gotcha: `src/components/ui/*` is the source of truth, but CI's
+  `pnpm run verify` runs `scripts/sync-registry.mjs --check` and then fails on
+  `git diff --exit-code -- public/r registry.json`. After changing a UI
+  component, regenerate committed artifacts with
+  `node scripts/sync-registry.mjs && pnpm run registry:build` and commit the
+  `registry/base-nova/` and `public/r/` output, or verify/CI will fail even
+  though the app runs fine.
+- `pnpm run build` uses Turbopack and prerenders ~33 static routes; a green
+  build does not exercise interaction, so verify UI behavior against the running
+  dev server.
