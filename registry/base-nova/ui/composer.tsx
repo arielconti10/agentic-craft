@@ -121,6 +121,7 @@ export function Composer({
   defaultValue = "",
   onValueChange: onValueChangeProp,
   onSend,
+  beforeSend,
   canSend: canSendProp,
   disabled = false,
   className,
@@ -131,6 +132,7 @@ export function Composer({
   defaultValue?: string
   onValueChange?: (value: string) => void
   onSend?: (value: string) => void
+  beforeSend?: (value: string) => boolean | void
   canSend?: boolean
   disabled?: boolean
 }) {
@@ -153,15 +155,16 @@ export function Composer({
     if (disabled) return
     if (isSending) return
     if (!canSend) return
-    setIsSending(true)
     const currentValue = value
+    if (beforeSend?.(currentValue) === false) return
+    setIsSending(true)
     setTimeout(() => {
       setValue("")
       setIsSending(false)
       if (textareaRef.current) textareaRef.current.style.height = "auto"
     }, 400)
     onSend?.(currentValue)
-  }, [value, disabled, isSending, canSend, setValue, onSend])
+  }, [value, disabled, isSending, canSend, setValue, onSend, beforeSend])
 
   const state = React.useMemo<ComposerState>(
     () => ({
@@ -274,6 +277,13 @@ export {
   ComposerContextRing,
   ComposerSend,
 } from "./composer-toolbar"
-export { ComposerScope, ComposerReply, ComposerPlan } from "./composer-islands"
+export {
+  ComposerScope,
+  ComposerReply,
+  ComposerPlan,
+  ComposerDoneWhen,
+  ComposerReceipt,
+  type ComposerDoneWhenItem,
+} from "./composer-islands"
 export { ComposerAttachments } from "./composer-attachments"
 export { ComposerSuggestions } from "./composer-suggestions"

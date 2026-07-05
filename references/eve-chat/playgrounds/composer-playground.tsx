@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import { useMemo, useState, type ReactNode } from "react";
-import { CheckIcon, CircleDashedIcon, FileIcon, PlusIcon } from "lucide-react";
-import { Composer, useOpenFilePicker } from "@/primitives/composer";
-import { Bubble, BubbleContent } from "@/components/ui/bubble";
+import { useMemo, useState, type ReactNode } from "react"
+import { CheckIcon, CircleDashedIcon, FileIcon, PlusIcon } from "lucide-react"
+import { Composer, useOpenFilePicker } from "@/primitives/composer"
+import { Bubble, BubbleContent } from "@/components/ui/bubble"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,10 +11,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { InputGroupButton } from "@/components/ui/input-group";
-import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
-import { Message, MessageContent } from "@/components/ui/message";
+} from "@/components/ui/dropdown-menu"
+import { InputGroupButton } from "@/components/ui/input-group"
+import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker"
+import { Message, MessageContent } from "@/components/ui/message"
 import {
   MessageScroller,
   MessageScrollerButton,
@@ -22,8 +22,8 @@ import {
   MessageScrollerItem,
   MessageScrollerProvider,
   MessageScrollerViewport,
-} from "@/components/ui/message-scroller";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/message-scroller"
+import { cn } from "@/lib/utils"
 
 // ---------------------------------------------------------------------------
 // Composer playground
@@ -33,55 +33,55 @@ import { cn } from "@/lib/utils";
 // any agent framework.
 // ---------------------------------------------------------------------------
 
-let eventId = 0;
+let eventId = 0
 type PlaygroundEvent = {
-  readonly id: number;
-  readonly label: string;
-  readonly payload?: unknown;
-  readonly at: string;
-};
+  readonly id: number
+  readonly label: string
+  readonly payload?: unknown
+  readonly at: string
+}
 
 // Fixture controls shape — demonstrates the primitive does not care what the
 // integrator types `controls` as.
-type Mode = "plan" | "auto" | "manual";
+type Mode = "plan" | "auto" | "manual"
 type PlaygroundControls = {
-  readonly mode: Mode;
-  readonly verbosity: "brief" | "normal" | "thorough";
-};
+  readonly mode: Mode
+  readonly verbosity: "brief" | "normal" | "thorough"
+}
 
 const MODES: readonly { readonly id: Mode; readonly label: string }[] = [
   { id: "plan", label: "Plan" },
   { id: "auto", label: "Auto" },
   { id: "manual", label: "Manual" },
-];
-const VERBOSITIES = ["brief", "normal", "thorough"] as const;
+]
+const VERBOSITIES = ["brief", "normal", "thorough"] as const
 
 export function ComposerPlayground() {
-  const [draft, setDraft] = useState("");
-  const [phase, setPhase] = useState<"idle" | "preparing" | "busy">("idle");
-  const [showInfoBar, setShowInfoBar] = useState(true);
-  const [attachmentsOn, setAttachmentsOn] = useState(true);
-  const [maxAttachments, setMaxAttachments] = useState(6);
-  const [acceptImagesOnly, setAcceptImagesOnly] = useState(false);
-  const [autoFocus, setAutoFocus] = useState(true);
-  const [placeholder, setPlaceholder] = useState("Ask anything...");
-  const [mode, setMode] = useState<Mode>("plan");
+  const [draft, setDraft] = useState("")
+  const [phase, setPhase] = useState<"idle" | "preparing" | "busy">("idle")
+  const [showInfoBar, setShowInfoBar] = useState(true)
+  const [attachmentsOn, setAttachmentsOn] = useState(true)
+  const [maxAttachments, setMaxAttachments] = useState(6)
+  const [acceptImagesOnly, setAcceptImagesOnly] = useState(false)
+  const [autoFocus, setAutoFocus] = useState(true)
+  const [placeholder, setPlaceholder] = useState("Ask anything...")
+  const [mode, setMode] = useState<Mode>("plan")
   const [verbosity, setVerbosity] =
-    useState<(typeof VERBOSITIES)[number]>("normal");
-  const [events, setEvents] = useState<PlaygroundEvent[]>([]);
+    useState<(typeof VERBOSITIES)[number]>("normal")
+  const [events, setEvents] = useState<PlaygroundEvent[]>([])
   const [integrations, setIntegrations] = useState<Record<string, boolean>>({
     notion: false,
     linear: true,
     sentry: false,
-  });
+  })
 
   const controls: PlaygroundControls = useMemo(
     () => ({ mode, verbosity }),
-    [mode, verbosity],
-  );
+    [mode, verbosity]
+  )
 
   const logEvent = (label: string, payload?: unknown) => {
-    eventId += 1;
+    eventId += 1
     setEvents((current) =>
       [
         {
@@ -91,18 +91,22 @@ export function ComposerPlayground() {
           payload,
         },
         ...current,
-      ].slice(0, 12),
-    );
-  };
+      ].slice(0, 12)
+    )
+  }
 
   const handleSubmit = ({
     attachments,
     message,
     controls,
   }: Readonly<{
-    attachments?: readonly { readonly name: string; readonly type: string; readonly size: number }[];
-    message: string;
-    controls: PlaygroundControls;
+    attachments?: readonly {
+      readonly name: string
+      readonly type: string
+      readonly size: number
+    }[]
+    message: string
+    controls: PlaygroundControls
   }>) => {
     logEvent("submit", {
       message,
@@ -112,18 +116,18 @@ export function ComposerPlayground() {
         type: a.type,
         size: a.size,
       })),
-    });
-    setPhase("preparing");
+    })
+    setPhase("preparing")
     window.setTimeout(() => {
-      setPhase("busy");
-      window.setTimeout(() => setPhase("idle"), 1600);
-    }, 600);
-  };
+      setPhase("busy")
+      window.setTimeout(() => setPhase("idle"), 1600)
+    }, 600)
+  }
 
   const handleStop = () => {
-    logEvent("stop");
-    setPhase("idle");
-  };
+    logEvent("stop")
+    setPhase("idle")
+  }
 
   const playgroundIntegrations = useMemo(
     () =>
@@ -132,13 +136,13 @@ export function ComposerPlayground() {
         { id: "linear", label: "Linear" },
         { id: "sentry", label: "Sentry" },
       ].map((i) => ({ ...i, enabled: integrations[i.id] ?? false })),
-    [integrations],
-  );
+    [integrations]
+  )
 
   const togglePlaygroundIntegration = (id: string) => {
-    setIntegrations((current) => ({ ...current, [id]: !current[id] }));
-    logEvent("toggle-integration", { id, next: !(integrations[id] ?? false) });
-  };
+    setIntegrations((current) => ({ ...current, [id]: !current[id] }))
+    logEvent("toggle-integration", { id, next: !(integrations[id] ?? false) })
+  }
 
   return (
     <div className="flex min-h-dvh flex-col bg-background text-foreground md:flex-row">
@@ -159,7 +163,7 @@ export function ComposerPlayground() {
         <div className="flex min-h-0 flex-1 items-center justify-center px-4 py-10 sm:px-6">
           <div className="w-full max-w-2xl space-y-4">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                 Home-style
               </p>
               <p className="text-xs text-muted-foreground/70">
@@ -211,7 +215,7 @@ export function ComposerPlayground() {
 
             <div className="space-y-3 pt-2">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                   Plus menu
                 </p>
                 <p className="text-xs text-muted-foreground/70">
@@ -253,13 +257,14 @@ export function ComposerPlayground() {
 
             <div className="space-y-3 pt-2">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                   Uncontrolled
                 </p>
                 <p className="text-xs text-muted-foreground/70">
-                  No <code className="font-mono">value</code>/<code className="font-mono">onChange</code> in
-                  the parent. Seeded with <code className="font-mono">defaultValue</code>, self-clears
-                  after submit. The parent never holds draft state.
+                  No <code className="font-mono">value</code>/
+                  <code className="font-mono">onChange</code> in the parent.
+                  Seeded with <code className="font-mono">defaultValue</code>,
+                  self-clears after submit. The parent never holds draft state.
                 </p>
               </div>
               <Composer.Root<PlaygroundControls>
@@ -290,11 +295,23 @@ export function ComposerPlayground() {
         </div>
       </div>
 
-      <aside className="flex w-full shrink-0 flex-col gap-5 border-t border-border/70 bg-muted/30 p-5 text-sm md:w-80 md:border-l md:border-t-0">
+      <aside className="flex w-full shrink-0 flex-col gap-5 border-t border-border/70 bg-muted/30 p-5 text-sm md:w-80 md:border-t-0 md:border-l">
         <Section title="Lifecycle">
-          <Toggle label="Show InfoBar" checked={showInfoBar} onChange={setShowInfoBar} />
-          <Toggle label="phase: preparing" checked={phase === "preparing"} onChange={(v) => setPhase(v ? "preparing" : "idle")} />
-          <Toggle label="phase: busy" checked={phase === "busy"} onChange={(v) => setPhase(v ? "busy" : "idle")} />
+          <Toggle
+            label="Show InfoBar"
+            checked={showInfoBar}
+            onChange={setShowInfoBar}
+          />
+          <Toggle
+            label="phase: preparing"
+            checked={phase === "preparing"}
+            onChange={(v) => setPhase(v ? "preparing" : "idle")}
+          />
+          <Toggle
+            label="phase: busy"
+            checked={phase === "busy"}
+            onChange={(v) => setPhase(v ? "busy" : "idle")}
+          />
         </Section>
 
         <Section title="Attachments">
@@ -315,7 +332,7 @@ export function ComposerPlayground() {
               min={1}
               onChange={(event) =>
                 setMaxAttachments(
-                  Math.max(1, Math.min(20, Number(event.target.value) || 1)),
+                  Math.max(1, Math.min(20, Number(event.target.value) || 1))
                 )
               }
               type="range"
@@ -336,15 +353,20 @@ export function ComposerPlayground() {
               value={placeholder}
             />
           </Field>
-          <Toggle label="autoFocus" checked={autoFocus} onChange={setAutoFocus} />
+          <Toggle
+            label="autoFocus"
+            checked={autoFocus}
+            onChange={setAutoFocus}
+          />
         </Section>
 
         <Section title="Events">
           {events.length === 0 ? (
             <p className="text-xs text-muted-foreground">
               Submit or stop the composer to see callbacks fire here. The{" "}
-              <code className="font-mono">submit</code> payload includes the opaque{" "}
-              <code className="font-mono">controls</code> the slot produced.
+              <code className="font-mono">submit</code> payload includes the
+              opaque <code className="font-mono">controls</code> the slot
+              produced.
             </p>
           ) : (
             <ul className="space-y-1.5">
@@ -354,7 +376,9 @@ export function ComposerPlayground() {
                   className="rounded-md border border-border/60 bg-background px-2 py-1.5 text-xs"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-medium text-foreground">{event.label}</span>
+                    <span className="font-medium text-foreground">
+                      {event.label}
+                    </span>
                     <span className="text-muted-foreground">{event.at}</span>
                   </div>
                   {event.payload !== undefined ? (
@@ -369,14 +393,14 @@ export function ComposerPlayground() {
         </Section>
       </aside>
     </div>
-  );
+  )
 }
 
 function ThreadPrimitiveFixture() {
   return (
     <section className="space-y-3 pt-4">
       <div>
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
           Thread primitives
         </p>
         <p className="text-xs text-muted-foreground/70">
@@ -395,8 +419,13 @@ function ThreadPrimitiveFixture() {
                 <MessageScrollerItem messageId="fixture-user" scrollAnchor>
                   <Message align="end">
                     <MessageContent>
-                      <Bubble variant="muted" className="border border-border/40 bg-muted/70">
-                        <BubbleContent>Can you summarize what changed?</BubbleContent>
+                      <Bubble
+                        variant="muted"
+                        className="border border-border/40 bg-muted/70"
+                      >
+                        <BubbleContent>
+                          Can you summarize what changed?
+                        </BubbleContent>
                       </Bubble>
                     </MessageContent>
                   </Message>
@@ -407,7 +436,9 @@ function ThreadPrimitiveFixture() {
                     <MarkerIcon>
                       <CircleDashedIcon className="size-3.5 animate-spin" />
                     </MarkerIcon>
-                    <MarkerContent className="shimmer">Reading changed files...</MarkerContent>
+                    <MarkerContent className="shimmer">
+                      Reading changed files...
+                    </MarkerContent>
                   </Marker>
                 </MessageScrollerItem>
 
@@ -415,8 +446,9 @@ function ThreadPrimitiveFixture() {
                   <Message align="start">
                     <MessageContent className="max-w-none text-sm leading-relaxed">
                       <p>
-                        Added shadcn-style thread primitives and wired them into the
-                        chat renderer while keeping the eve message parts intact.
+                        Added shadcn-style thread primitives and wired them into
+                        the chat renderer while keeping the eve message parts
+                        intact.
                       </p>
                       <Marker className="mt-3 justify-start px-1">
                         <MarkerIcon>
@@ -434,7 +466,7 @@ function ThreadPrimitiveFixture() {
         </MessageScrollerProvider>
       </div>
     </section>
-  );
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -448,10 +480,10 @@ function FixtureControlsSlot({
   onVerbosityChange,
   verbosity,
 }: {
-  readonly mode: Mode;
-  readonly onModeChange: (mode: Mode) => void;
-  readonly onVerbosityChange: (v: (typeof VERBOSITIES)[number]) => void;
-  readonly verbosity: (typeof VERBOSITIES)[number];
+  readonly mode: Mode
+  readonly onModeChange: (mode: Mode) => void
+  readonly onVerbosityChange: (v: (typeof VERBOSITIES)[number]) => void
+  readonly verbosity: (typeof VERBOSITIES)[number]
 }) {
   return (
     <div className="flex min-w-0 items-center gap-1.5">
@@ -464,11 +496,14 @@ function FixtureControlsSlot({
       <SegmentedControl
         ariaLabel="Verbosity"
         onChange={(id) => onVerbosityChange(id as (typeof VERBOSITIES)[number])}
-        options={VERBOSITIES.map((v) => ({ id: v, label: v[0]!.toUpperCase() }))}
+        options={VERBOSITIES.map((v) => ({
+          id: v,
+          label: v[0]!.toUpperCase(),
+        }))}
         value={verbosity}
       />
     </div>
-  );
+  )
 }
 
 function SegmentedControl({
@@ -477,10 +512,10 @@ function SegmentedControl({
   options,
   value,
 }: {
-  readonly ariaLabel: string;
-  readonly onChange: (id: string) => void;
-  readonly options: readonly { readonly id: string; readonly label: string }[];
-  readonly value: string;
+  readonly ariaLabel: string
+  readonly onChange: (id: string) => void
+  readonly options: readonly { readonly id: string; readonly label: string }[]
+  readonly value: string
 }) {
   return (
     <div
@@ -489,7 +524,7 @@ function SegmentedControl({
       role="radiogroup"
     >
       {options.map((option) => {
-        const selected = option.id === value;
+        const selected = option.id === value
         return (
           <button
             aria-checked={selected}
@@ -497,7 +532,7 @@ function SegmentedControl({
               "rounded-[5px] px-2 py-1 text-[11px] font-medium transition-colors",
               selected
                 ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground",
+                : "text-muted-foreground hover:text-foreground"
             )}
             key={option.id}
             onClick={() => onChange(option.id)}
@@ -506,37 +541,31 @@ function SegmentedControl({
           >
             {option.label}
           </button>
-        );
+        )
       })}
     </div>
-  );
-}
-
-function ControlsPreview({ controls }: { readonly controls: PlaygroundControls }) {
-  return (
-    <div className="flex items-center gap-2 rounded-md border border-border/60 bg-muted/30 px-2.5 py-1.5 text-[11px] text-muted-foreground">
-      <span className="font-medium text-foreground">controls</span>
-      <span className="font-mono">{JSON.stringify(controls)}</span>
-      <span className="text-muted-foreground/60">
-        ↑ carried into onSubmit.controls, opaque to the primitive
-      </span>
-    </div>
-  );
+  )
 }
 
 // ---------------------------------------------------------------------------
 // Small presentational helpers, local to the playground.
 // ---------------------------------------------------------------------------
 
-function Section({ children, title }: { readonly children: ReactNode; readonly title: string }) {
+function Section({
+  children,
+  title,
+}: {
+  readonly children: ReactNode
+  readonly title: string
+}) {
   return (
     <section className="space-y-2">
-      <h3 className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+      <h3 className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
         {title}
       </h3>
       <div className="space-y-2">{children}</div>
     </section>
-  );
+  )
 }
 
 function Toggle({
@@ -544,9 +573,9 @@ function Toggle({
   label,
   onChange,
 }: {
-  readonly checked: boolean;
-  readonly label: string;
-  readonly onChange: (next: boolean) => void;
+  readonly checked: boolean
+  readonly label: string
+  readonly onChange: (next: boolean) => void
 }) {
   return (
     <label className="flex cursor-pointer items-center justify-between gap-3">
@@ -555,11 +584,11 @@ function Toggle({
         aria-checked={checked}
         className={cn(
           "relative inline-flex h-4 w-7 shrink-0 items-center rounded-full transition-colors",
-          checked ? "bg-emerald-500" : "bg-muted",
+          checked ? "bg-emerald-500" : "bg-muted"
         )}
         onClick={(event) => {
-          event.preventDefault();
-          onChange(!checked);
+          event.preventDefault()
+          onChange(!checked)
         }}
         role="switch"
         type="button"
@@ -567,40 +596,46 @@ function Toggle({
         <span
           className={cn(
             "size-3 rounded-full bg-white shadow-sm transition-transform",
-            checked ? "translate-x-[15px]" : "translate-x-0.5",
+            checked ? "translate-x-[15px]" : "translate-x-0.5"
           )}
         />
       </button>
     </label>
-  );
+  )
 }
 
-function Field({ children, label }: { readonly children: ReactNode; readonly label: string }) {
+function Field({
+  children,
+  label,
+}: {
+  readonly children: ReactNode
+  readonly label: string
+}) {
   return (
     <label className="block space-y-1">
       <span className="text-xs text-muted-foreground">{label}</span>
       {children}
     </label>
-  );
+  )
 }
 
 type PlaygroundIntegration = {
-  readonly id: string;
-  readonly label: string;
-  readonly enabled: boolean;
-};
+  readonly id: string
+  readonly label: string
+  readonly enabled: boolean
+}
 
 function PlaygroundPlusMenu({
   attachmentsOn,
   integrations,
   onToggleIntegration,
 }: {
-  readonly attachmentsOn: boolean;
-  readonly integrations: readonly PlaygroundIntegration[];
-  readonly onToggleIntegration: (id: string) => void;
+  readonly attachmentsOn: boolean
+  readonly integrations: readonly PlaygroundIntegration[]
+  readonly onToggleIntegration: (id: string) => void
 }) {
-  const openFilePicker = useOpenFilePicker();
-  const [open, setOpen] = useState(false);
+  const openFilePicker = useOpenFilePicker()
+  const [open, setOpen] = useState(false)
 
   return (
     <DropdownMenu onOpenChange={setOpen} open={open}>
@@ -609,8 +644,8 @@ function PlaygroundPlusMenu({
           aria-label="Add attachment or connection"
           className="shrink-0 text-muted-foreground hover:bg-muted hover:text-foreground"
           onPointerDown={(event) => {
-            event.preventDefault();
-            setOpen((current) => !current);
+            event.preventDefault()
+            setOpen((current) => !current)
           }}
           size="icon-sm"
           type="button"
@@ -626,28 +661,30 @@ function PlaygroundPlusMenu({
       >
         {attachmentsOn ? (
           <>
-            <DropdownMenuLabel className="px-2 py-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+            <DropdownMenuLabel className="px-2 py-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
               Add
             </DropdownMenuLabel>
             <DropdownMenuItem
               className="h-auto cursor-pointer gap-2 rounded-sm px-2 py-1.5 text-sm focus:bg-muted/70"
               onSelect={(event) => {
-                event.preventDefault();
-                openFilePicker();
+                event.preventDefault()
+                openFilePicker()
               }}
             >
               <span className="flex size-7 shrink-0 items-center justify-center rounded-md border border-border bg-background text-foreground">
                 <FileIcon className="size-4 text-foreground" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-sm text-foreground">Attach file</span>
+                <span className="block text-sm text-foreground">
+                  Attach file
+                </span>
                 <span className="block text-[11px] text-muted-foreground">
                   From device, drop, or paste
                 </span>
               </span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="my-1 bg-border/70" />
-            <DropdownMenuLabel className="px-2 py-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+            <DropdownMenuLabel className="px-2 py-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
               Connections
             </DropdownMenuLabel>
           </>
@@ -658,28 +695,30 @@ function PlaygroundPlusMenu({
             className="h-9 cursor-pointer gap-2 rounded-sm px-2 py-1 text-sm focus:bg-muted/70"
             key={i.id}
             onSelect={(event) => {
-              event.preventDefault();
-              onToggleIntegration(i.id);
+              event.preventDefault()
+              onToggleIntegration(i.id)
             }}
             role="menuitemcheckbox"
           >
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-md border border-border bg-background text-[11px] font-medium uppercase text-foreground">
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-md border border-border bg-background text-[11px] font-medium text-foreground uppercase">
               {i.label.slice(0, 2)}
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm text-foreground">{i.label}</span>
+              <span className="block truncate text-sm text-foreground">
+                {i.label}
+              </span>
             </span>
             <span
               aria-hidden="true"
               className={cn(
                 "relative inline-flex h-4 w-7 shrink-0 items-center rounded-full transition-colors",
-                i.enabled ? "bg-emerald-500" : "bg-muted",
+                i.enabled ? "bg-emerald-500" : "bg-muted"
               )}
             >
               <span
                 className={cn(
                   "size-3 rounded-full bg-white shadow-sm transition-transform",
-                  i.enabled ? "translate-x-[15px]" : "translate-x-0.5",
+                  i.enabled ? "translate-x-[15px]" : "translate-x-0.5"
                 )}
               />
             </span>
@@ -687,5 +726,5 @@ function PlaygroundPlusMenu({
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }
