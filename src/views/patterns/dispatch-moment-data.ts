@@ -43,6 +43,49 @@ const AUTONOMY_POSTURES: readonly AutonomyPosture[] = [
   },
 ] as const
 
+type ExecutionPosture =
+  | "auto-review"
+  | "accept-edits"
+  | "review-each"
+  | "keep-planning"
+
+type ExecutionOption = {
+  id: ExecutionPosture
+  label: string
+  description: string
+  recommended?: boolean
+}
+
+/**
+ * Plan→execute gate choices (problem C). After plan review the user picks how
+ * much autonomy the run gets — the gate selects execution posture, not just
+ * approval.
+ */
+const EXECUTION_OPTIONS: readonly ExecutionOption[] = [
+  {
+    id: "auto-review",
+    label: "Approve and run with auto-review",
+    description:
+      "High-trust edits inside scope; classifier catches risky actions.",
+    recommended: true,
+  },
+  {
+    id: "accept-edits",
+    label: "Approve and accept edits",
+    description: "File changes apply without per-edit prompts.",
+  },
+  {
+    id: "review-each",
+    label: "Approve and review each step",
+    description: "Every edit and command waits for you.",
+  },
+  {
+    id: "keep-planning",
+    label: "Keep planning with feedback",
+    description: "Return to read-only planning — no execution yet.",
+  },
+] as const
+
 type DefensibilityGapId = "stopping" | "proof" | "scope" | "budget" | "risk"
 
 type DefensibilityGapDefinition = {
@@ -184,6 +227,7 @@ function evaluateDefensibility(
 export {
   AUTONOMY_POSTURES,
   DEFENSIBILITY_GAPS,
+  EXECUTION_OPTIONS,
   FIXTURE_PROMPT,
   evaluateDefensibility,
   parseDispatchPrompt,
@@ -192,5 +236,7 @@ export {
   type DefensibilityGapDefinition,
   type DefensibilityGapId,
   type DefensibilityGapStatus,
+  type ExecutionOption,
+  type ExecutionPosture,
   type ParsedDispatch,
 }

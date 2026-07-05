@@ -8,6 +8,7 @@ import {
   type ComposerSubmitPhase,
 } from "@/components/playground/compound-composer"
 import { Badge } from "@/components/ui/badge"
+import { DispatchMomentLabPanel } from "@/views/playground/dispatch-moment-lab"
 
 // ---------------------------------------------------------------------------
 // Compound composer playground
@@ -414,6 +415,38 @@ function CompoundComposerPlayground() {
         description="controls is opaque to the primitive and typed by the integrator. Cycle the chips, send, and read the exact payload onSubmit received. Controlled draft — clearing is the integrator's job."
       >
         <ControlsInspectorPanel />
+      </PanelSection>
+
+      <PanelSection
+        title="5 · Dispatch moment (B+C)"
+        description="The B+C ideas from /patterns/dispatch-moment on the compound API: defensibility strip in Composer.Before, posture badge as a Controls chip, plan→execute gate intercepting onSubmit. Same fixture, same vocabulary — different primitive."
+      >
+        <DispatchMomentLabPanel />
+        <div className="mt-6 rounded-lg border border-border/60 bg-muted/20 p-4 text-xs leading-5 text-muted-foreground">
+          <p className="font-medium text-foreground">
+            Registry composer vs compound composer — first comparison notes
+          </p>
+          <ul className="mt-2 flex list-disc flex-col gap-1 pl-4">
+            <li>
+              Interception point: the registry composer&apos;s{" "}
+              <code>beforeSend</code> can veto a send; the compound primitive
+              has no pre-submit hook, so the gate intercepts in{" "}
+              <code>onSubmit</code>. Fine for a controlled text draft, but with
+              attachments enabled the primitive has already handed files over
+              and revoked previews by then.
+            </li>
+            <li>
+              Placement: registry islands stack the strip outside the card;
+              <code> Composer.Before</code> keeps it inside the frame, so the
+              gaps read as part of the ask rather than a separate warning.
+            </li>
+            <li>
+              Posture chip composes identically in both —{" "}
+              <code>ComposerToolbar</code> vs <code>Composer.Controls</code> are
+              equivalent slots for it.
+            </li>
+          </ul>
+        </div>
       </PanelSection>
     </div>
   )

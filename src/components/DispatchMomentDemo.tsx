@@ -32,47 +32,13 @@ import {
 import { cn } from "@/lib/utils"
 import {
   AUTONOMY_POSTURES,
+  EXECUTION_OPTIONS,
   FIXTURE_PROMPT,
   evaluateDefensibility,
   parseDispatchPrompt,
   type AutonomyPosture,
+  type ExecutionPosture,
 } from "@/views/patterns/dispatch-moment-data"
-
-type ExecutionPosture =
-  | "auto-review"
-  | "accept-edits"
-  | "review-each"
-  | "keep-planning"
-
-const EXECUTION_OPTIONS: {
-  id: ExecutionPosture
-  label: string
-  description: string
-  recommended?: boolean
-}[] = [
-  {
-    id: "auto-review",
-    label: "Approve and run with auto-review",
-    description:
-      "High-trust edits inside scope; classifier catches risky actions.",
-    recommended: true,
-  },
-  {
-    id: "accept-edits",
-    label: "Approve and accept edits",
-    description: "File changes apply without per-edit prompts.",
-  },
-  {
-    id: "review-each",
-    label: "Approve and review each step",
-    description: "Every edit and command waits for you.",
-  },
-  {
-    id: "keep-planning",
-    label: "Keep planning with feedback",
-    description: "Return to read-only planning — no execution yet.",
-  },
-]
 
 const PLAN_TASKS: ComposerTask[] = [
   {
