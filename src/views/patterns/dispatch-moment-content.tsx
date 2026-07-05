@@ -7,12 +7,17 @@ import { PatternDemo } from "@/components/reference/pattern-demo"
 import { PatternPage } from "@/components/reference/pattern-page"
 import { PatternSection } from "@/components/reference/pattern-section"
 import { PatternSpecTable } from "@/components/reference/pattern-spec-table"
+import {
+  AUTONOMY_POSTURES,
+  DEFENSIBILITY_GAPS,
+} from "@/views/patterns/dispatch-moment-data"
 
 const PRINCIPLES = [
   {
     title: "Behavioral badge, not a ladder",
-    description:
-      "Ship posture as language users recognize — asks first, edits freely — not L0–L5 numbers.",
+    description: `Ship posture as language users recognize — ${AUTONOMY_POSTURES.map(
+      (posture) => posture.label.toLowerCase()
+    ).join(", ")} — not L0–L5 numbers.`,
   },
   {
     title: "Verification before posture",
@@ -62,13 +67,13 @@ function DispatchMomentContent() {
         className="mb-10 grid scroll-mt-20 gap-4 border-y border-border/60 py-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]"
       >
         <div>
-          <p className="section-label mb-2">Reframe</p>
+          <p className="section-label mb-2">Direction — ratified 2026-07-05</p>
           <p className="font-serif text-2xl font-light tracking-tight text-balance">
             Verification defensibility + plan→execute — not contract read-back.
           </p>
         </div>
         <div className="min-w-0">
-          <p className="section-label mb-2">Open questions pursued</p>
+          <p className="section-label mb-2">Questions chosen</p>
           <div className="flex flex-wrap gap-2">
             <span className="rounded-md border border-border/70 px-2.5 py-1 text-xs font-medium text-muted-foreground">
               B · Verification defensibility
@@ -78,12 +83,13 @@ function DispatchMomentContent() {
             </span>
           </div>
           <p className="mt-3 text-xs leading-5 text-muted-foreground">
-            Continues the July 3 composer/autonomy session handoff in{" "}
+            Decision recorded in{" "}
             <code className="text-xs">
               sessions/2026-07-03-eve-chat-composer-autonomy.md
             </code>
-            . Supersedes the Bare/B/C/D contract-variant framing until the
-            problem is reframed.
+            . Question A resolves as behavioral badge, not ladder UI; the
+            Bare/B/C/D contract-variant framing is retired unless B+C work
+            surfaces a concrete need for it.
           </p>
         </div>
       </section>
@@ -116,6 +122,52 @@ function DispatchMomentContent() {
             demo sketches both patterns on the registry composer — not the
             superseded eight-field receipt variants.
           </p>
+        </div>
+      </PatternSection>
+
+      <PatternSection
+        id="vocabulary"
+        eyebrow="Canonical vocabulary"
+        title="Three postures, five gaps"
+        description="The posture badge labels and the pre-Send defensibility checklist are defined once, in dispatch-moment-data.ts, and shared by every surface that renders them."
+      >
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <div>
+            <p className="section-label mb-3">Posture badge</p>
+            <ul className="flex flex-col gap-2" role="list">
+              {AUTONOMY_POSTURES.map((posture) => (
+                <li
+                  key={posture.id}
+                  className="border-l border-border/70 bg-muted/20 py-2 pl-4"
+                >
+                  <span className="text-sm font-medium text-foreground">
+                    {posture.label}
+                  </span>
+                  <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
+                    {posture.description}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="section-label mb-3">Defensibility checklist</p>
+            <ul className="flex flex-col gap-2" role="list">
+              {DEFENSIBILITY_GAPS.map((gap) => (
+                <li
+                  key={gap.id}
+                  className="border-l border-border/70 bg-muted/20 py-2 pl-4"
+                >
+                  <span className="text-sm font-medium text-foreground">
+                    {gap.label}
+                  </span>
+                  <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
+                    {gap.hint}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </PatternSection>
 
@@ -159,18 +211,20 @@ function DispatchMomentContent() {
       >
         <ul className="mt-6 flex flex-col gap-2 text-sm leading-6 text-muted-foreground">
           <li>
-            Cross-check <code className="text-xs">docs/research.md</code> §4
-            against the agency×orchestration reframe (behavioral badge vs
-            numbered ladder).
+            <code className="text-xs">docs/research.md</code> §4.5 now carries
+            the reframe: levels are analysis vocabulary; Send shows a behavioral
+            badge plus defensibility gaps.
           </li>
           <li>
-            Promote compound-composer ideas from{" "}
-            <code className="text-xs">references/eve-chat/</code> only where
-            they strengthen B+C — not contract document UI.
+            Compound-composer lab at{" "}
+            <code className="text-xs">/playground/compound-composer</code> —
+            slot compositions, fixture controls, and the same B+C ideas on the
+            eve-chat compound API for comparison against this registry-composer
+            sketch.
           </li>
           <li>
-            Wire eve-chat playground variant picker if comparing integrator
-            compositions — after the problem statement holds.
+            Promotion of compound parts into the registry stays a separate,
+            explicit decision — the comparison writeup is the output for now.
           </li>
         </ul>
       </PatternSection>

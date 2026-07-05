@@ -36,15 +36,25 @@ The Claude Code exploration may have been **solving the wrong problem well**: po
 
 ---
 
-## Open composer questions (pick one to pursue)
+## Composer direction — decided 2026-07-05
 
-| ID | Question | Research signal |
-|----|----------|-----------------|
-| **A** | Level selection legibility at Send | No product ships L0–L5 as a numbered control; level works better as behavioral badge |
-| **B** | Verification defensibility before dispatch | Strongest gap — nothing answers "is this autonomy level defensible for *this* task?" pre-Send |
-| **C** | Plan→execute transition | Strongest pre-dispatch patterns: Claude Code 5-option plan approval, Factory Spec approval, Plan→Implement |
+**Decision: pursue B + C.** Verification defensibility before dispatch plus
+the plan→execute transition are the composer problems agentic-craft works on.
+Contract read-back is no longer the main problem.
 
-Research points strongest at **B + C**, with level as behavioral badge rather than ladder UI.
+| ID | Question | Resolution |
+|----|----------|------------|
+| **A** | Level selection legibility at Send | **Resolved as design position** — level ships as a behavioral badge ("Asks first" / "Edits freely" / "On its own"), never a numbered L0–L5 control |
+| **B** | Verification defensibility before dispatch | **Chosen** — surface missing proof, unclear stopping conditions, missing scope, cost/budget ambiguity, and risky actions before Send |
+| **C** | Plan→execute transition | **Chosen** — complex tasks gate on plan review, then explicitly pick execution posture |
+
+Canonical vocabulary (three postures, five defensibility gaps) lives in
+`src/views/patterns/dispatch-moment-data.ts`; the pattern page at
+[`/patterns/dispatch-moment`](../app/(reference)/patterns/dispatch-moment/page.tsx)
+is the reference sketch. `docs/research.md` §4.5 carries the reframe.
+
+**Bare/B/C/D stay retired** unless B+C work surfaces a concrete need for a
+contract-variant comparison.
 
 ---
 
@@ -130,9 +140,9 @@ Fixture ask: *"migrate session-chat-page to the shared adapter — don't touch d
 
 ---
 
-## Suggested next steps in agentic-craft
+## Next steps in agentic-craft
 
-1. Choose composer problem **A**, **B**, or **C** (recommend B + C) — **started:** [`/patterns/dispatch-moment`](../app/(reference)/patterns/dispatch-moment/page.tsx) sketches B+C on the registry composer
+1. ~~Choose composer problem **A**, **B**, or **C**~~ — **done 2026-07-05:** B + C chosen (see decision record above); [`/patterns/dispatch-moment`](../app/(reference)/patterns/dispatch-moment/page.tsx) sketches B+C on the registry composer
 2. Sketch against registry composer demos and/or compound-composer slots — not contract read-back
-3. Cross-check [`docs/research.md`](../docs/research.md) §4 "Autonomy as a contract" — may need revision to match reframe
-4. If promoting compound composer into the site, wire a playground route under agentic-craft (don't fork registry composer)
+3. ~~Cross-check [`docs/research.md`](../docs/research.md) §4~~ — **done 2026-07-05:** §4.5 carries the reframe (behavioral badge, defensibility at Send)
+4. Wire the compound-composer playground at `/playground/compound-composer` (URL-only lab; don't fork registry composer) — icons injectable per consumer shadcn config, `attachment` added via CLI

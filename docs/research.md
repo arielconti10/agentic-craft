@@ -266,6 +266,20 @@ Autonomy contracts are not set-and-forget. The agent should re-confirm autonomy 
 
 Beyond per-product autonomy settings, Anthropic positions its own model behavior on a "disposition dial" ranging from _fully corrigible_ (does whatever instructed) to _fully autonomous_ (acts on its own values). Current Claude models sit closer to the corrigible end — a deliberate safety choice with direct UX implications: agents defer to the principal hierarchy (Anthropic → operator → user) rather than override it. The autonomy contract a product designs sits on top of this model-level disposition.
 
+### 4.5 Levels are analysis vocabulary, not Send-time UI (July 2026 reframe)
+
+> **Position (ratified 2026-07-05).** The level ladder in §4.1 is how we _analyze_ autonomy. It is not what the user sees at Send. At the dispatch moment the user sees a **behavioral posture badge** plus **verification defensibility gaps** — and, for complex tasks, a **plan→execute gate** that picks execution posture after plan review.
+
+The July 2026 web audits (`audits/`, 2026-07-03 series) converged on three findings that reshape how §4 applies to composer UI:
+
+1. **No product ships L0–L5 as a numbered control at Send** ([`audits/dispatch-moment-ui-web-2026-07-03.md`](../audits/dispatch-moment-ui-web-2026-07-03.md)). Mode, model, and placement are visible; Run Mode, sandbox, allowlists, and stopping conditions stay hidden. Where level surfaces at all, it works as behavior language, not a number.
+2. **The strongest pre-dispatch gap is defensibility** ([`audits/verification-defensibility-web-2026-07-03.md`](../audits/verification-defensibility-web-2026-07-03.md)). Nothing on the market answers "is this autonomy level defensible for _this_ task?" before Send. The eight-field run contract (Addy Osmani, July 2026) is one safeguard among many — not the organizing UI concept; its fields ship shredded across products ([`audits/contract-field-reality-2026-07-03.md`](../audits/contract-field-reality-2026-07-03.md)).
+3. **Plan gates that also pick execution posture are the strongest shipping pattern** — Claude Code's plan-approval options, Factory's Spec approval. The plan review moment is where autonomy gets renegotiated, not a settings page.
+
+**Canonical Send-time vocabulary.** agentic-craft ships posture as three behavioral badges — **"Asks first"** (pauses before edits and external actions), **"Edits freely"** (applies file edits without per-step approval), **"On its own"** (runs until done or a gate fires) — roughly the behavior of L2/L3/L4 in §4.1's terms. Before Send, the composer surfaces five defensibility gaps: **stopping condition, verification method, scope boundary, spend cap, risky actions**. Source of truth: `src/views/patterns/dispatch-moment-data.ts`; reference sketch: `/patterns/dispatch-moment`.
+
+**How this composes with the rest of §4.** The matrix view (§4.2) and renegotiation (§4.3) still hold — the badge is the compressed, legible face of the effective policy, and the plan→execute gate is a renegotiation moment. What changes is the UI claim: the ladder informs design analysis and this document's taxonomy; the badge, the gap checklist, and the plan gate are what earn pixels at Send.
+
 ## 5. Trust through provenance
 
 > **Position.** Trust in agentic systems is not earned through confident prose. It is earned through _provenance_ — visible links between every claim and its source. An agent that says less but cites everything beats an agent that says more without sources.

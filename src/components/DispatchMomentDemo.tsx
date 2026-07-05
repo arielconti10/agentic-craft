@@ -16,7 +16,6 @@ import {
   ComposerPlan,
   ComposerDoneWhen,
   ComposerReceipt,
-  type ComposerDoneWhenItem,
   type ComposerTask,
 } from "@/components/ui/composer"
 import {
@@ -31,39 +30,19 @@ import {
   HumanGateTitle,
 } from "@/components/ui/human-gate"
 import { cn } from "@/lib/utils"
-
-const FIXTURE_PROMPT =
-  "Migrate session-chat-page to the shared adapter — don't touch deps, stop when tests pass, keep it under $5"
+import {
+  AUTONOMY_POSTURES,
+  FIXTURE_PROMPT,
+  evaluateDefensibility,
+  parseDispatchPrompt,
+  type AutonomyPosture,
+} from "@/views/patterns/dispatch-moment-data"
 
 type ExecutionPosture =
   | "auto-review"
   | "accept-edits"
   | "review-each"
   | "keep-planning"
-
-type AutonomyPosture = {
-  id: string
-  label: string
-  description: string
-}
-
-const AUTONOMY_POSTURES: AutonomyPosture[] = [
-  {
-    id: "asks-first",
-    label: "Asks first",
-    description: "Pauses before edits and external actions.",
-  },
-  {
-    id: "edits-freely",
-    label: "Edits freely",
-    description: "Applies file edits without per-step approval.",
-  },
-  {
-    id: "on-its-own",
-    label: "On its own",
-    description: "Runs until done or a gate fires.",
-  },
-]
 
 const EXECUTION_OPTIONS: {
   id: ExecutionPosture
@@ -111,103 +90,6 @@ const PLAN_TASKS: ComposerTask[] = [
   },
 ]
 
-type ParsedDispatch = {
-  summary: string
-  doneWhen: ComposerDoneWhenItem[]
-  exclusions: string[]
-  budget?: string
-  needsPlanGate: boolean
-}
-
-function parseDispatchPrompt(text: string): ParsedDispatch {
-  const trimmed = text.trim()
-  const lower = trimmed.toLowerCase()
-
-  const doneWhen: ComposerDoneWhenItem[] = []
-  const exclusions: string[] = []
-  let budget: string | undefined
-
-  const stopMatch = lower.match(
-    /(?:stop|done)\s+when\s+([^—–.;]+(?:pass|green|complete)[^—–.;]*)/i
-  )
-  if (stopMatch) {
-    doneWhen.push({
-      id: "stop",
-      label: stopMatch[1].trim(),
-    })
-  }
-
-  const budgetMatch = trimmed.match(
-    /(?:under|below|keep\s+it\s+under)\s+\$?\d+/i
-  )
-  if (budgetMatch) {
-    budget = budgetMatch[0].replace(/^keep it /i, "")
-    doneWhen.push({ id: "budget", label: budget })
-  }
-
-  const dontTouchMatch = trimmed.match(/don't touch\s+([^—–.;]+)/i)
-  if (dontTouchMatch) {
-    exclusions.push(dontTouchMatch[1].trim())
-    doneWhen.push({
-      id: "exclude",
-      label: `${dontTouchMatch[1].trim()} locked`,
-    })
-  }
-
-  const summary =
-    trimmed.length > 72 ? `${trimmed.slice(0, 69).trim()}…` : trimmed || "…"
-
-  const needsPlanGate =
-    /migrate|refactor|implement|across|shared adapter/i.test(trimmed) &&
-    trimmed.length > 40
-
-  return {
-    summary,
-    doneWhen,
-    exclusions,
-    budget,
-    needsPlanGate,
-  }
-}
-
-type VerificationGap = {
-  id: string
-  label: string
-  met: boolean
-}
-
-function buildVerificationGaps(
-  parsed: ParsedDispatch,
-  fullText: string
-): VerificationGap[] {
-  const hasStop = parsed.doneWhen.some((item) => item.id === "stop")
-  const hasBudget = Boolean(parsed.budget)
-  const hasScope = parsed.exclusions.length > 0
-
-  return [
-    {
-      id: "stop",
-      label: "Stopping condition",
-      met: hasStop,
-    },
-    {
-      id: "proof",
-      label: "Verification method",
-      met: hasStop && /test|check|pass|green|ci/i.test(fullText),
-    },
-    {
-      id: "scope",
-      label: "Scope boundary",
-      met: hasScope,
-    },
-    {
-      id: "budget",
-      label: "Spend cap",
-      met: hasBudget,
-    },
-  ]
-}
-
 function DispatchMomentDemo() {
   const [draft, setDraft] = React.useState("")
   const [postureIndex, setPostureIndex] = React.useState(0)
@@ -222,7 +104,7 @@ function DispatchMomentDemo() {
 
   const parsed = React.useMemo(() => parseDispatchPrompt(draft), [draft])
   const verificationGaps = React.useMemo(
-    () => buildVerificationGaps(parsed, draft),
+    () => evaluateDefensibility(parsed, draft),
     [parsed, draft]
   )
   const missingVerification = verificationGaps.filter((gap) => !gap.met)
@@ -466,4 +348,4 @@ function DispatchMomentDemo() {
   )
 }
 
-export { DispatchMomentDemo, FIXTURE_PROMPT, parseDispatchPrompt }
+export { DispatchMomentDemo }
