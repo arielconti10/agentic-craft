@@ -26,11 +26,12 @@ function ModeScaleTrack({
 }) {
   return (
     <div
-      className="relative mx-1 mb-3 mt-1 h-1.5 rounded-full bg-linear-to-r from-emerald-500/70 via-amber-400/70 to-red-500/70"
+      className="relative mx-1 mt-1 mb-3 h-1.5 rounded-full bg-linear-to-r from-emerald-500/70 via-amber-400/70 to-red-500/70"
       aria-hidden="true"
     >
       {detents.map((detent, index) => {
-        const left = detents.length === 1 ? 50 : (index / (detents.length - 1)) * 100
+        const left =
+          detents.length === 1 ? 50 : (index / (detents.length - 1)) * 100
         const active = index === activeIndex
         return (
           <span
@@ -77,7 +78,9 @@ function ComposerDressingModeMenu({
         className="w-[min(100vw-2rem,320px)] p-0"
       >
         <div className="border-b border-border/60 px-3 py-2.5">
-          <p className="text-[11px] font-medium text-foreground">App vocabulary</p>
+          <p className="text-[11px] font-medium text-foreground">
+            App vocabulary
+          </p>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {(Object.keys(APP_MODE_SETS) as AppId[]).map((id) => {
               const selected = id === appId
