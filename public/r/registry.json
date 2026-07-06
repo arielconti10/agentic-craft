@@ -369,6 +369,18 @@
       ]
     },
     {
+      "name": "run-receipt",
+      "type": "registry:ui",
+      "title": "Run Receipt",
+      "description": "A compound retrospective receipt surface for run evidence, scope, spend, checkpoint ledger rows, and plan-vs-delivered classification chips.",
+      "files": [
+        {
+          "path": "registry/base-nova/ui/run-receipt.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "run-trace",
       "type": "registry:ui",
       "title": "Run Trace",

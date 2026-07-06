@@ -4,6 +4,7 @@ import * as React from "react"
 
 import { ActionPreview } from "@/components/ui/action-preview"
 import { Button } from "@/components/ui/button"
+import { RunReceipt } from "@/components/ui/run-receipt"
 import {
   RunTrace,
   type RunTraceEvent,
@@ -185,22 +186,7 @@ function EscalationCard({
 
 /* ── The receipt: the run's account of itself ── */
 
-function ReceiptSection({
-  label,
-  children,
-}: {
-  label: string
-  children: React.ReactNode
-}) {
-  return (
-    <div className="border-t border-border/60 px-3 py-3 sm:px-4">
-      <p className="text-[11px] font-medium text-muted-foreground">{label}</p>
-      <div className="mt-2">{children}</div>
-    </div>
-  )
-}
-
-function RunReceipt({
+function RunSurfaceReceipt({
   phase,
   posture,
   stoppedAt,
@@ -239,36 +225,32 @@ function RunReceipt({
   ].filter((file): file is string => Boolean(file))
 
   return (
-    <section
+    <RunReceipt.Root
       aria-label="Run receipt"
-      className="animate-[route-expand_240ms_ease-out] rounded-lg border border-border bg-background"
+      className="animate-[route-expand_240ms_ease-out]"
     >
-      <div className="px-3 py-3 sm:px-4">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h3 className="text-sm font-medium text-foreground">
-            {stopped ? "Run stopped" : "Run complete"}
-          </h3>
-          <span className="text-xs text-muted-foreground">Receipt</span>
-        </div>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">
-          {stopped
+      <RunReceipt.Header
+        title={stopped ? "Run stopped" : "Run complete"}
+        tag="Receipt"
+        summary={
+          stopped
             ? `Stopped by you at step ${(stoppedAt ?? 0) + 1} of ${RUN_SCRIPT.length}. Completed work is preserved; nothing was pushed.`
-            : "Stopping condition met — the ask said stop when tests pass."}
-        </p>
-      </div>
+            : "Stopping condition met — the ask said stop when tests pass."
+        }
+      />
 
       {!stopped ? (
-        <ReceiptSection label="Evidence">
+        <RunReceipt.Section label="Evidence">
           <p className="text-sm leading-5 text-foreground">
             npm test — 42 passed · 0 failed
           </p>
           <p className="mt-1 text-xs leading-4 text-muted-foreground">
             Second run, after the boundary fix. First run had 2 failures.
           </p>
-        </ReceiptSection>
+        </RunReceipt.Section>
       ) : null}
 
-      <ReceiptSection label="Scope touched">
+      <RunReceipt.Section label="Scope touched">
         {filesTouched.length > 0 ? (
           <ul className="flex flex-col gap-1 font-mono text-xs leading-5 text-foreground">
             {filesTouched.map((file) => (
@@ -288,15 +270,15 @@ function RunReceipt({
               : "worked around it without touching deps, per your choice."}
           </p>
         ) : null}
-      </ReceiptSection>
+      </RunReceipt.Section>
 
-      <ReceiptSection label="Spend">
+      <RunReceipt.Section label="Spend">
         <p className="text-sm leading-5 text-foreground tabular-nums">
           ${spend.toFixed(2)} of ${SPEND_CAP.toFixed(2)} cap
         </p>
-      </ReceiptSection>
+      </RunReceipt.Section>
 
-      <ReceiptSection label="Checkpoint ledger">
+      <RunReceipt.Section label="Checkpoint ledger">
         <p className="text-sm leading-5 text-foreground">
           {inFlightDecisions} decision{inFlightDecisions === 1 ? "" : "s"} made
           in-flight · {unreviewedEdits.length} edit
@@ -305,17 +287,20 @@ function RunReceipt({
         {unreviewedEdits.length > 0 ? (
           <ul className="mt-2 flex flex-col gap-1.5">
             {unreviewedEdits.map((step) => (
-              <li
+              <RunReceipt.Row
                 key={step.id}
-                className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 text-xs leading-4"
+                as="li"
+                className="items-baseline gap-y-0.5 text-xs leading-4"
+                trailing={
+                  <span className="text-muted-foreground">review pending</span>
+                }
               >
                 <span className="text-foreground">
                   {step.id === "fix" && escalationChoice
                     ? FIX_VARIANTS[escalationChoice].title
                     : step.title}
                 </span>
-                <span className="text-muted-foreground">review pending</span>
-              </li>
+              </RunReceipt.Row>
             ))}
           </ul>
         ) : (
@@ -323,8 +308,8 @@ function RunReceipt({
             Nothing left to review — every edit was approved before it applied.
           </p>
         )}
-      </ReceiptSection>
-    </section>
+      </RunReceipt.Section>
+    </RunReceipt.Root>
   )
 }
 
@@ -558,7 +543,7 @@ function RunSurfaceLabContent() {
           />
 
           {phase === "done" || phase === "stopped" ? (
-            <RunReceipt
+            <RunSurfaceReceipt
               phase={phase}
               posture={posture}
               stoppedAt={stoppedAt}
