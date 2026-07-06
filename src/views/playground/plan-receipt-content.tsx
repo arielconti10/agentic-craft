@@ -205,9 +205,9 @@ function ReceiptDiffCard({
           <span className="text-xs text-muted-foreground">Retrospective</span>
         </div>
         <p className="mt-2 text-sm leading-5 text-foreground">
-          {asPlannedCount} of {deliveredCount} delivered items as planned ·{" "}
-          {deviationCount} deviation{deviationCount === 1 ? "" : "s"}, all
-          traced to your decisions
+          {deviationCount === 0
+            ? `${asPlannedCount} of ${deliveredCount} delivered items as planned · no deviations`
+            : `${asPlannedCount} of ${deliveredCount} delivered items as planned · ${deviationCount} deviation${deviationCount === 1 ? "" : "s"}, all traced to your decisions`}
         </p>
       </div>
 
@@ -224,7 +224,9 @@ function ReceiptDiffCard({
                   {item.label}
                 </p>
                 <p className="mt-0.5 text-xs leading-4 text-muted-foreground">
-                  {item.detail}
+                  {item.id === "fix" && escalationChoice === "workaround"
+                    ? FIX_VARIANTS.workaround.description
+                    : item.detail}
                 </p>
               </div>
               <ClassificationChip variant="muted">
