@@ -38,7 +38,7 @@ export function FoundationsContent() {
       <header className="mb-12 sm:mb-20">
         <p className="section-label mb-3">Foundations</p>
         <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
-          Designing for agentic interfaces
+          Designing agentic interfaces
         </h1>
         <p className="mt-4 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
           This site documents how to design interfaces for AI agents that handle
@@ -269,7 +269,7 @@ export function FoundationsContent() {
               <p className="text-sm font-medium text-foreground">
                 {row.surface}
               </p>
-              <ul className="space-y-2">
+              <ul className="flex flex-col gap-2">
                 {row.items.map((item) => (
                   <li key={item}>
                     <code className="block overflow-x-auto rounded-md border border-border bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
