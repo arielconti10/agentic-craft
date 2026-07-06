@@ -1,4 +1,5 @@
 import {
+  BookOpen01Icon,
   Brain01Icon,
   BubbleChatIcon,
   CheckListIcon,
@@ -26,6 +27,12 @@ export type NavigationSection = {
 }
 
 export const sections: NavigationSection[] = [
+  {
+    title: "Foundations",
+    path: "/foundations",
+    icon: BookOpen01Icon,
+    subs: [],
+  },
   {
     title: "Demo",
     path: "/",
