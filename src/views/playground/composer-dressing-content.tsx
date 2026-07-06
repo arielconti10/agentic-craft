@@ -308,6 +308,14 @@ function ComposerDressingLabContent() {
           mode control, different furniture. Use the ui.sh picker (bottom-right)
           to switch variants after typing the fixture.
         </p>
+        <p className="mt-3 max-w-[640px] rounded-lg border border-border/60 bg-muted/20 px-3 py-2 text-sm leading-relaxed text-muted-foreground">
+          <span className="font-medium text-foreground">
+            Decided (Jul 6, 2026): A wins.{" "}
+          </span>
+          Term chrome is rejected — the composer keeps meters, pickers, and
+          pointers; the prompt stays prose. B–E are kept below as the record of
+          what was tried and why it lost.
+        </p>
       </header>
 
       <div className="mb-6 flex flex-wrap items-center gap-2">
@@ -417,27 +425,34 @@ function ComposerDressingLabContent() {
       </div>
 
       <div className="mt-8 rounded-lg border border-border/60 bg-muted/20 p-4 text-xs leading-5 text-muted-foreground">
-        <p className="font-medium text-foreground">What to compare</p>
+        <p className="font-medium text-foreground">Verdict — why A won</p>
         <ul className="mt-2 flex list-disc flex-col gap-1.5 pl-4">
           <li>
-            B bets the receipt alone carries the contract because it is tappable
-            — everything in C and D is one tap deep from B.
-          </li>
-          <li>D bets that seeing the parse builds trust the receipt cannot.</li>
-          <li>
-            Open the mode chip on any variant: ordered scale (option B), top
-            detent visible but gated with Enable — Claude Code desktop pattern.
+            Everything B–E adds is term chrome: it renders user-stated
+            constraints (scope, stop, budget) as furniture. The harness
+            doesn&apos;t enforce those constraints, so rendering them gives
+            wishes the visual authority of enforced limits.
           </li>
           <li>
-            Switch app vocabulary to feel one control, four mode sets (CC,
-            Codex, Cursor, eve).
+            What shipping products (Cursor, Codex, Claude Code) dress the
+            composer with is machinery chrome only: meters (context ring,
+            branch, execution locus), pickers (mode, model), pointers
+            (@-mentions, attachments). All platform-known fact, none of it a
+            term — and all of it stays true in every session state, which is why
+            it can be static chrome.
           </li>
           <li>
-            E bets the dressing question is state-dependent, not static: type
-            the ask, send it, and judge whether the collapse from dispatch
-            chrome to a pinned run fact reads as honest or as flicker. No
-            shipping product does dispatch-only chrome — this is the untested
-            move.
+            The receipt survives, relocated: as the run&apos;s opening
+            transcript entry (&quot;here&apos;s what I understood, here&apos;s
+            what I&apos;m doing&quot;) — where E&apos;s pinned run fact
+            accidentally pointed. Post-dispatch surface, not composer chrome.
+          </li>
+          <li>
+            The five defensibility gaps stay valid as analysis vocabulary — they
+            map to real incidents — but their homes are settings (spend),
+            in-flight approvals (risk), the prompt itself (stop), and the
+            post-run receipt (verification). Only scope touches the composer,
+            and mentions already serve it as a pointer.
           </li>
         </ul>
       </div>
