@@ -273,6 +273,49 @@ function countInFlightCheckpoints(posture: PostureId): number {
   ).length
 }
 
+type PlanItem = {
+  id: string
+  label: string
+  detail: string
+}
+
+type RunPlan = {
+  approach: readonly string[]
+  scope: readonly PlanItem[]
+  stopping: string
+  budget: string
+  exclusions: readonly string[]
+}
+
+const RUN_PLAN: RunPlan = {
+  approach: [
+    "Read session-chat-page.tsx and adapter call sites — public props stay stable",
+    "Swap local composer state for the shared adapter hook in session-chat-page.tsx",
+    "Add a session-scoped send queue behind composer-adapter.ts",
+    "Update session-chat-page.test.tsx mocks and verify with npm test",
+  ],
+  scope: [
+    {
+      id: "edit-page",
+      label: "src/pages/session-chat-page.tsx",
+      detail: "+41 −67 · swap local composer state for the adapter hook",
+    },
+    {
+      id: "edit-adapter",
+      label: "src/lib/composer-adapter.ts",
+      detail: "+18 −2 · add a session-scoped send queue",
+    },
+    {
+      id: "fix",
+      label: "src/pages/session-chat-page.test.tsx",
+      detail: "Update mocks after adapter migration",
+    },
+  ],
+  stopping: "Stop when npm test passes",
+  budget: "≤ $5.00",
+  exclusions: ["deps"],
+}
+
 export {
   ACTION_CLASS_LABELS,
   CHECKPOINT_KIND_LABELS,
@@ -280,9 +323,12 @@ export {
   FIX_VARIANTS,
   POLICY,
   POSTURES,
+  RUN_PLAN,
   RUN_SCRIPT,
   SPEND_CAP,
   type ActionClass,
+  type PlanItem,
+  type RunPlan,
   type CheckpointKind,
   type EscalationChoiceId,
   type Posture,
