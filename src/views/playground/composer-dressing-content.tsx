@@ -10,6 +10,7 @@ import {
   ComposerSend,
   ComposerToolbar,
 } from "@/components/ui/composer"
+import { cn } from "@/lib/utils"
 import {
   FIXTURE_ASK,
   parseComposerAsk,
@@ -18,7 +19,12 @@ import {
 } from "@/views/playground/composer-dressing-data"
 import { ComposerDressingModeMenu } from "@/views/playground/composer-dressing-mode-menu"
 
-type DressingLevel = "bare" | "receipt-only" | "receipt-scope" | "fully-dressed"
+type DressingLevel =
+  | "bare"
+  | "receipt-only"
+  | "receipt-scope"
+  | "fully-dressed"
+  | "state-aware"
 
 function ParseEchoRow({ text }: { text: string }) {
   return (
@@ -31,11 +37,7 @@ function ParseEchoRow({ text }: { text: string }) {
   )
 }
 
-function ScopeChipsRow({
-  parsed,
-}: {
-  parsed: ParsedComposerAsk
-}) {
+function ScopeChipsRow({ parsed }: { parsed: ParsedComposerAsk }) {
   return (
     <div className="border-b border-border/60 px-3 py-2 sm:px-4">
       <div className="flex flex-wrap items-center gap-1.5">
@@ -112,16 +114,13 @@ function DressingComposer({
   const parsed = React.useMemo(() => parseComposerAsk(draft), [draft])
 
   return (
-    <Composer
-      value={draft}
-      onValueChange={onDraftChange}
-      onSend={() => {}}
-    >
+    <Composer value={draft} onValueChange={onDraftChange} onSend={() => {}}>
       <ComposerCard>
         {level === "fully-dressed" && showParsed ? (
           <ParseEchoRow text={parsed.parseEcho} />
         ) : null}
-        {(level === "receipt-scope" || level === "fully-dressed") && showParsed ? (
+        {(level === "receipt-scope" || level === "fully-dressed") &&
+        showParsed ? (
           <ScopeChipsRow parsed={parsed} />
         ) : null}
         {level === "fully-dressed" && showParsed ? (
@@ -155,6 +154,134 @@ function DressingComposer({
   )
 }
 
+function CollapsibleRow({
+  open,
+  children,
+}: {
+  open: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <div
+      className={cn(
+        "grid transition-[grid-template-rows,opacity] duration-300 ease-out",
+        open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+      )}
+      aria-hidden={!open}
+    >
+      <div className="min-h-0 overflow-hidden">{children}</div>
+    </div>
+  )
+}
+
+function StateAwareComposer({
+  draft,
+  onDraftChange,
+  appId,
+  onAppIdChange,
+  modeIndex,
+  onModeIndexChange,
+}: {
+  draft: string
+  onDraftChange: (value: string) => void
+  appId: AppId
+  onAppIdChange: (appId: AppId) => void
+  modeIndex: number
+  onModeIndexChange: (index: number) => void
+}) {
+  const [phase, setPhase] = React.useState<"dispatch" | "running">("dispatch")
+  const [runReceipt, setRunReceipt] = React.useState("")
+
+  const isDispatch = phase === "dispatch"
+  const showParsed = isDispatch && draft.trim().length > 0
+  const parsed = React.useMemo(() => parseComposerAsk(draft), [draft])
+
+  return (
+    <div>
+      <Composer
+        value={draft}
+        onValueChange={onDraftChange}
+        onSend={(value) => {
+          if (isDispatch) {
+            setRunReceipt(
+              parseComposerAsk(value).receipt.replace(
+                /\s*·\s*tap to edit$/i,
+                ""
+              )
+            )
+            setPhase("running")
+          }
+        }}
+      >
+        <ComposerCard>
+          {!isDispatch ? (
+            <div className="animate-[route-expand_200ms_ease-out] border-b border-border/60 px-3 py-2 sm:px-4">
+              <p className="flex items-center gap-2 text-[11px] leading-4 text-muted-foreground">
+                <span
+                  className="size-1.5 shrink-0 animate-[route-pulse_1.6s_ease-in-out_infinite] rounded-full bg-[var(--status-warn)]"
+                  aria-hidden="true"
+                />
+                <span className="min-w-0 truncate">
+                  <span className="font-medium text-foreground">
+                    Run active ·{" "}
+                  </span>
+                  {runReceipt}
+                </span>
+              </p>
+            </div>
+          ) : null}
+
+          <CollapsibleRow open={showParsed}>
+            <ScopeChipsRow parsed={parsed} />
+          </CollapsibleRow>
+
+          <ComposerInput
+            aria-label="State-aware composer prompt"
+            placeholder={
+              isDispatch
+                ? "Describe the task — include how you'll know it's done…"
+                : "Steer the run — redirect, narrow, or stop…"
+            }
+          />
+
+          <CollapsibleRow open={showParsed}>
+            <ReceiptRow text={parsed.receipt} />
+          </CollapsibleRow>
+
+          <ComposerToolbar>
+            <ComposerDressingModeMenu
+              appId={appId}
+              onAppIdChange={onAppIdChange}
+              modeIndex={modeIndex}
+              onModeIndexChange={onModeIndexChange}
+            />
+            <div className="min-w-0 flex-1" />
+            <ComposerSend />
+          </ComposerToolbar>
+        </ComposerCard>
+      </Composer>
+
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs text-muted-foreground">
+          {isDispatch
+            ? "Pre-dispatch — receipt and scope are live chrome."
+            : "Running — dispatch chrome collapsed into a pinned run fact. Next send is a steering message."}
+        </p>
+        {!isDispatch ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setPhase("dispatch")}
+          >
+            Reset to dispatch
+          </Button>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
 function ComposerDressingLabContent() {
   const [draft, setDraft] = React.useState("")
   const [appId, setAppId] = React.useState<AppId>("claude-code")
@@ -177,7 +304,7 @@ function ComposerDressingLabContent() {
           Composer dressing
         </h1>
         <p className="mt-4 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
-          Four ways to reflect the run contract in the composer — same ask, same
+          Five ways to reflect the run contract in the composer — same ask, same
           mode control, different furniture. Use the ui.sh picker (bottom-right)
           to switch variants after typing the fixture.
         </p>
@@ -205,19 +332,11 @@ function ComposerDressingLabContent() {
         </p>
       </div>
 
-      <div
-        data-uidotsh-pick="Composer dressing"
-        className="contents"
-      >
-        <div
-          data-uidotsh-option="A — Bare (current)"
-          className="contents"
-        >
+      <div data-uidotsh-pick="Composer dressing" className="contents">
+        <div data-uidotsh-option="A — Bare (current)" className="contents">
           <section className="page-section">
             <div className="mb-4">
-              <h2 className="text-sm font-semibold tracking-tight">
-                A — Bare
-              </h2>
+              <h2 className="text-sm font-semibold tracking-tight">A — Bare</h2>
               <p className="mt-1 text-xs leading-5 text-muted-foreground">
                 Control condition. Your prompt is the contract; the composer
                 reflects none of it.
@@ -227,11 +346,7 @@ function ComposerDressingLabContent() {
           </section>
         </div>
 
-        <div
-          data-uidotsh-option="B — Receipt only"
-          className="contents"
-          hidden
-        >
+        <div data-uidotsh-option="B — Receipt only" className="contents" hidden>
           <section className="page-section">
             <div className="mb-4">
               <h2 className="text-sm font-semibold tracking-tight">
@@ -283,6 +398,22 @@ function ComposerDressingLabContent() {
             <DressingComposer level="fully-dressed" {...sharedComposerProps} />
           </section>
         </div>
+
+        <div data-uidotsh-option="E — State-aware" className="contents" hidden>
+          <section className="page-section">
+            <div className="mb-4">
+              <h2 className="text-sm font-semibold tracking-tight">
+                E — State-aware
+              </h2>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                Dispatch-only chrome. Receipt and scope mount before the first
+                send, then collapse into a pinned run fact once the run starts —
+                the transition itself is what&apos;s under evaluation.
+              </p>
+            </div>
+            <StateAwareComposer {...sharedComposerProps} />
+          </section>
+        </div>
       </div>
 
       <div className="mt-8 rounded-lg border border-border/60 bg-muted/20 p-4 text-xs leading-5 text-muted-foreground">
@@ -292,16 +423,21 @@ function ComposerDressingLabContent() {
             B bets the receipt alone carries the contract because it is tappable
             — everything in C and D is one tap deep from B.
           </li>
-          <li>
-            D bets that seeing the parse builds trust the receipt cannot.
-          </li>
+          <li>D bets that seeing the parse builds trust the receipt cannot.</li>
           <li>
             Open the mode chip on any variant: ordered scale (option B), top
             detent visible but gated with Enable — Claude Code desktop pattern.
           </li>
           <li>
-            Switch app vocabulary to feel one control, four mode sets (CC, Codex,
-            Cursor, eve).
+            Switch app vocabulary to feel one control, four mode sets (CC,
+            Codex, Cursor, eve).
+          </li>
+          <li>
+            E bets the dressing question is state-dependent, not static: type
+            the ask, send it, and judge whether the collapse from dispatch
+            chrome to a pinned run fact reads as honest or as flicker. No
+            shipping product does dispatch-only chrome — this is the untested
+            move.
           </li>
         </ul>
       </div>

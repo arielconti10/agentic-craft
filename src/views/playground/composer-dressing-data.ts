@@ -84,14 +84,16 @@ function parseComposerAsk(text: string): ParsedComposerAsk {
   const lower = trimmed.toLowerCase()
 
   const stopMatch = lower.match(
-    /(?:stop|done)\s+when\s+([^—–.;]+(?:pass|green|complete)[^—–.;]*)/i
+    /(?:stop|done)\s+when\s+([^—–.;,]+(?:pass|green|complete)[^—–.;,]*)/i
   )
   const stopLabel = stopMatch?.[1]?.trim() ?? "tests pass"
 
-  const budgetMatch = trimmed.match(/(?:under|below|keep\s+it\s+under)\s+\$?\d+/i)
+  const budgetMatch = trimmed.match(
+    /(?:under|below|keep\s+it\s+under)\s+\$?\d+/i
+  )
   const budget = budgetMatch?.[0].replace(/^keep it /i, "") ?? "≤ $5"
 
-  const dontTouchMatch = trimmed.match(/don't touch\s+([^—–.;]+)/i)
+  const dontTouchMatch = trimmed.match(/don't touch\s+([^—–.;,]+)/i)
   const exclusion = dontTouchMatch?.[1]?.trim() ?? "deps"
 
   const taskMatch = trimmed.match(/migrate\s+([^—–]+?)(?:\s+to|\s+—)/i)
