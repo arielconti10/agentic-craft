@@ -3,12 +3,12 @@
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
+import { RunReceipt } from "@/components/ui/run-receipt"
 import {
   RunTrace,
   type RunTraceEvent,
   type RunTraceStatus,
 } from "@/components/ui/run-trace"
-import { cn } from "@/lib/utils"
 import { FIXTURE_ASK } from "@/views/playground/composer-dressing-data"
 import {
   FIX_VARIANTS,
@@ -26,29 +26,6 @@ type Current = { index: number; stage: "checkpoint" | "executing" } | null
 
 function isCheckpoint(step: RunStep): boolean {
   return step.actionClass === "boundary"
-}
-
-function ClassificationChip({
-  children,
-  variant = "muted",
-}: {
-  children: React.ReactNode
-  variant?: "muted" | "deviation" | "positive"
-}) {
-  return (
-    <span
-      className={cn(
-        "shrink-0 rounded-md border px-2 py-0.5 text-[11px] leading-4 font-medium",
-        variant === "muted" &&
-          "border-border/60 bg-muted/30 text-muted-foreground",
-        variant === "deviation" &&
-          "border-foreground/25 bg-background text-foreground",
-        variant === "positive" && "border-border/60 bg-muted/20 text-foreground"
-      )}
-    >
-      {children}
-    </span>
-  )
 }
 
 function EscalationCard({
@@ -193,102 +170,106 @@ function ReceiptDiffCard({
   const asPlannedCount = RUN_PLAN.scope.length
 
   return (
-    <section
+    <RunReceipt.Root
       aria-label="Receipt diffed against plan"
-      className="animate-[route-expand_240ms_ease-out] rounded-lg border border-border bg-background"
+      className="animate-[route-expand_240ms_ease-out]"
     >
-      <div className="border-b border-border/60 px-3 py-3 sm:px-4">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-sm font-medium text-foreground">
-            Receipt · diffed against plan
-          </h2>
-          <span className="text-xs text-muted-foreground">Retrospective</span>
-        </div>
-        <p className="mt-2 text-sm leading-5 text-foreground">
-          {deviationCount === 0
+      <RunReceipt.Header
+        className="border-b border-border/60"
+        heading="h2"
+        title="Receipt · diffed against plan"
+        tag="Retrospective"
+        summary={
+          deviationCount === 0
             ? `${asPlannedCount} of ${deliveredCount} delivered items as planned · no deviations`
-            : `${asPlannedCount} of ${deliveredCount} delivered items as planned · ${deviationCount} deviation${deviationCount === 1 ? "" : "s"}, all traced to your decisions`}
-        </p>
-      </div>
+            : `${asPlannedCount} of ${deliveredCount} delivered items as planned · ${deviationCount} deviation${deviationCount === 1 ? "" : "s"}, all traced to your decisions`
+        }
+        summaryClassName="mt-2 text-sm leading-5 text-foreground"
+      />
 
-      <div className="border-b border-border/60 px-3 py-3 sm:px-4">
-        <p className="text-[11px] font-medium text-muted-foreground">Scope</p>
-        <ul className="mt-2 flex flex-col gap-3">
+      <RunReceipt.Section
+        label="Scope"
+        className="border-t-0 border-b border-border/60"
+      >
+        <ul className="flex flex-col gap-3">
           {RUN_PLAN.scope.map((item) => (
-            <li
+            <RunReceipt.Row
               key={item.id}
-              className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1"
+              as="li"
+              trailing={
+                <RunReceipt.Chip variant="muted">as planned</RunReceipt.Chip>
+              }
             >
-              <div className="min-w-0">
-                <p className="font-mono text-xs leading-5 text-foreground">
-                  {item.label}
-                </p>
-                <p className="mt-0.5 text-xs leading-4 text-muted-foreground">
-                  {item.id === "fix" && escalationChoice === "workaround"
-                    ? FIX_VARIANTS.workaround.description
-                    : item.detail}
-                </p>
-              </div>
-              <ClassificationChip variant="muted">
-                as planned
-              </ClassificationChip>
-            </li>
+              <p className="font-mono text-xs leading-5 text-foreground">
+                {item.label}
+              </p>
+              <p className="mt-0.5 text-xs leading-4 text-muted-foreground">
+                {item.id === "fix" && escalationChoice === "workaround"
+                  ? FIX_VARIANTS.workaround.description
+                  : item.detail}
+              </p>
+            </RunReceipt.Row>
           ))}
           {escalationChoice === "allow" ? (
-            <li className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 rounded-md border border-foreground/25 px-3 py-2">
-              <div className="min-w-0">
-                <p className="font-mono text-xs leading-5 text-foreground">
-                  package.json · package-lock.json
-                </p>
-                <p className="mt-0.5 text-xs leading-4 text-muted-foreground">
-                  You allowed one devDependency at the boundary escalation
-                </p>
-              </div>
-              <ClassificationChip variant="deviation">
-                deviation — escalation #1
-              </ClassificationChip>
-            </li>
+            <RunReceipt.Row
+              as="li"
+              className="rounded-md border border-foreground/25 px-3 py-2"
+              trailing={
+                <RunReceipt.Chip variant="deviation">
+                  deviation — escalation #1
+                </RunReceipt.Chip>
+              }
+            >
+              <p className="font-mono text-xs leading-5 text-foreground">
+                package.json · package-lock.json
+              </p>
+              <p className="mt-0.5 text-xs leading-4 text-muted-foreground">
+                You allowed one devDependency at the boundary escalation
+              </p>
+            </RunReceipt.Row>
           ) : (
             <li className="text-xs leading-4 text-muted-foreground">
               0 deviations — delivered scope matches planned scope
             </li>
           )}
         </ul>
-      </div>
+      </RunReceipt.Section>
 
-      <div className="border-b border-border/60 px-3 py-3 sm:px-4">
-        <p className="text-[11px] font-medium text-muted-foreground">
-          Stopping condition
-        </p>
-        <div className="mt-2 flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
-          <div className="min-w-0">
-            <p className="text-xs leading-4 text-muted-foreground">
-              Planned: {RUN_PLAN.stopping}
-            </p>
-            <p className="mt-1 text-sm leading-5 text-foreground">
-              npm test — 42 passed · 0 failed
-            </p>
-          </div>
-          <ClassificationChip variant="positive">met</ClassificationChip>
-        </div>
-      </div>
+      <RunReceipt.Section
+        label="Stopping condition"
+        className="border-t-0 border-b border-border/60"
+      >
+        <RunReceipt.Row
+          trailing={<RunReceipt.Chip variant="positive">met</RunReceipt.Chip>}
+        >
+          <p className="text-xs leading-4 text-muted-foreground">
+            Planned: {RUN_PLAN.stopping}
+          </p>
+          <p className="mt-1 text-sm leading-5 text-foreground">
+            npm test — 42 passed · 0 failed
+          </p>
+        </RunReceipt.Row>
+      </RunReceipt.Section>
 
-      <div className="border-b border-border/60 px-3 py-3 sm:px-4">
-        <p className="text-[11px] font-medium text-muted-foreground">Budget</p>
-        <div className="mt-2 flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
-          <div className="min-w-0">
-            <p className="text-xs leading-4 text-muted-foreground">
-              Planned: {RUN_PLAN.budget}
-            </p>
-            <p className="mt-1 text-sm leading-5 text-foreground tabular-nums">
-              ${spend.toFixed(2)}
-            </p>
-          </div>
-          <ClassificationChip variant="positive">under cap</ClassificationChip>
-        </div>
-      </div>
+      <RunReceipt.Section
+        label="Budget"
+        className="border-t-0 border-b border-border/60"
+      >
+        <RunReceipt.Row
+          trailing={
+            <RunReceipt.Chip variant="positive">under cap</RunReceipt.Chip>
+          }
+        >
+          <p className="text-xs leading-4 text-muted-foreground">
+            Planned: {RUN_PLAN.budget}
+          </p>
+          <p className="mt-1 text-sm leading-5 text-foreground tabular-nums">
+            ${spend.toFixed(2)}
+          </p>
+        </RunReceipt.Row>
+      </RunReceipt.Section>
 
-      <div className="flex flex-wrap gap-2 px-3 py-3 sm:px-4">
+      <RunReceipt.Footer className="border-t-0">
         <Button type="button" size="sm" onClick={onRunAgain}>
           Run again
         </Button>
@@ -300,8 +281,8 @@ function ReceiptDiffCard({
         >
           Back to plan
         </Button>
-      </div>
-    </section>
+      </RunReceipt.Footer>
+    </RunReceipt.Root>
   )
 }
 
